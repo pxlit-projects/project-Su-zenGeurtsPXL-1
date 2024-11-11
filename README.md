@@ -1,6 +1,6 @@
 # Fullstack Java Project
 
-## Firstname Lastname (Class)
+## Su-zen Geurts (3AONa)
 Change the name and Class in the title above
 
 ## Folder structure
