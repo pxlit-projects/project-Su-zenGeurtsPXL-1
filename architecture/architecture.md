@@ -1,7 +1,12 @@
 # Architecture
+![Architecture](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/blob/main/architecture/architecture.drawio.svg)
 
-:heavy_check_mark:_(COMMENT) Add a description of the architecture of your application and create a diagram like the one below. Link to the diagram in this document._
+### Synchronous communications
+- When fetching a post by id with its reviews from the `Post Service`, the reviews are fetched by id from the `Review Service`
+- When fetching a post by id with its comments from the `Post Service`, the comments are fetched by id from the `Comment Service`
+- When a post is approved/rejected via the `Review Service`, the status of the post is updated via the `Post Service`
 
-![eShopOnContainers Architecture](https://docs.microsoft.com/en-us/dotnet/architecture/cloud-native/media/eshoponcontainers-development-architecture.png)
-
-[Source](https://docs.microsoft.com/en-us/dotnet/architecture/cloud-native/introduce-eshoponcontainers-reference-app)
+### Asynchronous communications
+- When approving a post with the `Review Service`, the editor of the post is notified
+- When rejecting a post with the `Review Service`, the editor of the post is notified
+- When adding a review with the `Review Service`, the editor of the post is notified
