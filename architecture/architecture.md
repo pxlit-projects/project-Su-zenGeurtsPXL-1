@@ -10,3 +10,11 @@
 - When approving a post with the `Review Service`, the editor of the post is notified
 - When rejecting a post with the `Review Service`, the editor of the post is notified
 - When adding a review with the `Review Service`, the editor of the post is notified
+
+# Entities
+![UML Diagram of enitities](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/blob/main/architecture/entities.drawio.svg)
+
+### User roles
+- Editor
+- Editor-in-chief
+- User
