@@ -18,3 +18,24 @@
 - Editor
 - Editor-in-chief
 - User
+
+# End points
+- Post Service
+    - @PostMapping("/") add [[US1]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/2)[[US2]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/4)
+    - @PutMapping("/{id}") edit [[US3]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/5)
+    - @GetMapping("/published") findAllPublished [[US4]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/6)
+    - @GetMapping("/submitted") findAllSubmitted [[US7]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/8)
+    - @GetMapping("/enums/categories") findAllCategories [[US1]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/2)
+    - @GetMapping("/{id}/with-reviews") findByIdWithReviews &rarr; find Review by Id [[US8]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/9)
+    - @GetMapping("/{id}/with-comments") findByIdWithComments &rarr; find Comment by Id [[US11]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/12)
+
+- Review Service
+    - @PostMapping("/") review [[US7]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/8) &rarr; edit Post [[US7]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/8) + notify editor [[US8]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/9)
+    - @PostMapping("/") add [[US9]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/10) &rarr; notify editor [[US8]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/9)
+    - @GetMapping("/{id}") findById [[US8]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/9)
+
+- Comment Service
+    - @PostMapping("/") add [[US10]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/11)
+    - @GetMapping("/{id}") findById [[US11]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/12)
+    - @PutMapping("/{id}") edit [[US12]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/13)
+    - @DeleteMapping("/{id}") delete [[US12]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/13)
