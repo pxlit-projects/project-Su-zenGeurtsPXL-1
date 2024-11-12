@@ -23,6 +23,8 @@
 ### Post Service
 - @PostMapping("/") add [[US1]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/2)[[US2]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/4)
 - @PutMapping("/{id}") edit [[US3]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/5)
+- @GetMapping("/") findAll [[US1]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/2)
+- @GetMapping("/{id}") findById [[US3]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/4)
 - @GetMapping("/published") findAllPublished [[US4]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/6)
 - @GetMapping("/submitted") findAllSubmitted [[US7]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/8)
 - @GetMapping("/enums/categories") findAllCategories [[US1]](https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1/issues/2)
