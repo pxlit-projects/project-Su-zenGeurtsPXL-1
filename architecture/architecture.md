@@ -15,7 +15,6 @@
 
 ### User roles
 - Editor
-- Editor-in-chief
 - User
 
 # End points
