@@ -11,6 +11,7 @@
     <groupId>be.pxl.services</groupId>
     <artifactId>PxlNews</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>PxlNews</name>
     <description>PxlNews</description>
     <url/>
@@ -20,6 +21,9 @@
     <developers>
         <developer/>
     </developers>
+    <modules>
+        <module>post-service</module>
+    </modules>
     <scm>
         <connection/>
         <developerConnection/>
