@@ -134,7 +134,7 @@ public class PostTests {
                 .content("Content...")
                 .userId((long) 123456)
                 .category(Category.ALUMNI)
-                .stateString("DRAFTED")
+                .state("DRAFTED")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/post")
@@ -152,7 +152,7 @@ public class PostTests {
                 .content("Content...")
                 .userId((long) 123456)
                 .category(Category.ALUMNI)
-                .stateString("SUBMITTED")
+                .state("SUBMITTED")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/post")
@@ -170,7 +170,7 @@ public class PostTests {
                 .content("Content...")
                 .userId((long) 123456)
                 .category(Category.ALUMNI)
-                .stateString("PUBLISHED")
+                .state("PUBLISHED")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/post")
@@ -186,7 +186,7 @@ public class PostTests {
                 .content("Content...")
                 .userId((long) 123456)
                 .category(Category.ALUMNI)
-                .stateString("NOSUCHSTATE")
+                .state("NOSUCHSTATE")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/post")

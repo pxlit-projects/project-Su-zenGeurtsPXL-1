@@ -41,14 +41,14 @@ public class PostService implements IPostService {
 
     @Override
     public PostResponse createPost(PostRequest postRequest) {
-        logger.info("Creating post with state" + postRequest.getStateString());
+        logger.info("Creating post with state" + postRequest.getState());
         State state;
-        if (postRequest.getStateString() == null) {
+        if (postRequest.getState() == null) {
             logger.info("Using default state");
             state = State.DRAFTED;
         } else {
             try {
-                state = State.valueOf(postRequest.getStateString());
+                state = State.valueOf(postRequest.getState());
                 if (state == State.PUBLISHED) {
                     logger.error("PUBLISHED state not allowed");
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post cannot be published before approval.");
