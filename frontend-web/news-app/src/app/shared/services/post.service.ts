@@ -7,27 +7,11 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class PostService {
-  api: string = 'http://localhost:8081/api/post/';
+  api: string = 'http://localhost:8081/api/post';
   http: HttpClient = inject(HttpClient);
 
-  getPosts(): Observable<Post[]>  {
+  getPosts(): Observable<Post[]> {
+    console.log("Fetching posts...");
     return this.http.get<Post[]>(this.api);
   }
-
-  getAllPosts(): void {
-    console.log("Getting all posts...");
-    this.http.get(this.api, {responseType: "text"})
-      .subscribe({
-        next: (data: string) => {
-          console.log(data);
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      })
-  }
-
-  // addPost(newPost: Post) {
-  //   this.posts.push(newPost);
-  // }
 }
