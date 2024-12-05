@@ -1,12 +1,12 @@
 <div [ngClass]="{'border-2 border-yellow-500': post.state === 'SUBMITTED'}" class="max-w-md mx-auto bg-white rounded-xl overflow-hidden shadow-md">
-  <img class="w-full h-36 object-cover" [src]="post.category + '.png'" alt="Card image">
+  <img class="w-full h-36 object-cover" [src]="'post-backgrounds/' + post.category + '.png'" alt="Card image">
 
   <div class="p-6">
     <h2 class="font-bold text-xl mb-2">{{post.title}}{{post.id}}</h2>
     <p class="text-gray-700 text-base">
       {{post.category}}
     </p>
-    <button (click)="openPost()" class="bg-green-500 hover:bg-green-700 text-white float-right font-bold mt-4 mb-4 py-2 px-2 rounded">
+    <button (click)="openPost()" class="bg-pxlGreen hover:bg-black text-white float-right font-bold mt-4 mb-4 py-2 px-2 rounded">
       Read
     </button>
   </div>
