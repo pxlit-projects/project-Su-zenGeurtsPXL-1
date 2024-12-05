@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class PostService {
-  api: string = 'http://localhost:8081/api/post';
+  api: string = '/post/api/post';
   http: HttpClient = inject(HttpClient);
 
   getPosts(): Observable<Post[]> {
@@ -15,3 +15,4 @@ export class PostService {
     return this.http.get<Post[]>(this.api);
   }
 }
+

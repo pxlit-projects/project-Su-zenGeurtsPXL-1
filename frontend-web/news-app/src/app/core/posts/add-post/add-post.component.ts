@@ -1,7 +1,10 @@
-import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Post} from "../../../shared/models/post.model";
 import {NgClass} from "@angular/common";
+import {Router} from "@angular/router";
+import {PostService} from "../../../shared/services/post.service";
+
 @Component({
   selector: 'app-add-post',
   standalone: true,
@@ -10,10 +13,11 @@ import {NgClass} from "@angular/common";
   styleUrl: './add-post.component.css'
 })
 export class AddPostComponent {
+  postService: PostService = inject(PostService);
   fb: FormBuilder = inject(FormBuilder);
-  @Output() addPost = new EventEmitter<Post>();
+  router: Router = inject(Router);
+
   postForm: FormGroup = this.fb.group({
-    id: [1],
     title: ['', Validators.required],
     content: ['', Validators.required],
     userId: [123],
@@ -22,12 +26,17 @@ export class AddPostComponent {
     state: ['DRAFTED'],
     imageUrl: ["ACADEMIC.png" ],
   });
+
   onSubmit() {
     console.log('Adding post...');
-    this.postForm.value.imageUrl = this.postForm.value.category + ".png";
+
     const newPost: Post = {
       ...this.postForm.value
     };
-    this.addPost.emit(newPost);
+
+    // this.postService.addPost(newPost).subscribe(post => {
+    //   this.postForm.reset();
+    //   this.router.navigate(['/posts']);
+    // });
   }
 }
