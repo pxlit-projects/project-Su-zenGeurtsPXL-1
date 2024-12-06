@@ -11,7 +11,6 @@ export class PostService {
   http: HttpClient = inject(HttpClient);
 
   getPosts(): Observable<Post[]> {
-    console.log("Fetching posts...");
     return this.http.get<Post[]>(this.api);
   }
 }

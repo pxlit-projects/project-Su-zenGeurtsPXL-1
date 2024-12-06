@@ -13,7 +13,6 @@ public class CorsConfig {
         corsConfig.addAllowedMethod("*");
         corsConfig.addAllowedHeader("*");
         corsConfig.setAllowCredentials(true);
-        CorsWebFilter corsWebFilter = new CorsWebFilter(source -> corsConfig);
-        return corsWebFilter;
+        return new CorsWebFilter(source -> corsConfig);
     }
 }

@@ -1,9 +1,9 @@
 import {Component, inject, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
+import {AsyncPipe} from "@angular/common";
 import {PostItemComponent} from "../post-item/post-item.component";
 import {Post} from "../../../shared/models/post.model";
 import {PostService} from "../../../shared/services/post.service";
-import {Observable} from "rxjs";
-import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-post-list',
@@ -15,7 +15,6 @@ import {AsyncPipe} from "@angular/common";
 
 export class PostListComponent implements OnInit {
   posts$!: Observable<Post[]>;
-
   postService: PostService = inject(PostService);
 
   ngOnInit(): void {
@@ -24,9 +23,5 @@ export class PostListComponent implements OnInit {
 
   fetchPosts(): void {
     this.posts$ = this.postService.getPosts();
-  }
-
-  processAdd(newPost: Post){
-  //   this.postService.addPost(newPost);
   }
 }
