@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        pxlGreen: '#58a518'
+        pxlGreen: '#58a518',
+        pxlGreenH: '#468413'
       }
     },
   },

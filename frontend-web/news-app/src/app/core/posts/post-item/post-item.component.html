@@ -1,4 +1,4 @@
-<div [ngClass]="{'border-2 border-yellow-500': post.state === 'SUBMITTED'}" class="max-w-md mx-auto bg-white rounded-xl overflow-hidden shadow-md">
+<div [ngClass]="{'border-2 border-yellow-500': post.state === 'SUBMITTED'}" class="max-w-md mx-auto bg-white rounded overflow-hidden shadow-md">
   <img class="w-full h-36 object-cover" [src]="'post-backgrounds/' + post.category + '.png'" alt="Card image">
   <div class="p-6">
     <p class="text-gray-400 text-sm my-auto mb-1">{{transformDate(post.createdAt)}}</p>
