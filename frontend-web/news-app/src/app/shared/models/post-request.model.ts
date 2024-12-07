@@ -1,9 +1,6 @@
-export interface Post {
-  id: number;
+export interface PostRequest {
   title: string;
   content: string;
   userId: number;
   category: string;
-  createdAt: string;
-  state: string;
 }

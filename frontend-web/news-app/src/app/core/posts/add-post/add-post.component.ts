@@ -1,42 +1,54 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {Post} from "../../../shared/models/post.model";
-import {NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {Router} from "@angular/router";
+import {Observable} from "rxjs";
+
+import {PostItemComponent} from "../post-item/post-item.component";
+import {PostRequest} from "../../../shared/models/post-request.model";
 import {PostService} from "../../../shared/services/post.service";
+
 
 @Component({
   selector: 'app-add-post',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass],
+  imports: [ReactiveFormsModule, NgClass, AsyncPipe, PostItemComponent],
   templateUrl: './add-post.component.html',
   styleUrl: './add-post.component.css'
 })
-export class AddPostComponent {
+export class AddPostComponent implements OnInit{
+  categories$!: Observable<string[]>;
   postService: PostService = inject(PostService);
   fb: FormBuilder = inject(FormBuilder);
   router: Router = inject(Router);
 
   postForm: FormGroup = this.fb.group({
-    title: ['', Validators.required],
+    title: ['', [Validators.required, Validators.maxLength(130)]],
     content: ['', Validators.required],
     userId: [123],
-    category: ['', Validators.required],
-    createdAt: [new Date(Date.now())],
-    state: ['DRAFTED'],
-    imageUrl: ["ACADEMIC.png" ],
+    category: ['', Validators.required]
   });
 
-  onSubmit() {
-    console.log('Adding post...');
+  ngOnInit(): void {
+    this.fetchCategories();
+  }
 
-    const newPost: Post = {
+  fetchCategories(): void {
+    this.categories$ = this.postService.getCategories();
+  }
+
+  onSubmit() {
+    const newPost: PostRequest = {
       ...this.postForm.value
     };
 
-    // this.postService.addPost(newPost).subscribe(post => {
-    //   this.postForm.reset();
-    //   this.router.navigate(['/posts']);
-    // });
+    this.postService.addPost(newPost).subscribe(() => {
+      this.postForm.reset();
+      this.router.navigate(['/posts']);
+    });
+  }
+
+  toPascalCasing(category: string): string {
+    return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
   }
 }
