@@ -17,4 +17,9 @@ export class PostItemComponent {
   openPost(): void {
     console.log(this.post);
   }
+
+  transformDate(date: string): string {
+    const dateDate = new Date(date);
+    return dateDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  }
 }
