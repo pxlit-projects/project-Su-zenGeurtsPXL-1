@@ -2,7 +2,7 @@
   <h1 class="text-2xl font-bold mb-8">Create new post</h1>
   <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
     <div class="mb-4">
-      <label for="title" class="block text-gray-700 text-sm mb-2">Title*</label>
+      <label for="title" class="block text-sm/6 font-medium text-gray-900 mb-1">Title</label>
       <input type="text" id="title" formControlName="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
       @if (postForm.get('title')?.touched && postForm.get('title')?.hasError('required')){
         <div class="text-red-500 text-sm mt-1">Title is required</div>
@@ -12,7 +12,7 @@
       }
     </div>
     <div class="mb-4">
-      <label for="content" class="block text-gray-700 text-sm mb-2">Content*</label>
+      <label for="content" class="block text-sm/6 font-medium text-gray-900 mb-1">Content</label>
       <textarea name="content" id="content" formControlName="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
       @if (postForm.get('content')?.touched && postForm.get('content')?.hasError('required')){
         <div class="text-red-500 text-sm mt-1">Content is required</div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="mb-4">
-      <label for="category" class="block text-gray-700 text-sm mb-2">Category*</label>
+      <label for="category" class="block text-sm/6 font-medium text-gray-900 mb-1">Category</label>
       <select formControlName="category" id="category" class="shadow appearance-none border w-full py-2 px-3 text-gray-700 leading-tight rounded focus:outline-none focus:shadow-outline">
         @for(category of categories$ | async; track category) {
           <option [value]="category">{{toPascalCasing(category)}}</option>
@@ -34,7 +34,7 @@
             [ngClass]="{'opacity-50 hover:bg-pxlGreen hover:opacity-50 cursor-not-allowed': !postForm.valid}" [disabled]="!postForm.valid">
       Save
     </button>
-    <button type="button" class=" text-black hover:text-pxlGreen font-bold py-2 px-4 mb-2 focus:outline-none focus:shadow-outline">
+    <button (click)="cancel()" class=" text-black hover:text-pxlGreen font-bold py-2 px-4 mb-2 focus:outline-none focus:shadow-outline">
       Cancel
     </button>
   </form>

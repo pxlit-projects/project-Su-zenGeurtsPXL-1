@@ -37,6 +37,10 @@ export class AddPostComponent implements OnInit{
     this.categories$ = this.postService.getCategories();
   }
 
+  cancel() {
+    this.router.navigate(['/posts']);
+  }
+
   onSubmit() {
     const newPost: PostRequest = {
       ...this.postForm.value
