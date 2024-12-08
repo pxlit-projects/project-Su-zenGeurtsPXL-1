@@ -1,11 +1,10 @@
 import { CanDeactivateFn } from '@angular/router';
-import {AddPostComponent} from "./core/posts/add-post/add-post.component";
+import { AddPostComponent } from './core/posts/add-post/add-post.component';
 
-export const confirmLeaveGuard: CanDeactivateFn<AddPostComponent> = (component) => {
-  if(component.postForm.dirty){
-    // TODO: Fix styling (https://tailwindui.com/components/application-ui/overlays/modal-dialogs)
+export const confirmLeaveGuard: CanDeactivateFn<AddPostComponent> = async (component) => {
+  if (component.postForm.dirty) {
     return window.confirm("Are you sure you want to leave this page?");
-  }else{
+  } else {
     return true;
   }
 };
