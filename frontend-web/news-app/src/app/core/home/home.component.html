@@ -1,0 +1,19 @@
+<div class="grid min-h-full place-items-center sm:py-32 lg:px-8">
+  <div class="text-center px-5 py-5  rounded">
+    <img class="m-auto" src="pxl_logo.png" alt="pxl logo" width="100" height="100">
+    <h1 class="mt-4 text-balance text-5xl font-semibold tracking-tight text-black sm:text-7xl">PXL News</h1>
+    <p class="mt-6 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">Full-stack application for managing and publishing internal news articles within an organization.</p>
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <a [routerLink]="['/posts']" class="rounded bg-pxlGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pxlGreenH">Go to posts</a>
+      @if (localStorage.getItem('userId') == null){
+        <a [routerLink]="['/login']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
+          Sign in
+          <span aria-hidden="true">→</span></a>
+      } @else {
+        <a [routerLink]="['/myPosts']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
+          Go to my posts
+          <span aria-hidden="true">→</span></a>
+      }
+    </div>
+  </div>
+</div>
