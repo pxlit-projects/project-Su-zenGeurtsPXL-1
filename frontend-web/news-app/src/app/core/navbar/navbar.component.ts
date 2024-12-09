@@ -39,6 +39,7 @@ export class NavbarComponent implements OnInit{
     this.hiddenUserMenu = true;
     localStorage.removeItem('userId');
     localStorage.removeItem('userFullName');
+    localStorage.removeItem('userRole');
   }
 
 

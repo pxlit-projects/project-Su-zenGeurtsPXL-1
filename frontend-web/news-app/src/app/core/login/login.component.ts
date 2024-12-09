@@ -38,6 +38,7 @@ export class LoginComponent{
       if (user != null) {
         localStorage.setItem('userId', user.id.toString());
         localStorage.setItem('userFullName', user.fullName);
+        localStorage.setItem('userRole', user.role);
         this.loginForm.reset();
         this.router.navigate(['/posts']);
       } else {

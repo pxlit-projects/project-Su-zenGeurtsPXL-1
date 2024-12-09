@@ -40,7 +40,8 @@
 
 
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-        @if (localStorage.getItem('userId') != null){
+        @if (localStorage.getItem('userId') != null && localStorage.getItem('userRole') === 'editor'){
+<!--          TODO: only show when correct role -->
           <button (click)="addPost()"  type="button" class="relative ml-3 flex bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             AddPost
           </button>
@@ -71,8 +72,10 @@
             <div [hidden]="hiddenUserMenu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
               <!-- Active: "bg-gray-100 outline-none", Not Active: "" f3f4f6 -->
               <div class="block px-4 py-2 text-sm text-black border-b-2 border-b-gray-100">{{localStorage.getItem('userFullName')}}</div>
-              <a href="/myPosts" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">My posts</a>
-              <a (click)="logout()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+              @if (localStorage.getItem('userRole') === 'editor'){
+                <a href="/myPosts" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">My posts</a>
+              }
+                <a (click)="logout()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>
           }
         </div>
