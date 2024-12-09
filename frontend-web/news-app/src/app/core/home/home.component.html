@@ -9,7 +9,7 @@
         <a [routerLink]="['/login']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
           Sign in
           <span aria-hidden="true">→</span></a>
-      } @else {
+      } @else if (localStorage.getItem('userRole') === 'editor'){
         <a [routerLink]="['/myPosts']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
           Go to my posts
           <span aria-hidden="true">→</span></a>

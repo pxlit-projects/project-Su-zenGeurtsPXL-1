@@ -1,15 +1,12 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Injectable} from '@angular/core';
 import {User} from "../models/user.model";
 import {UserRequest} from "../models/user-request.model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
-  api: string = 'api/users';
-  http: HttpClient = inject(HttpClient);
 
+export class AuthenticationService {
   private users: User[] = [
     { id: 1, username: 'milan', fullName: 'Milan Dewaele', password: 'ed123', role: 'editor' },
     { id: 2, username: 'lara', fullName: 'Lara Peeters', password: 'ed123', role: 'editor' },
