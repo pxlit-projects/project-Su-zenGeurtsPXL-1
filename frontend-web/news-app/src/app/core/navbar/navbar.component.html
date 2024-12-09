@@ -41,7 +41,6 @@
 
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         @if (localStorage.getItem('userId') != null && localStorage.getItem('userRole') === 'editor'){
-<!--          TODO: only show when correct role -->
           <button (click)="addPost()"  type="button" class="relative ml-3 flex bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
             AddPost
           </button>
