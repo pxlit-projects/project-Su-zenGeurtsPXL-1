@@ -24,6 +24,12 @@ export class PostDetailComponent implements OnDestroy {
   sub!: Subscription;
   router: Router = inject(Router);
 
+  submit() {
+    this.postService.submitPost(this.id, Number(localStorage.getItem('userId'))).subscribe(() => {
+      this.router.navigate(['/post/mine']);
+    });
+  }
+
   ngOnDestroy(): void {
     if(this.sub){
       this.sub.unsubscribe();

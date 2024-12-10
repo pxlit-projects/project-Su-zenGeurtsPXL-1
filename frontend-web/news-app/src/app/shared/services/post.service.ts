@@ -24,6 +24,10 @@ export class PostService {
     return this.http.get<string[]>(this.api + '/category');
   }
 
+  getPublishedPosts(): Observable<Post[]> {
+    return this.http.get<Post[]>(this.api + '/published');
+  }
+
   getPostsByUserId(userId: string | null): Observable<Post[]> {
     return this.http.get<Post[]>(this.api + "/user/" + userId);
   }
@@ -34,6 +38,10 @@ export class PostService {
 
   submitPost(id: number, userId: number): Observable<void> {
     return this.http.post<void>(this.api + "/submit/" + id, userId);
+  }
+
+  editPost(id: number, post: PostRequest): Observable<Post> {
+    return this.http.put<Post>(this.api + "/" + id, post);
   }
 
   public transformDate(date: string): string {

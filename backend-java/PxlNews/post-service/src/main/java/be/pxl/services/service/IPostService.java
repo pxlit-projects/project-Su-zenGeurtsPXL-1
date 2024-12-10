@@ -18,4 +18,8 @@ public interface IPostService {
     List<PostResponse> findPostsByUserId(Long userId);
 
     void submit(Long id, Long userId);
+
+    PostResponse updatePost(Long id, PostRequest postRequest);
+
+    List<PostResponse> findPublishedPosts();
 }

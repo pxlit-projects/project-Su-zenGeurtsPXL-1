@@ -23,6 +23,6 @@ export class PostListComponent implements OnInit {
   }
 
   fetchPosts(): void {
-    this.posts$ = this.postService.getPosts();
+    this.posts$ = this.postService.getPublishedPosts();
   }
 }

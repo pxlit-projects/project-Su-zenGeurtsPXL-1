@@ -8,25 +8,21 @@
   <div class=" px-6 py-4">
     <div class="pb-2">
       <span class="inline-flex items-center rounded bg-pxlGreen bg-opacity-20 px-2 py-1 text-sm font-medium text-pxlGreen ring-1 ring-inset ring-pxlGreen">{{postService.toPascalCasing(post.category)}}</span>
-      <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
-            [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
-     'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED',
-     'bg-pxlGreen text-pxlGreen ring-pxlGreen': post.state === 'APPROVED',
-'bg-red-500 text-red-500 ring-red-500': post.state === 'REJECTED'}"
-      >{{postService.toPascalCasing(post.state)}}</span>
+      @if (post.state !== 'PUBLISHED') {
+        <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
+              [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
+       'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED',
+       'bg-pxlGreen text-pxlGreen ring-pxlGreen': post.state === 'APPROVED',
+  'bg-red-500 text-red-500 ring-red-500': post.state === 'REJECTED'}"
+        >{{postService.toPascalCasing(post.state)}}</span>
+      }
     </div>
     <p class="text-gray-500 font-medium text-sm my-auto mb-1">By {{authenticationService.getUserById(post.userId)?.fullName}} | {{postService.transformDate(post.createdAt)}}</p>
     <p class="text-gray-500 font-medium text-sm my-auto mb-1"></p>
     <h1 class="text-black font-bold text-xl my-auto mb-2 min-h-40">{{post.title}}</h1>
-    @if (post.state === 'published') {
-      <button [routerLink]="['/post',post.id]" routerLinkActive="router-link-active" class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH">
-        Read
-      </button>
-    } @else {
-      <button [routerLink]="['/post/mine',post.id]" routerLinkActive="router-link-active" class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH">
-        Read
-      </button>
-    }
+    <button [routerLink]="[post.id]" class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH">
+      Read
+    </button>
 
   </div>
 </div>

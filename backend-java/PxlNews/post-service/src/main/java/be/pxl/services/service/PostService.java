@@ -46,12 +46,38 @@ public class PostService implements IPostService {
     }
 
     @Override
+    public List<PostResponse> findPublishedPosts() {
+        logger.info("Getting published posts");
+        return postRepository.findByState(State.PUBLISHED)
+                .stream()
+                .map(this::mapToPostResponse)
+                .toList();
+    }
+
+    @Override
     public List<PostResponse> findPostsByUserId(Long userId) {
         logger.info("Getting post with userId " + userId);
         return postRepository.findByUserId(userId)
                 .stream()
                 .map(this::mapToPostResponse)
                 .toList();
+    }
+
+    @Override
+    public PostResponse createPost(PostRequest postRequest) {
+        logger.info("Creating post");
+
+        Post post = Post.builder()
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .userId(postRequest.getUserId())
+                .category(postRequest.getCategory())
+                .createdAt(LocalDateTime.now())
+                .state(State.DRAFTED)
+                .build();
+
+        logger.info("Saving post");
+        return mapToPostResponse(postRepository.save(post));
     }
 
     @Override
@@ -75,20 +101,19 @@ public class PostService implements IPostService {
         post.setState(State.SUBMITTED);
         postRepository.save(post);
     }
+
     @Override
-    public PostResponse createPost(PostRequest postRequest) {
-        logger.info("Creating post");
+    public PostResponse updatePost(Long id, PostRequest postRequest) {
+        logger.info("Updating post");
 
-        Post post = Post.builder()
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .userId(postRequest.getUserId())
-                .category(postRequest.getCategory())
-                .createdAt(LocalDateTime.now())
-                .state(State.DRAFTED)
-                .build();
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
-        logger.info("Saving post");
+        if (!post.getUserId().equals(postRequest.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + postRequest.getUserId() + " cannot submit this post.");
+        }
+
+        post.setContent(postRequest.getContent());
         return mapToPostResponse(postRepository.save(post));
     }
 

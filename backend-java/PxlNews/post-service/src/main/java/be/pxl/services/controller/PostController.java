@@ -34,6 +34,12 @@ public class PostController {
         return postService.findAllCategories();
     }
 
+    @GetMapping(path = "/published")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> getPublishedPosts() {
+        return postService.findPublishedPosts();
+    }
+
     @GetMapping(path = "/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<PostResponse> getPostsByUserId(@PathVariable Long userId) {
@@ -50,5 +56,11 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public void submitPost(@PathVariable Long id, @RequestBody Long userId) {
         postService.submit(id, userId);
+    }
+
+    @PutMapping(path = "{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponse editPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
+        return postService.updatePost(id, postRequest);
     }
 }

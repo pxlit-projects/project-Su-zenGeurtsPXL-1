@@ -7,8 +7,8 @@ import {confirmLeaveGuard} from "./confirm-leave.guard";
 import {MyPostListComponent} from "./core/posts/my-post-list/my-post-list.component";
 import {HomeComponent} from "./core/home/home.component";
 import {PostDetailComponent} from "./core/posts/post-detail/post-detail.component";
-import {MyPostDetailComponent} from "./core/posts/my-post-detail/my-post-detail.component";
 import {AuthGuard} from "./auth.guard";
+import {EditPostComponent} from "./core/posts/edit-post/edit-post.component";
 
 export const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -17,7 +17,8 @@ export const routes: Routes = [
   {path: 'post', component: PostListComponent},
   {path: 'post/mine', component: MyPostListComponent, canActivate: [AuthGuard]},
   {path: 'addPost', component: AddPostComponent, canDeactivate: [confirmLeaveGuard]},
+  {path: 'editPost/:id', component: EditPostComponent, canDeactivate: [confirmLeaveGuard]},
   {path: 'post/:id', component: PostDetailComponent},
-  {path: 'post/mine/:id', component: MyPostDetailComponent, canActivate: [AuthGuard]},
+  {path: 'post/mine/:id', component: PostDetailComponent, canActivate: [AuthGuard]},
   {path: '**', component: PageNotFoundComponent},
 ];
