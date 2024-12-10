@@ -6,23 +6,30 @@ import {PostItemComponent} from "../post-item/post-item.component";
 import {Post} from "../../../shared/models/post.model";
 import {PostService} from "../../../shared/services/post.service";
 
+import {FilterComponent} from "../filter/filter.component";
+import {Filter} from "../../../shared/models/filter.model";
+
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [PostItemComponent, AsyncPipe],
+  imports: [PostItemComponent, FilterComponent, AsyncPipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
 
 export class PostListComponent implements OnInit {
-  posts$!: Observable<Post[]>;
+  filteredPosts$!: Observable<Post[]>;
   postService: PostService = inject(PostService);
 
   ngOnInit(): void {
     this.fetchPosts();
   }
 
+  handleFilter(filter: Filter) {
+    this.filteredPosts$ = this.postService.filterPosts(filter);
+  }
+
   fetchPosts(): void {
-    this.posts$ = this.postService.getPublishedPosts();
+    this.filteredPosts$ = this.postService.getPublishedPosts();
   }
 }

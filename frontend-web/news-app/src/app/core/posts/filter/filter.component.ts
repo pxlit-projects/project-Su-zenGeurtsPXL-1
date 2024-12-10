@@ -12,14 +12,14 @@ import {Filter} from "../../../shared/models/filter.model";
 })
 
 export class FilterComponent {
-  filter: Filter = { name: '', city: '', vat: undefined };
+  filter: Filter = { content: '', author: '', category: '' };
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
   onSubmit(form: any) {
     if (form.valid) {
-      this.filter.name = this.filter.name.toLowerCase();
-      this.filter.city = this.filter.city.toLowerCase();
+      this.filter.content = this.filter.content.toLowerCase();
+      this.filter.author = this.filter.author.toLowerCase();
       this.filterChanged.emit(this.filter);
     }
   }

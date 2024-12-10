@@ -7,7 +7,6 @@ import {Observable} from "rxjs";
 import {PostItemComponent} from "../post-item/post-item.component";
 import {PostRequest} from "../../../shared/models/post-request.model";
 import {PostService} from "../../../shared/services/post.service";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
 import {Post} from "../../../shared/models/post.model";
 
 
@@ -24,7 +23,6 @@ export class EditPostComponent implements OnInit{
   route: ActivatedRoute = inject(ActivatedRoute);
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
-  authenticationService: AuthenticationService = inject(AuthenticationService);
   post$: Observable<Post> = this.postService.getPost(this.id);
 
   fb: FormBuilder = inject(FormBuilder);

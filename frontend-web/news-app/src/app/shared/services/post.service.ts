@@ -1,9 +1,11 @@
 import {inject, Injectable} from '@angular/core';
 import {Post} from "../models/post.model";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import { environment } from '../../../environments/environment';
 import {PostRequest} from "../models/post-request.model";
+import {Filter} from "../models/filter.model";
+import {AuthenticationService} from "./authentication.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,13 @@ import {PostRequest} from "../models/post-request.model";
 export class PostService {
   api: string = environment.apiUrl + '/post/api/post';
   http: HttpClient = inject(HttpClient);
+  authenticationService: AuthenticationService = inject(AuthenticationService);
+
+  filterPosts(filter: Filter): Observable<Post[]> {
+    return this.http.get<Post[]>(this.api + '/published').pipe(
+      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
+    );
+  }
 
   getPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(this.api);
@@ -51,5 +60,20 @@ export class PostService {
 
   public toPascalCasing(category: string): string {
     return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+  }
+
+
+  public isPostMatchingFilter(post: Post, filter: Filter): boolean {
+
+    const user = this.authenticationService.getUserById(post.userId);
+    const matchesContent = post.content.toLowerCase().includes(filter.content.toLowerCase());
+    // @ts-ignore
+    console.log(user.fullName);
+    console.log(filter.author.toLowerCase());
+    // @ts-ignore
+    const matchesAuthor = user.fullName.toLowerCase().includes(filter.author.toLowerCase());
+    const matchesCategory = filter.category ? post.category.toLowerCase() === filter.category.toLowerCase() : true;
+
+    return matchesContent && matchesAuthor && matchesCategory;
   }
 }
