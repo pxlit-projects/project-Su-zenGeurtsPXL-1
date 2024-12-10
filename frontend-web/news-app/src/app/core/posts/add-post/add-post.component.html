@@ -23,7 +23,7 @@
       <label for="category" class="block text-sm/6 font-medium text-gray-900 mb-1">Category</label>
       <select formControlName="category" id="category" class="shadow appearance-none border w-full py-2 px-3 text-gray-700 leading-tight rounded focus:outline-none focus:shadow-outline">
         @for(category of categories$ | async; track category) {
-          <option [value]="category">{{toPascalCasing(category)}}</option>
+          <option [value]="category">{{postService.toPascalCasing(category)}}</option>
         }
       </select>
       @if(postForm.get('category')?.touched && postForm.get('category')?.hasError('required')){

@@ -1,8 +1,7 @@
-<h1>My posts TBC</h1>
-<!--<div class="md:container md:mx-auto container mx-auto my-10 px-2">-->
-<!--  <div class="grid grid-cols-3 gap-6">-->
-<!--    @for(post of posts$ | async; track post.id) {-->
-<!--      <app-post-item [post]="post"></app-post-item>-->
-<!--    }-->
-<!--  </div>-->
-<!--</div>-->
+<div class="md:container md:mx-auto container mx-auto my-10 px-2">
+  <div class="grid grid-cols-3 gap-6">
+    @for(post of posts$ | async; track post.id) {
+      <app-post-item [post]="post"></app-post-item>
+    }
+  </div>
+</div>

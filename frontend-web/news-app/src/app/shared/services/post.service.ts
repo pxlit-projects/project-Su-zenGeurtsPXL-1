@@ -16,11 +16,32 @@ export class PostService {
     return this.http.get<Post[]>(this.api);
   }
 
+  getPost(id: number): Observable<Post> {
+    return this.http.get<Post>(this.api + "/" + id);
+  }
+
   getCategories(): Observable<string[]> {
     return this.http.get<string[]>(this.api + '/category');
   }
 
+  getPostsByUserId(userId: string | null): Observable<Post[]> {
+    return this.http.get<Post[]>(this.api + "/user/" + userId);
+  }
+
   addPost(post: PostRequest): Observable<Post> {
-    return this.http.post<Post>(`${this.api}`, post);
+    return this.http.post<Post>(this.api, post);
+  }
+
+  submitPost(id: number, userId: number): Observable<void> {
+    return this.http.post<void>(this.api + "/submit/" + id, userId);
+  }
+
+  public transformDate(date: string): string {
+    const dateDate = new Date(date);
+    return dateDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  }
+
+  public toPascalCasing(category: string): string {
+    return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
   }
 }

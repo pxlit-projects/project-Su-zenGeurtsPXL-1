@@ -34,9 +34,21 @@ public class PostController {
         return postService.findAllCategories();
     }
 
+    @GetMapping(path = "/user/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> getPostsByUserId(@PathVariable Long userId) {
+        return postService.findPostsByUserId(userId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PostResponse addPost(@RequestBody PostRequest postRequest) {
         return postService.createPost(postRequest);
+    }
+
+    @PostMapping(path = "submit/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void submitPost(@PathVariable Long id, @RequestBody Long userId) {
+        postService.submit(id, userId);
     }
 }

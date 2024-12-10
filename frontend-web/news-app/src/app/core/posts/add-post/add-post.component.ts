@@ -38,7 +38,7 @@ export class AddPostComponent implements OnInit{
   }
 
   cancel() {
-    this.router.navigate(['/posts']);
+    this.router.navigate(['/post/mine']);
   }
 
   onSubmit() {
@@ -48,11 +48,7 @@ export class AddPostComponent implements OnInit{
 
     this.postService.addPost(newPost).subscribe(() => {
       this.postForm.reset();
-      this.router.navigate(['/posts']);
+      this.router.navigate(['/post/mine']);
     });
-  }
-
-  toPascalCasing(category: string): string {
-    return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
   }
 }

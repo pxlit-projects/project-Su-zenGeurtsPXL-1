@@ -6,13 +6,18 @@ import {PageNotFoundComponent} from "./core/page-not-found/page-not-found.compon
 import {confirmLeaveGuard} from "./confirm-leave.guard";
 import {MyPostListComponent} from "./core/posts/my-post-list/my-post-list.component";
 import {HomeComponent} from "./core/home/home.component";
+import {PostDetailComponent} from "./core/posts/post-detail/post-detail.component";
+import {MyPostDetailComponent} from "./core/posts/my-post-detail/my-post-detail.component";
+import {AuthGuard} from "./auth.guard";
 
 export const routes: Routes = [
-  {path: 'posts', component: PostListComponent},
-  {path: 'myPosts', component: MyPostListComponent},
-  {path: 'addPost', component: AddPostComponent, canDeactivate: [confirmLeaveGuard]},
-  {path: 'login', component: LoginComponent},
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
-  {path: '**', component: PageNotFoundComponent}
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent},
+  {path: 'post', component: PostListComponent},
+  {path: 'post/mine', component: MyPostListComponent, canActivate: [AuthGuard]},
+  {path: 'addPost', component: AddPostComponent, canDeactivate: [confirmLeaveGuard]},
+  {path: 'post/:id', component: PostDetailComponent},
+  {path: 'post/mine/:id', component: MyPostDetailComponent, canActivate: [AuthGuard]},
+  {path: '**', component: PageNotFoundComponent},
 ];

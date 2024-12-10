@@ -1,0 +1,27 @@
+@if (post$ | async; as post){
+  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden my-10">
+    <div class="relative h-48 flex items-center justify-center overflow-hidden">
+      <img [ngSrc]="'post-backgrounds/' + post.category + '.png'" alt="Card Image" width="900" height="191" >
+    </div>
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2">{{post.title}}</div>
+      <p class="text-gray-500 font-medium text-sm my-auto mb-5">By {{authenticationService.getUserById(post.userId)?.fullName}} | {{postService.transformDate(post.createdAt)}}
+        <span class="inline-flex items-center rounded bg-pxlGreen bg-opacity-20 px-2 py-1 text-sm font-medium text-pxlGreen ring-1 ring-inset ring-pxlGreen ml-2">{{postService.toPascalCasing(post.category)}}</span>
+        <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
+              [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
+     'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED',
+     'bg-pxlGreen text-pxlGreen ring-pxlGreen': post.state === 'APPROVED',
+'bg-red-500 text-red-500 ring-red-500': post.state === 'REJECTED'}"
+        >{{postService.toPascalCasing(post.state)}}</span>
+      </p>
+      <p class="text-black text-justify mb-8">{{post.content}}</p>
+
+      @if (localStorage.getItem('userId') == post.userId.toString()) {
+        @if (post.state === 'DRAFTED') {
+          <button class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="submit()">Submit</button>
+        }
+      }
+      <button [routerLink]="['/post/mine']" routerLinkActive="router-link-active" class="w-full text-black font-bold py-2 px-2 rounded hover:text-pxlGreen">Back</button>
+     </div>
+  </div>
+}

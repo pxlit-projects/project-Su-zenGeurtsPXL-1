@@ -40,6 +40,7 @@ export class NavbarComponent implements OnInit{
     localStorage.removeItem('userId');
     localStorage.removeItem('userFullName');
     localStorage.removeItem('userRole');
+    this.router.navigate(['/post']);
   }
 
 

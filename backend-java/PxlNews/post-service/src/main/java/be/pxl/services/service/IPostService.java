@@ -14,4 +14,8 @@ public interface IPostService {
     PostResponse createPost(PostRequest postRequest);
 
     List<Category> findAllCategories();
+
+    List<PostResponse> findPostsByUserId(Long userId);
+
+    void submit(Long id, Long userId);
 }

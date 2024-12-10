@@ -19,10 +19,10 @@ export class MyPostListComponent implements OnInit {
   postService: PostService = inject(PostService);
 
   ngOnInit(): void {
-    this.fetchPosts();
+    this.fetchMyPosts();
   }
 
-  fetchPosts(): void {
-    this.posts$ = this.postService.getPosts();
+  fetchMyPosts(): void {
+    this.posts$ = this.postService.getPostsByUserId(localStorage.getItem("userId"));
   }
 }

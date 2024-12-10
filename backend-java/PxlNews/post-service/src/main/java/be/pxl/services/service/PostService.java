@@ -40,24 +40,44 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse createPost(PostRequest postRequest) {
-        logger.info("Creating post with state" + postRequest.getState());
-        State state;
-        if (postRequest.getState() == null) {
-            logger.info("Using default state");
-            state = State.DRAFTED;
-        } else {
-            try {
-                state = State.valueOf(postRequest.getState());
-                if (state == State.PUBLISHED) {
-                    logger.error("PUBLISHED state not allowed");
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post cannot be published before approval.");
-                }
-            } catch (IllegalArgumentException e) {
-                logger.error("Non-existent state");
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid state.");
-            }
+    public List<Category> findAllCategories() {
+        logger.info("Getting all categories");
+        return List.of(Category.values());
+    }
+
+    @Override
+    public List<PostResponse> findPostsByUserId(Long userId) {
+        logger.info("Getting post with userId " + userId);
+        return postRepository.findByUserId(userId)
+                .stream()
+                .map(this::mapToPostResponse)
+                .toList();
+    }
+
+    @Override
+    public void submit(Long id, Long userId) {
+        logger.info("Submitting post with id " + id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
+
+        if (!post.getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot submit this post.");
         }
+
+        if (post.getState() == State.SUBMITTED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already submitted.");
+        }
+
+        if (post.getState() == State.PUBLISHED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is published.");
+        }
+
+        post.setState(State.SUBMITTED);
+        postRepository.save(post);
+    }
+    @Override
+    public PostResponse createPost(PostRequest postRequest) {
+        logger.info("Creating post");
 
         Post post = Post.builder()
                 .title(postRequest.getTitle())
@@ -65,17 +85,11 @@ public class PostService implements IPostService {
                 .userId(postRequest.getUserId())
                 .category(postRequest.getCategory())
                 .createdAt(LocalDateTime.now())
-                .state(state)
+                .state(State.DRAFTED)
                 .build();
 
         logger.info("Saving post");
         return mapToPostResponse(postRepository.save(post));
-    }
-
-    @Override
-    public List<Category> findAllCategories() {
-        logger.info("Getting all categories");
-        return List.of(Category.values());
     }
 
     private PostResponse mapToPostResponse(Post post) {

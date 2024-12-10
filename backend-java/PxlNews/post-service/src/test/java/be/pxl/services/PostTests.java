@@ -59,7 +59,7 @@ public class PostTests {
             Post post = Post.builder()
                     .title("Post " + i)
                     .content("Content...")
-                    .userId((long) (i + 1))
+                    .userId((long)(i))
                     .category(Category.values()[i % Category.values().length])
                     .createdAt(LocalDateTime.now())
                     .state(State.DRAFTED)
@@ -74,7 +74,7 @@ public class PostTests {
     }
 
     @Test
-    public void getAllPosts_shouldReturnListOfPosts() throws Exception {
+    public void getAllPosts_shouldReturnListOfRequestedPosts() throws Exception {
         List<Post> expectedPosts = postRepository.findAll();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post"))
@@ -83,26 +83,22 @@ public class PostTests {
     }
 
     @Test
-    public void getPostById_shouldReturnPost() throws Exception {
-        List<Post> posts = postRepository.findAll();
-        Post expectedPost = posts.get(0);
-        int id = expectedPost.getId().intValue();
+    public void getPostById_shouldReturnRequestedPost() throws Exception {
+        Post expectedPost = postRepository.findAll().get(0);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId()))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedPost)));
     }
 
     @Test
-    public void getPostById_postIdDoesNotExist_ShouldReturnNotFound() throws Exception {
-        int nonExistentId = 9999;
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + nonExistentId))
+    public void getPostById_withInvalidId_ShouldReturnNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + 9999))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void getAllPostCategories_shouldReturnAllCategories() throws Exception {
+    public void getAllPostCategories_shouldReturnListOfCategories() throws Exception {
         List<Category> expectedCategories = List.of(Category.values());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/category"))
@@ -111,7 +107,17 @@ public class PostTests {
     }
 
     @Test
-    public void addPost_withoutState_shouldCreateDraftedPost() throws Exception {
+    public void getPostsByUserId_shouldReturnListOfRequestedPosts() throws Exception {
+        long userId = 5;
+        List<Post> expectedPosts = postRepository.findByUserId(userId);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/user/" + userId))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedPosts)));
+    }
+
+    @Test
+    public void addPost_shouldCreateDraftedPost() throws Exception {
         PostRequest postRequest = PostRequest.builder()
                 .title("Post title")
                 .content("Content...")
@@ -128,21 +134,60 @@ public class PostTests {
     }
 
     @Test
-    public void addPost_withState_DRAFTED_shouldCreateDraftedPost() throws Exception {
-        PostRequest postRequest = PostRequest.builder()
-                .title("Post title")
-                .content("Content...")
-                .userId((long) 123456)
-                .category(Category.ALUMNI)
-                .state("DRAFTED")
-                .build();
+    public void submitPost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        long id = post.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(post.getUserId())))
+                .andExpect(status().isOk());
+
+        Post updatedPost = postRepository.findById(id).orElseThrow();
+        assertEquals(State.SUBMITTED, updatedPost.getState());
+    }
+
+    @Test
+    public void submitPost_withInvalidId_shouldReturnNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + 9999)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postRequest)))
-                .andExpect(status().isCreated());
+                        .content(objectMapper.writeValueAsString(9999)))
+                .andExpect(status().isNotFound());
+    }
 
-        assertEquals(11, postRepository.findAll().size());
+    @Test
+    public void submitPost_withStateSubmitted_shouldReturnBadRequest() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.SUBMITTED);
+        postRepository.save(post);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(post.getUserId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void submitPost_withStatePublished_shouldReturnBadRequest() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.PUBLISHED);
+        postRepository.save(post);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(post.getUserId())))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void submitPost_withInvalidUserId_shouldReturnBadRequest() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        postRepository.save(post);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(post.getUserId() + 1)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

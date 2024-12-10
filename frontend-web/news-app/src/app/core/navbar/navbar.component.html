@@ -33,7 +33,7 @@
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <a [routerLink]="['/home']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">Home</a>
-            <a [routerLink]="['/posts']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">Posts</a>
+            <a [routerLink]="['/post']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">Posts</a>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@
               <!-- Active: "bg-gray-100 outline-none", Not Active: "" f3f4f6 -->
               <div class="block px-4 py-2 text-sm text-black border-b-2 border-b-gray-100">{{localStorage.getItem('userFullName')}}</div>
               @if (localStorage.getItem('userRole') === 'editor'){
-                <a href="/myPosts" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">My posts</a>
+                <a href="/post/mine" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">My posts</a>
               }
                 <a (click)="logout()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
             </div>

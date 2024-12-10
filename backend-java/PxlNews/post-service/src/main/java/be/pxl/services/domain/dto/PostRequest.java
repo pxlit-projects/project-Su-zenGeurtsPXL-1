@@ -15,5 +15,4 @@ public class PostRequest {
     private String content;
     private Long userId;
     private Category category;
-    private String state;
 }

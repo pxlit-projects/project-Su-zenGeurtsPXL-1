@@ -40,7 +40,7 @@ export class LoginComponent{
         localStorage.setItem('userFullName', user.fullName);
         localStorage.setItem('userRole', user.role);
         this.loginForm.reset();
-        this.router.navigate(['/posts']);
+        this.router.navigate(['/post']);
       } else {
         this.validLogin = true;
       }

@@ -4,13 +4,13 @@
     <h1 class="mt-4 text-balance text-5xl font-semibold tracking-tight text-black sm:text-7xl">PXL News</h1>
     <p class="mt-6 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">Full-stack application for managing and publishing internal news articles within an organization.</p>
     <div class="mt-10 flex items-center justify-center gap-x-6">
-      <a [routerLink]="['/posts']" class="rounded bg-pxlGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pxlGreenH">Go to posts</a>
+      <a [routerLink]="['/post']" class="rounded bg-pxlGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pxlGreenH">Go to posts</a>
       @if (localStorage.getItem('userId') == null){
         <a [routerLink]="['/login']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
           Sign in
           <span aria-hidden="true">→</span></a>
       } @else if (localStorage.getItem('userRole') === 'editor'){
-        <a [routerLink]="['/myPosts']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
+        <a [routerLink]="['/post/mine']"  class="text-sm font-semibold text-black hover:text-pxlGreen">
           Go to my posts
           <span aria-hidden="true">→</span></a>
       }
