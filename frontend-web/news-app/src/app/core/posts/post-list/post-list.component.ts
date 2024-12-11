@@ -30,10 +30,10 @@ export class PostListComponent implements OnInit {
   }
 
   handleFilter(filter: Filter) {
-    this.posts$ = this.postService.filterPosts(filter, this.mine);
+    this.posts$ =  this.mine ? this.postService.filterMyPosts(filter, localStorage.getItem('userId')) : this.postService.filterPublishedPosts(filter);
   }
 
   fetchPosts(): void {
-      this.posts$ = this.mine ? this.postService.getPostsByUserId(localStorage.getItem("userId")) : this.postService.getPublishedPosts();
+      this.posts$ = this.mine ? this.postService.getMyPosts(localStorage.getItem("userId")) : this.postService.getPublishedPosts();
   }
 }

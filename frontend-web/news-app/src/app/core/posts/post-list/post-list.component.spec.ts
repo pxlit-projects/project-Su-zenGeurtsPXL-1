@@ -13,12 +13,12 @@ describe('PostListComponent', () => {
   let postServiceMock: jasmine.SpyObj<PostService>;
   let routeMock: jasmine.SpyObj<ActivatedRoute>;
   const mockPosts: Post[] = [
-    new Post(1, 'Title1', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED'),
-    new Post(2, 'Title1', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')
+    new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED'),
+    new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')
   ];
 
   beforeEach(() => {
-    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getPostsByUserId', 'filterPosts']);
+    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'filterPublishedPosts']);
 
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('posts', {})] }
@@ -68,13 +68,13 @@ describe('PostListComponent', () => {
   it('should fetch posts by user id when "mine" is true', () => {
     routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
     localStorage.setItem('userId', '1');
-    postServiceMock.getPostsByUserId.and.returnValue(of(mockPosts));
+    postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
     component.fetchPosts();
 
-    expect(postServiceMock.getPostsByUserId).toHaveBeenCalledWith('1');
+    expect(postServiceMock.getMyPosts).toHaveBeenCalledWith('1');
     component.posts$.subscribe(data => {
       expect(data).toEqual(mockPosts);
     });
@@ -82,12 +82,12 @@ describe('PostListComponent', () => {
 
   it('should filter posts based on the filter criteria', () => {
     const filter: Filter = { content: 'con', author: 'Mi', category: 'ACA' };
-    const filteredPosts: Post[] = [new Post(1, 'Title1', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')];
-    postServiceMock.filterPosts.and.returnValue(of(filteredPosts));
+    const filteredPosts: Post[] = [new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')];
+    postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
 
     component.handleFilter(filter);
 
-    expect(postServiceMock.filterPosts).toHaveBeenCalledWith(filter, false);
+    expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);
     });

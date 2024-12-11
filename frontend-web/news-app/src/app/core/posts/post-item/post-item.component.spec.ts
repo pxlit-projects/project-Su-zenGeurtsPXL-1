@@ -11,7 +11,7 @@ describe('PostItemComponent', () => {
   let component: PostItemComponent;
   let fixture: ComponentFixture<PostItemComponent>;
   let postServiceMock: jasmine.SpyObj<PostService>;
-  const mockPost: Post = new Post(1, 'Title1', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED');
+  const mockPost: Post = new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED');
 
   beforeEach(() => {
     postServiceMock = jasmine.createSpyObj('PostService', ['toPascalCasing', 'transformDate']);
@@ -37,6 +37,6 @@ describe('PostItemComponent', () => {
     fixture.detectChanges();
 
     const debugElement = fixture.debugElement.query(By.css('h1'));
-    expect(debugElement.nativeElement.textContent).toContain('Title1');
+    expect(debugElement.nativeElement.textContent).toContain('Title');
   });
 });

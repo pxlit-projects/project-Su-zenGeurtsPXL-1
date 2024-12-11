@@ -15,19 +15,6 @@ export class PostService {
   http: HttpClient = inject(HttpClient);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
-  filterPosts(filter: Filter, mine: boolean): Observable<Post[]> {
-    let posts: Observable<Post[]>;
-    if (mine) {
-      posts = this.getPostsByUserId(localStorage.getItem('userId'));
-    } else {
-      posts = this.getPublishedPosts();
-    }
-
-    return posts.pipe(
-      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
-    );
-  }
-
   getPost(id: number): Observable<Post> {
     return this.http.get<Post>(this.api + "/" + id);
   }
@@ -40,7 +27,7 @@ export class PostService {
     return this.http.get<Post[]>(this.api + '/published');
   }
 
-  getPostsByUserId(userId: string | null): Observable<Post[]> {
+  getMyPosts(userId: string | null): Observable<Post[]> {
     return this.http.get<Post[]>(this.api + "/user/" + userId);
   }
 
@@ -56,19 +43,32 @@ export class PostService {
     return this.http.put<Post>(this.api + "/" + id, post);
   }
 
+  filterPublishedPosts(filter: Filter): Observable<Post[]> {
+    return this.getPublishedPosts().pipe(
+      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
+    );
+  }
+
+  filterMyPosts(filter: Filter, userId: string | null): Observable<Post[]> {
+    return this.getMyPosts(userId).pipe(
+      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
+    );
+  }
+
+
   public transformDate(date: string): string {
     const dateDate = new Date(date);
     return dateDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
   }
 
-  public toPascalCasing(category: string): string {
-    return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
+  public toPascalCasing(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   }
 
 
   public isPostMatchingFilter(post: Post, filter: Filter): boolean {
     const user = this.authenticationService.getUserById(post.userId);
-    if (user == null) return false;
+    if (user == undefined) return false;
 
     const matchesContent = this.checkInclusion(post.content, filter.content);
     const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
