@@ -1,6 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 import {AsyncPipe} from "@angular/common";
+import {ActivatedRoute, UrlSegment} from "@angular/router";
 
 import {PostItemComponent} from "../post-item/post-item.component";
 import {Post} from "../../../shared/models/post.model";
@@ -18,7 +19,10 @@ import {Filter} from "../../../shared/models/filter.model";
 })
 
 export class PostListComponent implements OnInit {
-  filteredPosts$!: Observable<Post[]>;
+  route: ActivatedRoute = inject(ActivatedRoute);
+  url: UrlSegment[] = this.route.snapshot.url;
+  mine: boolean = this.url.length == 2;
+  posts$!: Observable<Post[]>;
   postService: PostService = inject(PostService);
 
   ngOnInit(): void {
@@ -26,10 +30,10 @@ export class PostListComponent implements OnInit {
   }
 
   handleFilter(filter: Filter) {
-    this.filteredPosts$ = this.postService.filterPosts(filter);
+    this.posts$ = this.postService.filterPosts(filter, this.mine);
   }
 
   fetchPosts(): void {
-    this.filteredPosts$ = this.postService.getPublishedPosts();
+      this.posts$ = this.mine ? this.postService.getPostsByUserId(localStorage.getItem("userId")) : this.postService.getPublishedPosts();
   }
 }

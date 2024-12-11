@@ -221,10 +221,8 @@ public class PostTests {
     @Test
     public void updatePost_withInvalidId_shouldReturnNotFound() throws Exception {
         PostRequest postRequest = PostRequest.builder()
-                .title("Post title")
                 .content("Content...")
                 .userId((long) 123456)
-                .category(Category.ALUMNI)
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + 9999)
@@ -238,10 +236,42 @@ public class PostTests {
         Post post = postRepository.findAll().get(0);
 
         PostRequest postRequest = PostRequest.builder()
-                .title("Post title")
                 .content("Content...")
                 .userId(post.getUserId() + 1)
-                .category(Category.ALUMNI)
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updatePost_withStateSubmitted_shouldReturnBadRequest() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.SUBMITTED);
+        postRepository.save(post);
+
+        PostRequest postRequest = PostRequest.builder()
+                .content("Content...")
+                .userId(post.getUserId())
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updatePost_withStatePublished_shouldReturnBadRequest() throws Exception {
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.PUBLISHED);
+        postRepository.save(post);
+
+        PostRequest postRequest = PostRequest.builder()
+                .content("Content...")
+                .userId(post.getUserId())
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())

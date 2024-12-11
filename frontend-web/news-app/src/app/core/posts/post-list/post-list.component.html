@@ -1,8 +1,8 @@
-<app-filter (filterChanged)="handleFilter($event)"></app-filter>
+<app-filter (filterChanged)="handleFilter($event)" [mine]="mine"></app-filter>
 
 <div class="md:container md:mx-auto container mx-auto mb-10 px-2">
   <div class="grid grid-cols-3 gap-6">
-    @for(post of filteredPosts$ | async; track post.id) {
+    @for(post of posts$ | async; track post.id) {
       <app-post-item [post]="post"></app-post-item>
     }
   </div>

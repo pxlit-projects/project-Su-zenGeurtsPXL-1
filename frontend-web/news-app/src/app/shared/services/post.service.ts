@@ -15,14 +15,17 @@ export class PostService {
   http: HttpClient = inject(HttpClient);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
-  filterPosts(filter: Filter): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/published').pipe(
+  filterPosts(filter: Filter, mine: boolean): Observable<Post[]> {
+    let posts: Observable<Post[]>;
+    if (mine) {
+      posts = this.getPostsByUserId(localStorage.getItem('userId'));
+    } else {
+      posts = this.getPublishedPosts();
+    }
+
+    return posts.pipe(
       map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
     );
-  }
-
-  getPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api);
   }
 
   getPost(id: number): Observable<Post> {
@@ -64,16 +67,17 @@ export class PostService {
 
 
   public isPostMatchingFilter(post: Post, filter: Filter): boolean {
-
     const user = this.authenticationService.getUserById(post.userId);
-    const matchesContent = post.content.toLowerCase().includes(filter.content.toLowerCase());
-    // @ts-ignore
-    console.log(user.fullName);
-    console.log(filter.author.toLowerCase());
-    // @ts-ignore
-    const matchesAuthor = user.fullName.toLowerCase().includes(filter.author.toLowerCase());
-    const matchesCategory = filter.category ? post.category.toLowerCase() === filter.category.toLowerCase() : true;
+    if (user == null) return false;
+
+    const matchesContent = this.checkInclusion(post.content, filter.content);
+    const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
+    const matchesCategory = this.checkInclusion(post.category, filter.category);
 
     return matchesContent && matchesAuthor && matchesCategory;
+  }
+
+  public checkInclusion(item: string, filter: string): boolean {
+    return item.toLowerCase().includes(filter.toLowerCase());
   }
 }

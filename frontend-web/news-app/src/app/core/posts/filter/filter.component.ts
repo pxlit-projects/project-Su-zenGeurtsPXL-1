@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {Filter} from "../../../shared/models/filter.model";
 
@@ -12,14 +12,13 @@ import {Filter} from "../../../shared/models/filter.model";
 })
 
 export class FilterComponent {
+  @Input() mine!: boolean;
   filter: Filter = { content: '', author: '', category: '' };
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
   onSubmit(form: any) {
     if (form.valid) {
-      this.filter.content = this.filter.content.toLowerCase();
-      this.filter.author = this.filter.author.toLowerCase();
       this.filterChanged.emit(this.filter);
     }
   }

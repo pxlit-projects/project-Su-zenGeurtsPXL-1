@@ -39,14 +39,6 @@ export class EditPostComponent implements OnInit{
         content: post.content,
       });
     });
-
-    // document.addEventListener("DOMContentLoaded", () => {
-    //   let textArea = document.querySelector("textarea");
-    //   // @ts-ignore
-    //   textArea.style.height = "";
-    //   // @ts-ignore
-    //   textArea.style.height = textArea.scrollHeight + "px";
-    // });
   }
   cancel() {
     this.router.navigate(['/post/mine']);
@@ -57,9 +49,15 @@ export class EditPostComponent implements OnInit{
       ...this.postForm.value
     };
 
-    this.postService.editPost(this.id, editedPost).subscribe(() => {
-      this.postForm.reset();
-      this.router.navigate(['/post/mine/' + this.id]);
+    this.postService.editPost(this.id, editedPost).subscribe({
+      next: () => {
+        this.postForm.reset();
+        this.router.navigate(['/post/mine/' + this.id]);
+      },
+      error: (err) => {
+        let element = document.getElementById('errorMessage');
+        if (element) element.innerText = err.error.message;
+      }
     });
   }
 }

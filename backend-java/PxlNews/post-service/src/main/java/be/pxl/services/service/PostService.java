@@ -83,20 +83,7 @@ public class PostService implements IPostService {
     @Override
     public void submit(Long id, Long userId) {
         logger.info("Submitting post with id " + id);
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
-
-        if (!post.getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot submit this post.");
-        }
-
-        if (post.getState() == State.SUBMITTED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already submitted.");
-        }
-
-        if (post.getState() == State.PUBLISHED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is published.");
-        }
+        Post post = checksToUpdatePost(id, userId);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
@@ -106,15 +93,28 @@ public class PostService implements IPostService {
     public PostResponse updatePost(Long id, PostRequest postRequest) {
         logger.info("Updating post");
 
+        Post post = checksToUpdatePost(id, postRequest.getUserId());
+        post.setContent(postRequest.getContent());
+        return mapToPostResponse(postRepository.save(post));
+    }
+
+    private Post checksToUpdatePost(Long id, Long userId) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
-        if (!post.getUserId().equals(postRequest.getUserId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + postRequest.getUserId() + " cannot submit this post.");
+        if (!post.getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
         }
 
-        post.setContent(postRequest.getContent());
-        return mapToPostResponse(postRepository.save(post));
+        if (post.getState() == State.SUBMITTED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already submitted.");
+        }
+
+        if (post.getState() == State.PUBLISHED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already published.");
+        }
+
+        return post;
     }
 
     private PostResponse mapToPostResponse(Post post) {
