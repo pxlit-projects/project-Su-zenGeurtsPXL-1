@@ -1,7 +1,7 @@
-import {Component, OnDestroy, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import { Post } from '../../../shared/models/post.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable} from 'rxjs';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {PostService} from "../../../shared/services/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication.service";
@@ -13,7 +13,7 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
-export class PostDetailComponent implements OnDestroy, OnInit {
+export class PostDetailComponent implements OnInit {
   protected readonly localStorage = localStorage;
 
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -21,7 +21,6 @@ export class PostDetailComponent implements OnDestroy, OnInit {
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
   post$: Observable<Post> = this.postService.getPost(this.id);
-  sub!: Subscription;
   router: Router = inject(Router);
 
   ngOnInit(): void {
@@ -32,15 +31,15 @@ export class PostDetailComponent implements OnDestroy, OnInit {
     });
   }
 
-  submit() {
-    this.postService.submitPost(this.id, Number(localStorage.getItem('userId'))).subscribe(() => {
-      this.router.navigate(['/myPost']);
+  submitPost() {
+    this.postService.submitPost(this.id, Number(localStorage.getItem('userId'))).subscribe({
+      next: () => {
+        this.router.navigate(['/myPost']);
+      },
+      error: (err) => {
+        let element = document.getElementById('errorMessage');
+        if (element) element.innerText = err.error.message;
+      }
     });
-  }
-
-  ngOnDestroy(): void {
-    if(this.sub){
-      this.sub.unsubscribe();
-    }
   }
 }
