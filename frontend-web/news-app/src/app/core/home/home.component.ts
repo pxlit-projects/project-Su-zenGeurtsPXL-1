@@ -9,5 +9,6 @@ import {RouterLink} from "@angular/router";
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  protected readonly localStorage = localStorage;
+  userId$: string | null = localStorage.getItem('userId');
+  userRole$: string | null = localStorage.getItem('userRole');
 }

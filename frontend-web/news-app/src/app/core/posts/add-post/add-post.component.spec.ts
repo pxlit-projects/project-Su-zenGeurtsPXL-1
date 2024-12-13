@@ -1,4 +1,5 @@
 import {Post} from "../../../shared/models/post.model";
+import {PostRequest} from "../../../shared/models/post-request.model";
 import {PostService} from "../../../shared/services/post.service";
 import {AddPostComponent} from "./add-post.component";
 
@@ -6,8 +7,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import {PostRequest} from "../../../shared/models/post-request.model";
-
 
 describe('AddPostComponent', () => {
   let component: AddPostComponent;

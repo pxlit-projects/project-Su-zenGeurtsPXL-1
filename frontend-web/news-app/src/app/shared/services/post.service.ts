@@ -35,8 +35,12 @@ export class PostService {
     return this.http.post<Post>(this.api, post);
   }
 
-  submitPost(id: number, userId: number): Observable<void> {
-    return this.http.post<void>(this.api + "/submit/" + id, userId);
+  submitPost(id: number, userId: number | null): Observable<void> {
+    if (userId == null) {
+      throw new Error("Nobody is signed in.");
+    } else {
+      return this.http.post<void>(this.api + "/submit/" + id, userId);
+    }
   }
 
   editPost(id: number, post: PostRequest): Observable<Post> {

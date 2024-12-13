@@ -18,7 +18,7 @@
       </p>
       <p class="text-black text-justify mb-8">{{post.content}}</p>
 
-      @if (localStorage.getItem('userId') == post.userId.toString()) {
+      @if (userId$ == post.userId) {
         @if (post.state === 'DRAFTED') {
           <div class="grid grid-cols-2 gap-2">
             <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="submitPost()">Submit</button>

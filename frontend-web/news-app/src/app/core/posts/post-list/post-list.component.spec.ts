@@ -13,8 +13,8 @@ describe('PostListComponent', () => {
   let postServiceMock: jasmine.SpyObj<PostService>;
   let routeMock: jasmine.SpyObj<ActivatedRoute>;
   const mockPosts: Post[] = [
-    new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED'),
-    new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')
+    { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
+    { id: 2, title: 'Title2', content: 'Content2...', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
   ];
 
   beforeEach(() => {
@@ -86,7 +86,9 @@ describe('PostListComponent', () => {
 
   it('should filter posts based on the filter criteria', () => {
     const filter: Filter = { content: 'con', author: 'Mi', category: 'ACA' };
-    const filteredPosts: Post[] = [new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')];
+    const filteredPosts: Post[] = [
+      { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
+    ];
     postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
     postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
 

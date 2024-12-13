@@ -14,14 +14,13 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
   styleUrl: './post-detail.component.css'
 })
 export class PostDetailComponent implements OnInit {
-  protected readonly localStorage = localStorage;
-
+  router: Router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
   post$: Observable<Post> = this.postService.getPost(this.id);
-  router: Router = inject(Router);
+  userId$: number | null = Number(localStorage.getItem('userId'));
 
   ngOnInit(): void {
     this.post$.subscribe({
@@ -32,14 +31,14 @@ export class PostDetailComponent implements OnInit {
   }
 
   submitPost() {
-    this.postService.submitPost(this.id, Number(localStorage.getItem('userId'))).subscribe({
-      next: () => {
-        this.router.navigate(['/myPost']);
-      },
-      error: (err) => {
-        let element = document.getElementById('errorMessage');
-        if (element) element.innerText = err.error.message;
-      }
-    });
+    let element = document.getElementById('errorMessage');
+      this.postService.submitPost(this.id, this.userId$).subscribe({
+        next: () => {
+          this.router.navigate(['/myPost']);
+        },
+        error: (err) => {
+          if (element) element.innerText = err.error.message;
+        }
+      });
   }
 }

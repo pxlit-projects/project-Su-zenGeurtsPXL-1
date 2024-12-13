@@ -1,3 +1,9 @@
 #menu-toggle:checked + #menu {
   display: block;
 }
+
+#profile {
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
+}

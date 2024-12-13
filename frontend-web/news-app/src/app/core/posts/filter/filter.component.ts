@@ -16,6 +16,7 @@ export class FilterComponent {
   router: Router = inject(Router);
   @Input() mine!: boolean;
   filter: Filter = { content: '', author: '', category: '' };
+  userRole$: string | null = localStorage.getItem('userRole');
 
   @Output() filterChanged = new EventEmitter<Filter>();
 

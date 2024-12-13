@@ -12,9 +12,9 @@ describe('PostService', () => {
   let httpTestingController: HttpTestingController;
 
   const mockPosts: Post[] = [
-    new Post('Title 01', 'About a student', 1, 'STUDENT', '2024-12-10 15:30:07', 'DRAFTED'),
-    new Post('Title 02', 'About sport', 1, 'SPORTS', '2024-12-10 15:30:07', 'SUBMITTED'),
-    new Post('Title 03', 'About alumni', 1, 'ALUMNI', '2024-12-10 15:30:07', 'PUBLISHED')
+    { id: 1, title: 'Title', content: 'About a student', userId: 1, category: 'STUDENT', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'},
+    { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:30:07', state: 'SUBMITTED'},
+    { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'}
   ];
 
   const mockCategories: string[] = [
@@ -86,7 +86,7 @@ describe('PostService', () => {
 
   // addPost()
   it('should add a post via POST', () => {
-    const newPost = new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'DRAFTED');
+    const newPost = { id: 4, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'};
 
     service.addPost(newPost).subscribe(post => {
       expect(post).toEqual(newPost);
@@ -109,6 +109,13 @@ describe('PostService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(userId);
     req.flush(null);
+  });
+
+  it('should throw error when submitting a post without a USERID', () => {
+    const postId = 1;
+    const userId = null;
+
+    expect(() => service.submitPost(postId, userId).subscribe()).toThrowError('Nobody is signed in.');
   });
 
   // editPost()
@@ -158,7 +165,7 @@ describe('PostService', () => {
   });
 
   it('should not filter when filter criteria of user is broken', () => {
-    mockPosts.push(new Post('Title 03', 'About sport', 9999, 'SPORTS', '2024-12-10 15:30:07', 'DRAFTED'))
+    mockPosts.push({ id: 4, title: 'Title', content: 'Content...', userId: 9999, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'});
     const filter: Filter = { content: 'About', author: 'Milan', category: 'spo' };
 
     expect(service.isPostMatchingFilter(mockPosts[mockPosts.length - 1], filter)).toBeFalse();
@@ -171,12 +178,10 @@ describe('PostService', () => {
     expect(service.transformDate(word)).toBe(expectedWord);
   })
 
-
   // toPascalCasing()
   it('should format strings to PascalCasing correctly', () => {
     const word = 'ACADEMIC'
     const expectedWord = 'Academic'
     expect(service.toPascalCasing(word)).toBe(expectedWord);
   })
-
 });

@@ -15,6 +15,7 @@ export class NavbarComponent {
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
   hiddenUserMenu: boolean = true;
+  imageUrl: string = 'user.png';
 
   userMenu() {
     this.hiddenUserMenu = !this.hiddenUserMenu;
@@ -26,11 +27,9 @@ export class NavbarComponent {
 
   logout() {
     this.hiddenUserMenu = true;
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userFullName');
-    localStorage.removeItem('userRole');
+    this.localStorage.removeItem('userId');
+    this.localStorage.removeItem('userFullName');
+    this.localStorage.removeItem('userRole');
     this.router.navigate(['/post']);
   }
-
-
 }

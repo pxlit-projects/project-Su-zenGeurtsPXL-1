@@ -18,8 +18,6 @@ import {Post} from "../../../shared/models/post.model";
   styleUrl: './edit-post.component.css'
 })
 export class EditPostComponent implements OnInit{
-  protected readonly localStorage = localStorage;
-
   route: ActivatedRoute = inject(ActivatedRoute);
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
