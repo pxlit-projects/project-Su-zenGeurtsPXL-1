@@ -4,7 +4,7 @@ import {PostService} from "../../../shared/services/post.service";
 import {EditPostComponent} from "./edit-post.component";
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Router, ActivatedRoute} from '@angular/router';
+import {Router, ActivatedRoute, UrlSegment} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {of, throwError} from 'rxjs';
 import {By} from "@angular/platform-browser";
@@ -56,6 +56,16 @@ describe('EditPostComponent', () => {
     expect(component.postForm.controls['userId'].value).toBe(localStorage.getItem("userId"));
   });
 
+  it('should navigate to pageNotFound when getPost fails in ngOnInit', () => {
+    postServiceMock.getPost.and.returnValue(throwError(() => new Error('Post not found')));
+    fixture = TestBed.createComponent(EditPostComponent);
+    component = fixture.componentInstance;
+
+    component.ngOnInit();
+
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/pageNotFound']);
+  });
+
   it('should call editPost on form submit and navigate on success', () => {
     const postRequest = {
       content: 'Updated content',
@@ -70,7 +80,7 @@ describe('EditPostComponent', () => {
     expect(postServiceMock.editPost).toHaveBeenCalledWith(1, postRequest as PostRequest);
 
     expect(component.postForm.pristine).toBeTrue();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/post/mine/1']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost/1']);
   });
 
   it('should display error message when editPost fails', () => {
@@ -83,18 +93,12 @@ describe('EditPostComponent', () => {
     component.onSubmit();
     fixture.detectChanges();
 
-
     const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
     expect(debugElement.nativeElement.textContent).toContain('Failed to update the post');
-
-
-    // expect(errorMessageElement.innerText).toBe('Failed to update the post');
   });
-
-
 
   it('should navigate back on cancel', () => {
     component.cancel();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/post/mine']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
   });
 });
