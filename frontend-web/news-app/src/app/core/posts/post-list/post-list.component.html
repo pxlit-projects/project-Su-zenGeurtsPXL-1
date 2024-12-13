@@ -1,7 +1,16 @@
-<app-filter (filterChanged)="handleFilter($event)" [mine]="mine"></app-filter>
-
-<div class="md:container md:mx-auto container mx-auto mb-10 px-2">
-  <div class="grid grid-cols-3 gap-6">
+<div class="container mx-auto mt-5 px-2">
+  <div class="flex justify-between mb-8">
+      <h1 class="text-2xl font-bold inline-block align-bottom py-3 ">
+        @if (mine) {
+          My posts
+        }
+        @else {
+          Posts
+        }
+      </h1>
+      <app-filter class="inline-block" (filterChanged)="handleFilter($event)" [mine]="mine"></app-filter>
+    </div>
+  <div class="grid grid-cols-3">
     @for(post of posts$ | async; track post.id) {
       <app-post-item [post]="post"></app-post-item>
     }

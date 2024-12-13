@@ -1,7 +1,7 @@
-<div class="container mx-auto p-2">
+<div class="container my-2">
   <div class="flex items-center">
     <form #filterForm="ngForm" (ngSubmit)="onSubmit(filterForm)">
-      <div class="flex items-center p-2">
+      <div class="flex items-center">
         <input type="text" class="px-4 py-2 mr-2 border-2 rounded shadow" placeholder="Search by content" name="content" [(ngModel)]="filter.content">
         @if (!mine) {
         <input type="text" class="px-4 py-2 mr-2 border-2 rounded shadow" placeholder="Search by author" name="author" [(ngModel)]="filter.author">
