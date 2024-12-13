@@ -70,10 +70,7 @@ describe('AddPostComponent', () => {
   });
 
   it('should navigate back on cancel', () => {
-    // spyOn(component, 'cancel');
     component.cancel();
-    // fixture.detectChanges();
-    // expect(component.cancel).toHaveBeenCalled();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/post/mine']);
   });
 });

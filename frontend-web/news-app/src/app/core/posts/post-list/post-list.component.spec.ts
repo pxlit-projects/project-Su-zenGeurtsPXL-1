@@ -18,7 +18,8 @@ describe('PostListComponent', () => {
   ];
 
   beforeEach(() => {
-    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'filterPublishedPosts']);
+    localStorage.setItem('userId', '1');
+    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'filterPublishedPosts', 'filterMyPosts']);
 
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('posts', {})] }
@@ -41,10 +42,14 @@ describe('PostListComponent', () => {
   });
 
   it('should initialize "mine" based on route URL', () => {
+    // !mine
     expect(component.mine).toBe(false);
+
+    // mine
     routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
+
     expect(component.mine).toBe(true);
   });
 
@@ -54,21 +59,20 @@ describe('PostListComponent', () => {
     expect(component.fetchPosts).toHaveBeenCalled();
   });
 
-  it('should fetch published posts when "mine" is false', () => {
+  it('should fetch posts when "mine" is false', () => {
     postServiceMock.getPublishedPosts.and.returnValue(of(mockPosts));
+    postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
 
+    // if (!mine) getPublishedPosts
     component.fetchPosts();
 
     expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
     component.posts$.subscribe(data => {
       expect(data).toEqual(mockPosts);
     });
-  });
 
-  it('should fetch posts by user id when "mine" is true', () => {
+    // if (mine) getMyPosts
     routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
-    localStorage.setItem('userId', '1');
-    postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
@@ -84,13 +88,28 @@ describe('PostListComponent', () => {
     const filter: Filter = { content: 'con', author: 'Mi', category: 'ACA' };
     const filteredPosts: Post[] = [new Post('Title', 'Content...', 1, 'ACADEMIC', '2024-12-10 15:30:07', 'PUBLISHED')];
     postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
+    postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
 
+    // if (!mine) filterPublishedPosts
     component.handleFilter(filter);
 
     expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
+
+    component.posts$.subscribe(data => {
+      expect(data).toEqual(filteredPosts);
+    });
+
+    // if (mine) filterMyPosts
+    routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
+    fixture = TestBed.createComponent(PostListComponent);
+    component = fixture.componentInstance;
+
+    component.handleFilter(filter);
+
+    expect(postServiceMock.filterMyPosts).toHaveBeenCalledWith(filter, '1');
+
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);
     });
   });
 });
-
