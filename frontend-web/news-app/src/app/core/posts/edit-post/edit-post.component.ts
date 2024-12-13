@@ -46,7 +46,7 @@ export class EditPostComponent implements OnInit{
     });
   }
   cancel() {
-    this.router.navigate(['/post/mine']);
+    this.router.navigate(['/myPost']);
   }
 
   onSubmit() {
@@ -57,7 +57,7 @@ export class EditPostComponent implements OnInit{
     this.postService.editPost(this.id, editedPost).subscribe({
       next: () => {
         this.postForm.reset();
-        this.router.navigate(['/post/mine/' + this.id]);
+        this.router.navigate(['/myPost/' + this.id]);
       },
       error: (err) => {
         let element = document.getElementById('errorMessage');

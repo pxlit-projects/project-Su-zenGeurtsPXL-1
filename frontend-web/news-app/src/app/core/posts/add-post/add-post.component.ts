@@ -48,7 +48,7 @@ export class AddPostComponent implements OnInit{
 
     this.postService.addPost(newPost).subscribe(() => {
       this.postForm.reset();
-      this.router.navigate(['/post/mine']);
+      this.router.navigate(['/myPost']);
     });
   }
 }

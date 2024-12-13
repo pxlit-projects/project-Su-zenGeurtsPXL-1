@@ -66,11 +66,11 @@ describe('AddPostComponent', () => {
     expect(postServiceMock.addPost).toHaveBeenCalledWith(postRequest as PostRequest);
 
     expect(component.postForm.pristine).toBeTrue();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/post/mine']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
   });
 
   it('should navigate back on cancel', () => {
     component.cancel();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/post/mine']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
   });
 });
