@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject } from '@angular/core';
+import {Component, OnDestroy, inject, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import { Post } from '../../../shared/models/post.model';
 import { Observable, Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
-export class PostDetailComponent implements OnDestroy {
+export class PostDetailComponent implements OnDestroy, OnInit {
   protected readonly localStorage = localStorage;
 
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -24,9 +24,17 @@ export class PostDetailComponent implements OnDestroy {
   sub!: Subscription;
   router: Router = inject(Router);
 
+  ngOnInit(): void {
+    this.post$.subscribe({
+      error: () => {
+        this.router.navigate(['/pageNotFound']);
+      }
+    });
+  }
+
   submit() {
     this.postService.submitPost(this.id, Number(localStorage.getItem('userId'))).subscribe(() => {
-      this.router.navigate(['/post/mine']);
+      this.router.navigate(['/myPost']);
     });
   }
 

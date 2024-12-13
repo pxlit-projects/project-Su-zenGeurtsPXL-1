@@ -14,10 +14,11 @@ export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
   {path: 'post', component: PostListComponent},
-  {path: 'post/mine', component: PostListComponent, canActivate: [AuthGuard]},
+  {path: 'myPost', component: PostListComponent, canActivate: [AuthGuard]},
   {path: 'addPost', component: AddPostComponent, canDeactivate: [confirmLeaveGuard]},
   {path: 'editPost/:id', component: EditPostComponent, canDeactivate: [confirmLeaveGuard]},
   {path: 'post/:id', component: PostDetailComponent},
-  {path: 'post/mine/:id', component: PostDetailComponent, canActivate: [AuthGuard]},
+  {path: 'myPost/:id', component: PostDetailComponent, canActivate: [AuthGuard]},
+  {path: 'pageNotFound', component: PageNotFoundComponent},
   {path: '**', component: PageNotFoundComponent},
 ];

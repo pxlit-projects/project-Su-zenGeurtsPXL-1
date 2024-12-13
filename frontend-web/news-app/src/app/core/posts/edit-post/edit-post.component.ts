@@ -34,10 +34,15 @@ export class EditPostComponent implements OnInit{
   });
 
   ngOnInit(): void {
-    this.post$.subscribe(post => {
-      this.postForm.patchValue({
-        content: post.content,
-      });
+    this.post$.subscribe({
+      next: (post) => {
+        this.postForm.patchValue({
+          content: post.content,
+        });
+      },
+      error: () => {
+        this.router.navigate(['/pageNotFound']);
+      }
     });
   }
   cancel() {

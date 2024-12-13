@@ -33,7 +33,10 @@ export class AuthenticationService {
     }
   }
 
-  getUserById(id: number): User | undefined {
+  getUserById(id: number | string | null): User | undefined {
+    if (typeof id === 'string') {
+      id = Number(id);
+    }
     return this.users.find(user => user.id === id);
   }
 }

@@ -21,7 +21,7 @@ import {Filter} from "../../../shared/models/filter.model";
 export class PostListComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
-  mine: boolean = this.url.length == 2;
+  mine: boolean = this.url[0].path === 'myPost';
   posts$!: Observable<Post[]>;
   postService: PostService = inject(PostService);
 

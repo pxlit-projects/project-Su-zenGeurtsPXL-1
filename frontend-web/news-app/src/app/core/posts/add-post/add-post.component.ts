@@ -38,7 +38,7 @@ export class AddPostComponent implements OnInit{
   }
 
   cancel() {
-    this.router.navigate(['/post/mine']);
+    this.router.navigate(['/myPost']);
   }
 
   onSubmit() {

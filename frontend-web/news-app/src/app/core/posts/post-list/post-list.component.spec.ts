@@ -46,7 +46,7 @@ describe('PostListComponent', () => {
     expect(component.mine).toBe(false);
 
     // mine
-    routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
+    routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
@@ -72,7 +72,7 @@ describe('PostListComponent', () => {
     });
 
     // if (mine) getMyPosts
-    routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
+    routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
@@ -100,7 +100,7 @@ describe('PostListComponent', () => {
     });
 
     // if (mine) filterMyPosts
-    routeMock.snapshot.url = [new UrlSegment('post', {}), new UrlSegment('mine', {})];
+    routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 

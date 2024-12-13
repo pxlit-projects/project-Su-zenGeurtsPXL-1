@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {Filter} from "../../../shared/models/filter.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-filter',
@@ -12,6 +13,7 @@ import {Filter} from "../../../shared/models/filter.model";
 })
 
 export class FilterComponent {
+  router: Router = inject(Router);
   @Input() mine!: boolean;
   filter: Filter = { content: '', author: '', category: '' };
 
@@ -21,6 +23,10 @@ export class FilterComponent {
     if (form.valid) {
       this.filterChanged.emit(this.filter);
     }
+  }
+
+  addPost() {
+    this.router.navigate(['/addPost']);
   }
 
 }
