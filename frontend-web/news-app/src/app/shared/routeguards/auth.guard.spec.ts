@@ -23,7 +23,6 @@ describe('AuthGuard', () => {
   it('should allow activation if userId exists in localStorage', () => {
     spyOn(localStorage, 'getItem').and.returnValue('123');
     expect(authGuard.canActivate()).toBeTrue();
-    // expect(routerSpy.navigate).not.toHaveBeenCalled();
     expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 
