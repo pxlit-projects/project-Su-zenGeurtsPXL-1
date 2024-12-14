@@ -22,4 +22,4 @@
 - When commenting on a post, a message is send to the event bus for the `Post Service` to read.
 
 ###### Post Service
-- When listening to the event bus for messages from the `Review Service` and `Comment Service`, a notification is added for every message.
+- When listening to the event bus for messages from the `Review Service` and `Comment Service`, a update is added for every message.
