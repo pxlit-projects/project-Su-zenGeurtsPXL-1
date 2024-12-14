@@ -4,15 +4,16 @@ import { CanActivate, Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
     const userId = localStorage.getItem('userId');
     if (userId) {
-      return true; // Allow access if userId exists
+      return true;
     } else {
-      this.router.navigate(['/login']); // Redirect to login if userId is null
+      this.router.navigate(['/login']);
       return false;
     }
   }

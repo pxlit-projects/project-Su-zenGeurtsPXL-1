@@ -67,7 +67,7 @@ describe('LoginComponent', () => {
       id: 1,
       username: 'john',
       fullName: 'John Doe',
-      password: 'ed123',
+      password: '123',
       role: 'user'
     };
 
