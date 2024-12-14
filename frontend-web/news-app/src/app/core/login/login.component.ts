@@ -39,9 +39,12 @@ export class LoginComponent {
       const user = this.authenticationService.login(login);
 
       if (user != null) {
+        const imageUrl = 'user-profiles/' + user.role + user.id + '.png';
+
         localStorage.setItem('userId', user.id.toString());
         localStorage.setItem('userFullName', user.fullName);
         localStorage.setItem('userRole', user.role);
+        localStorage.setItem('userImage', imageUrl);
         this.loginForm.reset();
         if (user.role === 'editor') {
           this.router.navigate(['/myPost'])

@@ -15,7 +15,6 @@ export class NavbarComponent {
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
   hiddenUserMenu: boolean = true;
-  imageUrl: string = 'user.png';
 
   userMenu() {
     this.hiddenUserMenu = !this.hiddenUserMenu;

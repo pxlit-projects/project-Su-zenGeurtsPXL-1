@@ -53,7 +53,7 @@
               <button (click)="userMenu()" class="relative flex rounded-full" id="user-menu-button">
               <span class="absolute -inset-1.5"></span>
                 <div>
-                  <img id="profile" class="inline-block rounded-full border-2 border-white" [src]="imageUrl" alt="default user profile">
+                  <img id="profile" class="inline-block rounded-full border-2 border-white"  [src]=" localStorage.getItem('userImage') != null ? localStorage.getItem('userImage') : 'user.png'" alt="user profile">
                   <span class="text-sm font-medium text-white inline-block mx-2 align-middle">{{ localStorage.getItem('userFullName') }}</span>
                 </div>
 
@@ -78,5 +78,6 @@
     </div>
 </nav>
 
+<!--<div class="bg-green-500 text-white">{{ localStorage.getItem('userRole') != null? localStorage.getItem('userRole') : 'NO ROLE'  + localStorage.getItem('userId') != null ? localStorage.getItem('userId') : 'NO ID' + '.png'}}</div>-->
 
 
