@@ -16,7 +16,7 @@ export const routes: Routes = [
   {path: 'post', component: PostListComponent},
   {path: 'myPost', component: PostListComponent, canActivate: [AuthGuard]},
   {path: 'addPost', component: AddPostComponent, canDeactivate: [confirmLeaveGuard], canActivate: [AuthGuard]},
-  {path: 'editPost/:id', component: EditPostComponent, canDeactivate: [confirmLeaveGuard]},
+  {path: 'editPost/:id', component: EditPostComponent, canDeactivate: [confirmLeaveGuard], canActivate: [AuthGuard]},
   {path: 'post/:id', component: PostDetailComponent},
   {path: 'myPost/:id', component: PostDetailComponent, canActivate: [AuthGuard]},
   {path: 'pageNotFound', component: PageNotFoundComponent},
