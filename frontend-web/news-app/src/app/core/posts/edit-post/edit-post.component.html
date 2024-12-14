@@ -28,12 +28,12 @@
         }
       </div>
       <button type="submit" class="bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 mb-2 rounded focus:outline-none focus:shadow-outline"
-              [ngClass]="{'opacity-50 hover:bg-pxlGreen hover:opacity-50 cursor-not-allowed': !postForm.valid}" [disabled]="!postForm.valid">
+              [class]="{'opacity-50 hover:bg-pxlGreen hover:opacity-50 cursor-not-allowed': !postForm.valid}" [disabled]="!postForm.valid">
         Save
       </button>
-      <button (click)="cancel()" class=" text-black hover:text-pxlGreen font-bold py-2 px-4 mb-2 focus:outline-none focus:shadow-outline">
-        Cancel
-      </button>
+<!--      <button (click)="cancel()" class=" text-black hover:text-pxlGreen font-bold py-2 px-4 mb-2 focus:outline-none focus:shadow-outline">-->
+<!--        Cancel-->
+<!--      </button>-->
       <div id="errorMessage" class="text-red-500 text-sm mt-1"></div>
     </form>
   </div>
