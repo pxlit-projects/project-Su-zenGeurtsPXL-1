@@ -31,9 +31,11 @@ export class PostListComponent implements OnInit {
 
   handleFilter(filter: Filter) {
     this.posts$ =  this.mine ? this.postService.filterMyPosts(filter, localStorage.getItem('userId')) : this.postService.filterPublishedPosts(filter);
+    this.posts$ = this.postService.orderToMostRecent(this.posts$);
   }
 
   fetchPosts(): void {
-      this.posts$ = this.mine ? this.postService.getMyPosts(localStorage.getItem("userId")) : this.postService.getPublishedPosts();
+    this.posts$ = this.mine ? this.postService.getMyPosts(localStorage.getItem("userId")) : this.postService.getPublishedPosts();
+    this.posts$ = this.postService.orderToMostRecent(this.posts$);
   }
 }

@@ -17,9 +17,14 @@ describe('PostListComponent', () => {
     { id: 2, title: 'Title2', content: 'Content2...', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
   ];
 
+  const mockReversePosts: Post[] = [
+    { id: 2, title: 'Title2', content: 'Content2...', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
+    { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
+  ];
+
   beforeEach(() => {
     localStorage.setItem('userId', '1');
-    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'filterPublishedPosts', 'filterMyPosts']);
+    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'filterPublishedPosts', 'filterMyPosts', 'orderToMostRecent']);
 
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('posts', {})] }
@@ -62,13 +67,15 @@ describe('PostListComponent', () => {
   it('should fetch posts when "mine" is false', () => {
     postServiceMock.getPublishedPosts.and.returnValue(of(mockPosts));
     postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
+    postServiceMock.orderToMostRecent.and.returnValue(of(mockReversePosts));
 
     // if (!mine) getPublishedPosts
     component.fetchPosts();
 
     expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
+    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
     component.posts$.subscribe(data => {
-      expect(data).toEqual(mockPosts);
+      expect(data).toEqual(mockReversePosts);
     });
 
     // if (mine) getMyPosts
@@ -79,8 +86,9 @@ describe('PostListComponent', () => {
     component.fetchPosts();
 
     expect(postServiceMock.getMyPosts).toHaveBeenCalledWith('1');
+    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
     component.posts$.subscribe(data => {
-      expect(data).toEqual(mockPosts);
+      expect(data).toEqual(mockReversePosts);
     });
   });
 
@@ -91,11 +99,13 @@ describe('PostListComponent', () => {
     ];
     postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
     postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
+    postServiceMock.orderToMostRecent.and.returnValue(of(filteredPosts));
 
     // if (!mine) filterPublishedPosts
     component.handleFilter(filter);
 
     expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
+    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
 
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);

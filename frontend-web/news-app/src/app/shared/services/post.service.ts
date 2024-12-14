@@ -84,4 +84,8 @@ export class PostService {
   public checkInclusion(item: string, filter: string): boolean {
     return item.toLowerCase().includes(filter.toLowerCase());
   }
+
+  public orderToMostRecent(posts: Observable<Post[]>): Observable<Post[]> {
+    return posts.pipe(map((posts: Post[]) => posts.reverse()));
+  }
 }
