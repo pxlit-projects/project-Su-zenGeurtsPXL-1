@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,4 +22,5 @@ public class PostResponse {
     private Category category;
     private LocalDateTime createdAt;
     private State state;
+    private List<ReviewResponse> reviews;
 }

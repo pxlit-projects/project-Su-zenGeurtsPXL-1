@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name ="post")
@@ -29,4 +30,7 @@ public class Post {
     private Category category;
     private LocalDateTime createdAt;
     private State state;
+
+    @Transient
+    private List<Review> reviews;
 }

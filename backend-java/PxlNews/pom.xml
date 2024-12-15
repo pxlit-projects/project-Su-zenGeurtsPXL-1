@@ -26,6 +26,7 @@
         <module>config-service</module>
         <module>discovery-service</module>
         <module>gateway-service</module>
+        <module>review-service</module>
     </modules>
     <scm>
         <connection/>

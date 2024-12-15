@@ -40,6 +40,19 @@ public class PostController {
         return postService.findPublishedPosts();
     }
 
+    @GetMapping(path = "/submitted")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostResponse> getSubmittedPosts() {
+        return postService.findSubmittedPosts();
+    }
+
+
+    @GetMapping(path = "/{id}/with-reviews")
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponse getPostByIdWithReviews(@PathVariable Long id) {
+        return postService.findPostByIdWithReviews(id);
+    }
+
     @GetMapping(path = "/user/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<PostResponse> getPostsByUserId(@PathVariable Long userId) {
@@ -54,8 +67,14 @@ public class PostController {
 
     @PostMapping(path = "submit/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void submitPost(@PathVariable Long id, @RequestBody Long userId) {
-        postService.submit(id, userId);
+    public void submitPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
+        postService.submit(id, postRequest);
+    }
+
+    @PostMapping(path = "publish/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void publishPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
+        postService.publish(id, postRequest);
     }
 
     @PutMapping(path = "{id}")

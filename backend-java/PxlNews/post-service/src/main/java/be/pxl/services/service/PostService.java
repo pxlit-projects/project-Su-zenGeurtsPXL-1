@@ -1,10 +1,13 @@
 package be.pxl.services.service;
 
+import be.pxl.services.client.ReviewClient;
 import be.pxl.services.domain.Category;
 import be.pxl.services.domain.Post;
+import be.pxl.services.domain.Review;
 import be.pxl.services.domain.State;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
+import be.pxl.services.domain.dto.ReviewResponse;
 import be.pxl.services.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService implements IPostService {
     private final PostRepository postRepository;
+    private final ReviewClient reviewClient;
     private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 
     @Override
@@ -55,6 +59,42 @@ public class PostService implements IPostService {
     }
 
     @Override
+    public PostResponse findPostByIdWithReviews(Long id) {
+        logger.info("Getting post by id " + id + " with reviews");
+        PostResponse postResponse = postRepository.findById(id)
+                .map(this::mapToPostResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
+
+        List<ReviewResponse> reviews = reviewClient.getReviewsByPostId(id)
+                .stream()
+                .map(this::mapToReviewResponse)
+                .toList();
+
+        postResponse.setReviews(reviews);
+        return postResponse;
+    }
+
+    @Override
+    public List<PostResponse> findSubmittedPosts() {
+        logger.info("Getting submitted posts");
+        return postRepository.findByState(State.SUBMITTED)
+                .stream()
+                .map(this::mapToPostResponse)
+                .toList();
+    }
+
+    @Override
+    public void publish(Long id, PostRequest postRequest) {
+        logger.info("Publishing post with id " + id);
+
+        checksUser(postRequest.getUserRole());
+        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.SUBMITTED);
+
+        post.setState(State.PUBLISHED);
+        postRepository.save(post);
+    }
+
+    @Override
     public List<PostResponse> findPostsByUserId(Long userId) {
         logger.info("Getting post with userId " + userId);
         return postRepository.findByUserId(userId)
@@ -66,6 +106,8 @@ public class PostService implements IPostService {
     @Override
     public PostResponse createPost(PostRequest postRequest) {
         logger.info("Creating post");
+
+        checksUser(postRequest.getUserRole());
 
         Post post = Post.builder()
                 .title(postRequest.getTitle())
@@ -81,9 +123,11 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void submit(Long id, Long userId) {
+    public void submit(Long id, PostRequest postRequest) {
         logger.info("Submitting post with id " + id);
-        Post post = checksToUpdatePost(id, userId);
+
+        checksUser(postRequest.getUserRole());
+        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.DRAFTED);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
@@ -93,12 +137,19 @@ public class PostService implements IPostService {
     public PostResponse updatePost(Long id, PostRequest postRequest) {
         logger.info("Updating post");
 
-        Post post = checksToUpdatePost(id, postRequest.getUserId());
+        checksUser(postRequest.getUserRole());
+        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.DRAFTED);
         post.setContent(postRequest.getContent());
         return mapToPostResponse(postRepository.save(post));
     }
 
-    private Post checksToUpdatePost(Long id, Long userId) {
+    private void checksUser(String role) {
+        if (!role.equals("editor")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
+        }
+    }
+
+    private Post checksToUpdatePost(Long id, Long userId, State validState) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
@@ -106,7 +157,11 @@ public class PostService implements IPostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
         }
 
-        if (post.getState() == State.SUBMITTED) {
+        if (post.getState() == State.DRAFTED && validState != State.DRAFTED) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is still a draft.");
+        }
+
+        if (post.getState() == State.SUBMITTED && validState != State.SUBMITTED) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already submitted.");
         }
 
@@ -126,6 +181,17 @@ public class PostService implements IPostService {
                 .category(post.getCategory())
                 .createdAt(post.getCreatedAt())
                 .state(post.getState())
+                .build();
+    }
+
+    private ReviewResponse mapToReviewResponse(Review review) {
+        return ReviewResponse.builder()
+                .id(review.getId())
+                .userId(review.getUserId())
+                .postId(review.getPostId())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .type(review.getType())
                 .build();
     }
 }

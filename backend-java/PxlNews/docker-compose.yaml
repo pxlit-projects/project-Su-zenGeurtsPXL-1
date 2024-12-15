@@ -12,5 +12,18 @@ services:
     volumes:
       - post_db_data:/var/lib/mysql
 
+  review-service:
+    image: mysql:8.0
+    container_name: reviewservice_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: reviewservice_db
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - review_db_data:/var/lib/mysql
+
 volumes:
   post_db_data:
+  review_db_data:
