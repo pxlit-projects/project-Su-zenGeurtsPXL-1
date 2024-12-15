@@ -7,7 +7,7 @@ import {PostItemComponent} from "../post-item/post-item.component";
 import {Post} from "../../../shared/models/post.model";
 import {PostService} from "../../../shared/services/post.service";
 
-import {FilterComponent} from "../filter/filter.component";
+import {FilterComponent} from "../../filter/filter.component";
 import {Filter} from "../../../shared/models/filter.model";
 
 @Component({

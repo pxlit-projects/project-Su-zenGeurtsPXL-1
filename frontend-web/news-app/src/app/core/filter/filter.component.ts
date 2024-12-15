@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {Filter} from "../../../shared/models/filter.model";
+import {Filter} from "../../shared/models/filter.model";
 import {Router} from "@angular/router";
 
 @Component({
