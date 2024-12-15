@@ -12,11 +12,7 @@ describe('PostService', () => {
   let service: PostService;
   let httpTestingController: HttpTestingController;
 
-  let mockPosts: Post[] = [
-    { id: 1, title: 'Title', content: 'About a student', userId: 1, category: 'STUDENT', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'},
-    { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:30:07', state: 'SUBMITTED'},
-    { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'}
-  ];
+  let mockPosts: Post[] = [];
 
   const mockCategories: string[] = [
     'STUDENT',
@@ -27,8 +23,8 @@ describe('PostService', () => {
   beforeEach(() => {
     mockPosts = [
       { id: 1, title: 'Title', content: 'About a student', userId: 1, category: 'STUDENT', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'},
-      { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:30:07', state: 'SUBMITTED'},
-      { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'}
+      { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-5 15:30:07', state: 'SUBMITTED'},
+      { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-7 15:30:07', state: 'PUBLISHED'}
     ];
 
     TestBed.configureTestingModule({
@@ -93,7 +89,7 @@ describe('PostService', () => {
 
   // addPost()
   it('should add a post via POST', () => {
-    const newPost = { id: 4, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'};
+    const newPost = { id: 4, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-18 15:30:07', state: 'DRAFTED'};
 
     service.addPost(newPost).subscribe(post => {
       expect(post).toEqual(newPost);
@@ -195,9 +191,9 @@ describe('PostService', () => {
   // orderToMostRecent()
   it('should order the array correctly', () => {
     const expectedPosts: Post[] = [
-      { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
-      { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:30:07', state: 'SUBMITTED'},
-      { id: 1, title: 'Title', content: 'About a student', userId: 1, category: 'STUDENT', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'}
+      { id: 1, title: 'Title', content: 'About a student', userId: 1, category: 'STUDENT', createdAt: '2024-12-10 15:30:07', state: 'DRAFTED'},
+      { id: 3, title: 'Title', content: 'About alumni', userId: 1, category: 'ALUMNI', createdAt: '2024-12-7 15:30:07', state: 'PUBLISHED'},
+      { id: 2, title: 'Title', content: 'About sport', userId: 1, category: 'SPORTS', createdAt: '2024-12-5 15:30:07', state: 'SUBMITTED'}
     ];
 
     service.orderToMostRecent(of(mockPosts)).subscribe(posts => {
