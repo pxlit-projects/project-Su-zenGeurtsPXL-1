@@ -16,10 +16,10 @@
 
 ### Asynchronous communications
 ###### Review Service
-- When reviewing a post, a message is sent to the event bus for the `Notification Service` to read.
+- When reviewing a post, a message is sent to the event bus for the `Post Service` to read.
 
 ###### Comment Service
-- When commenting on a post, a message is send to the event bus for the `Notification Service` to read.
+- When commenting on a post, a message is send to the event bus for the `Post Service` to read.
 
-###### Notification Service
-- When listening to the event bus for messages from the `Review Service` and `Comment Service`, a notification is added for every message.
+###### Post Service
+- When listening to the event bus for messages from the `Review Service` and `Comment Service`, a update is added for every message.
