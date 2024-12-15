@@ -86,6 +86,7 @@ export class PostService {
   }
 
   public orderToMostRecent(posts: Observable<Post[]>): Observable<Post[]> {
-    return posts.pipe(map((posts: Post[]) => posts.reverse()));
+    return posts.pipe(map((posts: Post[]) =>
+      posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
   }
 }
