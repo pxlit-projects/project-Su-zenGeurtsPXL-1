@@ -76,15 +76,14 @@ export class PostService {
 
     const matchesContent = this.checkInclusion(post.content, filter.content);
     const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
-    const matchesDate = filter.date == undefined ? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
-
+    const matchesDate = filter.date === ""? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
     return matchesContent && matchesAuthor && matchesDate;
   }
 
   public checkDate(postDate: Date, filterDate: Date): boolean {
-    const matchesDay = postDate.getDay() == filterDate.getDay();
-    const matchesMonth = postDate.getMonth() == filterDate.getMonth();
-    const matchesYear = postDate.getFullYear() == filterDate.getFullYear();
+    const matchesDay = postDate.getDate() === filterDate.getDate();
+    const matchesMonth = postDate.getMonth() === filterDate.getMonth();
+    const matchesYear = postDate.getFullYear() === filterDate.getFullYear();
 
     return matchesDay && matchesMonth && matchesYear;
   }
