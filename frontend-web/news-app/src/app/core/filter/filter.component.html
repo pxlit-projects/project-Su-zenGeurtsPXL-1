@@ -6,7 +6,7 @@
         @if (!mine) {
         <input type="text" class="px-4 py-2 mr-2 border-2 rounded shadow" placeholder="Search by author" name="author" [(ngModel)]="filter.author">
         }
-        <input type="text" class="px-4 py-2 border-2 rounded shadow" placeholder="Search by category" name="category" [(ngModel)]="filter.category">
+        <input type="date" class="px-4 py-2 border-2 rounded shadow" name="date" [(ngModel)]="filter.date">
         <button type="submit" class="ml-2 bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 rounded">Search</button>
         @if(userRole$ == 'editor' && mine) {
           <button (click)="addPost()"  class="ml-2 bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 rounded">Add post</button>

@@ -76,9 +76,17 @@ export class PostService {
 
     const matchesContent = this.checkInclusion(post.content, filter.content);
     const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
-    const matchesCategory = this.checkInclusion(post.category, filter.category);
+    const matchesDate = filter.date == undefined ? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
 
-    return matchesContent && matchesAuthor && matchesCategory;
+    return matchesContent && matchesAuthor && matchesDate;
+  }
+
+  public checkDate(postDate: Date, filterDate: Date): boolean {
+    const matchesDay = postDate.getDay() == filterDate.getDay();
+    const matchesMonth = postDate.getMonth() == filterDate.getMonth();
+    const matchesYear = postDate.getFullYear() == filterDate.getFullYear();
+
+    return matchesDay && matchesMonth && matchesYear;
   }
 
   public checkInclusion(item: string, filter: string): boolean {

@@ -15,13 +15,14 @@ import {Router} from "@angular/router";
 export class FilterComponent {
   router: Router = inject(Router);
   @Input() mine!: boolean;
-  filter: Filter = { content: '', author: '', category: '' };
+  filter: Filter = { content: '', author: '', date: undefined };
   userRole$: string | null = localStorage.getItem('userRole');
 
   @Output() filterChanged = new EventEmitter<Filter>();
 
   onSubmit(form: any) {
     if (form.valid) {
+      console.log(this.filter.date);
       this.filterChanged.emit(this.filter);
     }
   }
