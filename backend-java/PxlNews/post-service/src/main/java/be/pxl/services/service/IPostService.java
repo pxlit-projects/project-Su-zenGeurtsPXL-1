@@ -11,15 +11,15 @@ public interface IPostService {
 
     PostResponse findPostById(Long id);
 
-    PostResponse createPost(PostRequest postRequest);
+    PostResponse createPost(Long userId, String userRole, PostRequest postRequest);
 
     List<Category> findAllCategories();
 
-    List<PostResponse> findPostsByUserId(Long userId);
+    List<PostResponse> findPostsByUserId(Long userId, String userRole);
 
-    void submit(Long id, PostRequest postRequest);
+    void submit(Long id, Long userId, String userRole);
 
-    PostResponse updatePost(Long id, PostRequest postRequest);
+    PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest);
 
     List<PostResponse> findPublishedPosts();
 
@@ -27,5 +27,5 @@ public interface IPostService {
 
     List<PostResponse> findSubmittedPosts();
 
-    void publish(Long id, PostRequest postRequest);
+    void publish(Long id, Long userId, String userRole);
 }
