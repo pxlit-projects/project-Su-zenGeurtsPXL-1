@@ -84,19 +84,22 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void publish(Long id, PostRequest postRequest) {
+    public void publish(Long id, Long userId, String userRole) {
         logger.info("Publishing post with id " + id);
 
-        checksUser(postRequest.getUserRole());
-        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.SUBMITTED);
+        checksUserRole(userRole);
+        Post post = checksToUpdatePost(id, userId, State.SUBMITTED);
 
         post.setState(State.PUBLISHED);
         postRepository.save(post);
     }
 
     @Override
-    public List<PostResponse> findPostsByUserId(Long userId) {
+    public List<PostResponse> findPostsByUserId(Long userId, String userRole) {
         logger.info("Getting post with userId " + userId);
+
+        checksUserRole(userRole);
+
         return postRepository.findByUserId(userId)
                 .stream()
                 .map(this::mapToPostResponse)
@@ -104,15 +107,15 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse createPost(PostRequest postRequest) {
+    public PostResponse createPost(Long userId, String userRole, PostRequest postRequest) {
         logger.info("Creating post");
 
-        checksUser(postRequest.getUserRole());
+        checksUserRole(userRole);
 
         Post post = Post.builder()
                 .title(postRequest.getTitle())
                 .content(postRequest.getContent())
-                .userId(postRequest.getUserId())
+                .userId(userId)
                 .category(postRequest.getCategory())
                 .createdAt(LocalDateTime.now())
                 .state(State.DRAFTED)
@@ -123,27 +126,27 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void submit(Long id, PostRequest postRequest) {
+    public void submit(Long id, Long userId, String userRole) {
         logger.info("Submitting post with id " + id);
 
-        checksUser(postRequest.getUserRole());
-        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.DRAFTED);
+        checksUserRole(userRole);
+        Post post = checksToUpdatePost(id, userId, State.DRAFTED);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
     }
 
     @Override
-    public PostResponse updatePost(Long id, PostRequest postRequest) {
+    public PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest) {
         logger.info("Updating post");
 
-        checksUser(postRequest.getUserRole());
-        Post post = checksToUpdatePost(id, postRequest.getUserId(), State.DRAFTED);
+        checksUserRole(userRole);
+        Post post = checksToUpdatePost(id, userId, State.DRAFTED);
         post.setContent(postRequest.getContent());
         return mapToPostResponse(postRepository.save(post));
     }
 
-    private void checksUser(String role) {
+    private void checksUserRole(String role) {
         if (!role.equals("editor")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
         }

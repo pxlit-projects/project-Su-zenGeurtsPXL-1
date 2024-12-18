@@ -53,33 +53,33 @@ public class PostController {
         return postService.findPostByIdWithReviews(id);
     }
 
-    @GetMapping(path = "/user/{userId}")
+    @GetMapping(path = "/mine")
     @ResponseStatus(HttpStatus.OK)
-    public List<PostResponse> getPostsByUserId(@PathVariable Long userId) {
-        return postService.findPostsByUserId(userId);
+    public List<PostResponse> getPostsByUserId(@RequestHeader Long userId, @RequestHeader String userRole) {
+        return postService.findPostsByUserId(userId, userRole);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponse addPost(@RequestBody PostRequest postRequest) {
-        return postService.createPost(postRequest);
+    public PostResponse addPost(@RequestHeader Long userId, @RequestHeader String userRole, @RequestBody PostRequest postRequest) {
+        return postService.createPost(userId, userRole, postRequest);
     }
 
     @PostMapping(path = "{id}/submit")
     @ResponseStatus(HttpStatus.OK)
-    public void submitPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
-        postService.submit(id, postRequest);
+    public void submitPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole) {
+        postService.submit(id, userId, userRole);
     }
 
     @PostMapping(path = "/{id}/publish")
     @ResponseStatus(HttpStatus.OK)
-    public void publishPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
-        postService.publish(id, postRequest);
+    public void publishPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole) {
+        postService.publish(id, userId, userRole);
     }
 
     @PutMapping(path = "{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PostResponse editPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
-        return postService.updatePost(id, postRequest);
+    public PostResponse editPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody PostRequest postRequest) {
+        return postService.updatePost(id, userId, userRole, postRequest);
     }
 }

@@ -13,7 +13,5 @@ import lombok.NoArgsConstructor;
 public class PostRequest {
     private String title;
     private String content;
-    private Long userId;
-    private String userRole;
     private Category category;
 }
