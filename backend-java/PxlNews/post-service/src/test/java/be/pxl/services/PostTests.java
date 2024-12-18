@@ -79,6 +79,26 @@ public class PostTests {
     }
 
     @Test
+    public void postBuilder_shouldBeImplemented() {
+        Post post = Post.builder()
+                .title("Post title")
+                .content("Content...")
+                .userId(123456L)
+                .category(Category.ALUMNI)
+                .createdAt(LocalDateTime.now())
+                .state(State.DRAFTED)
+                .build();
+
+        assertNotNull(post);
+        assertEquals("Post title", post.getTitle());
+        assertEquals("Content...", post.getContent());
+        assertEquals(123456L, post.getUserId());
+        assertEquals(Category.ALUMNI, post.getCategory());
+        assertNotNull(post.getCreatedAt());
+        assertEquals(State.DRAFTED, post.getState());
+    }
+
+    @Test
     public void applicationContext_shouldLoadSuccessfully() {
         assertDoesNotThrow(() -> PostServiceApplication.main(new String[] {}));
     }
@@ -212,7 +232,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isOk());
@@ -228,7 +248,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + 9999)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + 9999 + "/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isNotFound());
@@ -243,7 +263,7 @@ public class PostTests {
                 .userRole("invalid")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -258,7 +278,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -273,7 +293,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -288,7 +308,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/submit/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -303,7 +323,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isOk());
@@ -318,7 +338,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + 9999)
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + 9999 + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isNotFound());
@@ -333,7 +353,7 @@ public class PostTests {
                 .userRole("invalid")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -348,7 +368,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -363,7 +383,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
@@ -378,7 +398,7 @@ public class PostTests {
                 .userRole("editor")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/publish/" + post.getId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
