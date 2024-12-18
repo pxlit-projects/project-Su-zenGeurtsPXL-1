@@ -65,13 +65,13 @@ public class PostController {
         return postService.createPost(postRequest);
     }
 
-    @PostMapping(path = "submit/{id}")
+    @PostMapping(path = "{id}/submit")
     @ResponseStatus(HttpStatus.OK)
     public void submitPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
         postService.submit(id, postRequest);
     }
 
-    @PostMapping(path = "publish/{id}")
+    @PostMapping(path = "/{id}/publish")
     @ResponseStatus(HttpStatus.OK)
     public void publishPost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
         postService.publish(id, postRequest);
