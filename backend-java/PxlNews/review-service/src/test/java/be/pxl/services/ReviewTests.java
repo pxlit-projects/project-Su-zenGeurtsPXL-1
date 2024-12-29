@@ -81,6 +81,7 @@ public class ReviewTests {
             Review review = Review.builder()
                     .userId(1L)
                     .postId(postId)
+                    .content("Content...")
                     .createdAt(LocalDateTime.now())
                     .type(Type.APPROVAL)
                     .build();
@@ -112,6 +113,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -133,6 +135,7 @@ public class ReviewTests {
                 .userId(1L)
                 .userRole("editor")
                 .postId(postId)
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -159,6 +162,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("user")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -185,6 +189,7 @@ public class ReviewTests {
                 .userId(post.getUserId())
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -211,6 +216,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -237,6 +243,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -262,6 +269,7 @@ public class ReviewTests {
         Review review = Review.builder()
                 .userId(post.getUserId() + 1)
                 .postId(post.getId())
+                .content("Content...")
                 .createdAt(LocalDateTime.now())
                 .type(Type.APPROVAL)
                 .build();
@@ -272,6 +280,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -298,6 +307,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -328,6 +338,7 @@ public class ReviewTests {
                 .userId(1L)
                 .userRole("editor")
                 .postId(postId)
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -354,6 +365,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("user")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -380,6 +392,7 @@ public class ReviewTests {
                 .userId(post.getUserId())
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -406,6 +419,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -432,6 +446,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -457,6 +472,7 @@ public class ReviewTests {
         Review review = Review.builder()
                 .userId(post.getUserId() + 1)
                 .postId(post.getId())
+                .content("Content...")
                 .createdAt(LocalDateTime.now())
                 .type(Type.APPROVAL)
                 .build();
@@ -467,6 +483,7 @@ public class ReviewTests {
                 .userId(post.getUserId() + 1)
                 .userRole("editor")
                 .postId(post.getId())
+                .content("Content...")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")

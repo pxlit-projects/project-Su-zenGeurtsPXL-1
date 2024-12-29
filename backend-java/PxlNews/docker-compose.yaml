@@ -24,6 +24,16 @@ services:
     volumes:
       - review_db_data:/var/lib/mysql
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "15672:15672"  # Management console
+      - "5672:5672"    # AMQP protocol port
+
 volumes:
   post_db_data:
   review_db_data:

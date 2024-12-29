@@ -9,22 +9,45 @@ import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 import be.pxl.services.domain.dto.ReviewResponse;
 import be.pxl.services.repository.PostRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class PostService implements IPostService {
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private final PostRepository postRepository;
     private final ReviewClient reviewClient;
     private static final Logger logger = LoggerFactory.getLogger(PostService.class);
+
+    @RabbitListener(queues = "reviewQueue")
+    public void listen(String in) {
+        logger.info("Message read from reviewQueue : {}", in);
+
+        try {
+            Map review = objectMapper.readValue(in, Map.class);
+            logger.debug("PostID : {} and ReviewerId: {}", review.get("postId"), review.get("reviewerId"));
+            Integer postIdInt = (Integer) review.get("postId");
+            Integer reviewerIdInt = (Integer) review.get("reviewerId");
+
+            backToDraft(postIdInt.longValue(), reviewerIdInt.longValue());
+        } catch (Exception e) {
+            logger.error("Error occurred: {}", e.getMessage());
+        }
+    }
 
     @Override
     public List<PostResponse> findAllPosts() {
@@ -37,7 +60,7 @@ public class PostService implements IPostService {
 
     @Override
     public PostResponse findPostById(Long id) {
-        logger.info("Getting post by id " + id);
+        logger.info("Getting post by id {}", id);
         return postRepository.findById(id)
                 .map(this::mapToPostResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
@@ -60,7 +83,7 @@ public class PostService implements IPostService {
 
     @Override
     public PostResponse findPostByIdWithReviews(Long id) {
-        logger.info("Getting post by id " + id + " with reviews");
+        logger.info("Getting post by id {} with reviews", id);
         PostResponse postResponse = postRepository.findById(id)
                 .map(this::mapToPostResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
@@ -85,18 +108,28 @@ public class PostService implements IPostService {
 
     @Override
     public void publish(Long id, Long userId, String userRole) {
-        logger.info("Publishing post with id " + id);
+        logger.info("Publishing post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, State.SUBMITTED);
+        Post post = checksToUpdatePost(id, userId, true, State.SUBMITTED);
 
         post.setState(State.PUBLISHED);
         postRepository.save(post);
     }
 
     @Override
+    public void backToDraft(Long id, Long userId) {
+        logger.info("Making post with id {} a draft again", id);
+
+        Post post = checksToUpdatePost(id, userId, false, State.SUBMITTED);
+
+        post.setState(State.DRAFTED);
+        postRepository.save(post);
+    }
+
+    @Override
     public List<PostResponse> findPostsByUserId(Long userId, String userRole) {
-        logger.info("Getting post with userId " + userId);
+        logger.info("Getting post with userId {}", userId);
 
         checksUserRole(userRole);
 
@@ -127,10 +160,10 @@ public class PostService implements IPostService {
 
     @Override
     public void submit(Long id, Long userId, String userRole) {
-        logger.info("Submitting post with id " + id);
+        logger.info("Submitting post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, State.DRAFTED);
+        Post post = checksToUpdatePost(id, userId, true, State.DRAFTED);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
@@ -138,10 +171,10 @@ public class PostService implements IPostService {
 
     @Override
     public PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest) {
-        logger.info("Updating post");
+        logger.info("Updating post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, State.DRAFTED);
+        Post post = checksToUpdatePost(id, userId, true, State.DRAFTED);
         post.setContent(postRequest.getContent());
         return mapToPostResponse(postRepository.save(post));
     }
@@ -152,11 +185,11 @@ public class PostService implements IPostService {
         }
     }
 
-    private Post checksToUpdatePost(Long id, Long userId, State validState) {
+    private Post checksToUpdatePost(Long id, Long userId, boolean ownerAllowed, State validState) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
-        if (!post.getUserId().equals(userId)) {
+        if (post.getUserId().equals(userId) != ownerAllowed) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
         }
 
