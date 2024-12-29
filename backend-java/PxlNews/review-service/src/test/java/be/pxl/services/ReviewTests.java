@@ -89,9 +89,12 @@ public class ReviewTests {
             reviewRepository.save(review);
         }
 
+        String userRole = "editor";
+
         List<Review> expectedReviews = reviewRepository.findAll();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/review/post/" + postId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/review/post/" + postId)
+                        .header("userRole", userRole))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedReviews)));
     }
@@ -110,13 +113,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isOk());
@@ -132,13 +138,16 @@ public class ReviewTests {
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(1L)
-                .userRole("editor")
                 .postId(postId)
                 .content("Content...")
                 .build();
 
+        Long userId = 1L;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isNotFound());
@@ -159,13 +168,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("user")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "user";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -186,13 +198,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId())
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId();
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -213,13 +228,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -240,13 +258,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -277,13 +298,16 @@ public class ReviewTests {
         reviewRepository.save(review);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -304,13 +328,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isOk());
@@ -335,13 +362,16 @@ public class ReviewTests {
                 .thenThrow(new FeignException.NotFound("Post with id " + postId + " not found.", request, null , null));
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(1L)
-                .userRole("editor")
                 .postId(postId)
                 .content("Content...")
                 .build();
 
+        Long userId = 1L;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isNotFound());
@@ -362,13 +392,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("user")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "user";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -389,13 +422,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId())
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId();
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -416,13 +452,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -443,13 +482,16 @@ public class ReviewTests {
         Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());
@@ -480,13 +522,16 @@ public class ReviewTests {
         reviewRepository.save(review);
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
-                .userId(post.getUserId() + 1)
-                .userRole("editor")
                 .postId(post.getId())
                 .content("Content...")
                 .build();
 
+        Long userId = post.getUserId() + 1;
+        String userRole = "editor";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
+                        .header("userId", userId)
+                        .header("userRole", userRole)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isBadRequest());

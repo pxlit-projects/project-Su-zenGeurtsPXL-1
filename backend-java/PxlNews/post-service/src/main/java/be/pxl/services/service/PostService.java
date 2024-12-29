@@ -39,11 +39,11 @@ public class PostService implements IPostService {
 
         try {
             Map review = objectMapper.readValue(in, Map.class);
-            logger.debug("PostID : {} and ReviewerId: {}", review.get("postId"), review.get("reviewerId"));
             Integer postIdInt = (Integer) review.get("postId");
             Integer reviewerIdInt = (Integer) review.get("reviewerId");
 
-            backToDraft(postIdInt.longValue(), reviewerIdInt.longValue());
+            if (review.get("type") == "REJECTION")  backToDraft(postIdInt.longValue(), reviewerIdInt.longValue());
+
         } catch (Exception e) {
             logger.error("Error occurred: {}", e.getMessage());
         }

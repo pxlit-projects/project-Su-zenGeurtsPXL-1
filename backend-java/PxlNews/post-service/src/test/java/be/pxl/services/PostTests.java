@@ -7,6 +7,7 @@ import be.pxl.services.domain.Review;
 import be.pxl.services.domain.State;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.repository.PostRepository;
+import be.pxl.services.service.IPostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,9 @@ public class PostTests {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private IPostService postService;
 
     @Container
     private static final MySQLContainer sqlContainer =
@@ -102,6 +106,8 @@ public class PostTests {
     public void applicationContext_shouldLoadSuccessfully() {
         assertDoesNotThrow(() -> PostServiceApplication.main(new String[] {}));
     }
+
+
 
     @Test
     public void getAllPosts_shouldReturnListOfRequestedPosts() throws Exception {
@@ -232,6 +238,18 @@ public class PostTests {
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void backToDraft_shouldChangeStateToDraftedOfRequestedPost() {
+        Post post = postRepository.findAll().get(1);
+        Long userId = post.getUserId() + 1;
+
+        postService.backToDraft(post.getId(), userId);
+
+        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
+        assertEquals(State.DRAFTED, updatedPost.getState());
+    }
+
 
     @Test
     public void submitPost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
