@@ -27,15 +27,14 @@ export class EditPostComponent implements OnInit{
   router: Router = inject(Router);
 
   postForm: FormGroup = this.fb.group({
-    content: [ '', Validators.required],
-    userId: [localStorage.getItem("userId")]
+    content: [ '', Validators.required]
   });
 
   ngOnInit(): void {
     this.post$.subscribe({
       next: (post) => {
         this.postForm.patchValue({
-          content: post.content,
+          content: post.content
         });
       },
       error: () => {

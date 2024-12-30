@@ -1,5 +1,5 @@
 import {User} from "../../shared/models/user.model";
-import {UserRequest} from "../../shared/models/user-request.model";
+import {LoginRequest} from "../../shared/models/login-request.model";
 import {AuthenticationService} from "../../shared/services/authentication.service";
 import {LoginComponent} from "./login.component";
 
@@ -51,7 +51,7 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as UserRequest);
+    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
 
     expect(component.loginForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
@@ -77,7 +77,7 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as UserRequest);
+    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
 
     expect(component.loginForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/post']);
@@ -102,7 +102,7 @@ describe('LoginComponent', () => {
 
     component.onSubmit();
 
-    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as UserRequest);
+    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
 
     expect(component.loginForm.pristine).toBeTrue();
     expect(component.invalidLogin ).toBeTrue();

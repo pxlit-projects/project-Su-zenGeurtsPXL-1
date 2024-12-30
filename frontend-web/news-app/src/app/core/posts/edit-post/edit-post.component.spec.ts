@@ -4,7 +4,7 @@ import {PostService} from "../../../shared/services/post.service";
 import {EditPostComponent} from "./edit-post.component";
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Router, ActivatedRoute, UrlSegment} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {of, throwError} from 'rxjs';
 import {By} from "@angular/platform-browser";
@@ -53,7 +53,6 @@ describe('EditPostComponent', () => {
   it('should create the form with required controls and validators', () => {
     expect(component.postForm).toBeTruthy();
     expect(component.postForm.controls['content'].valid).toBeTrue();
-    expect(component.postForm.controls['userId'].value).toBe(localStorage.getItem("userId"));
   });
 
   it('should navigate to pageNotFound when getPost fails in ngOnInit', () => {
@@ -68,8 +67,7 @@ describe('EditPostComponent', () => {
 
   it('should call editPost on form submit and navigate on success', () => {
     const postRequest = {
-      content: 'Updated content',
-      userId: 1
+      content: 'Updated content'
     };
 
     component.postForm.setValue(postRequest);

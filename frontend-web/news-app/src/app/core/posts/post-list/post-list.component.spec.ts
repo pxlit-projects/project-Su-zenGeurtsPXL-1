@@ -85,7 +85,7 @@ describe('PostListComponent', () => {
 
     component.fetchPosts();
 
-    expect(postServiceMock.getMyPosts).toHaveBeenCalledWith('1');
+    expect(postServiceMock.getMyPosts).toHaveBeenCalled();
     expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
     component.posts$.subscribe(data => {
       expect(data).toEqual(mockReversePosts);
@@ -93,7 +93,7 @@ describe('PostListComponent', () => {
   });
 
   it('should filter posts based on the filter criteria', () => {
-    const filter: Filter = { content: 'con', author: 'Mi', category: 'ACA' };
+    const filter: Filter = { content: 'con', author: 'Mi', date: '2024-12-10' };
     const filteredPosts: Post[] = [
       { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
     ];
@@ -118,7 +118,7 @@ describe('PostListComponent', () => {
 
     component.handleFilter(filter);
 
-    expect(postServiceMock.filterMyPosts).toHaveBeenCalledWith(filter, '1');
+    expect(postServiceMock.filterMyPosts).toHaveBeenCalledWith(filter);
 
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);

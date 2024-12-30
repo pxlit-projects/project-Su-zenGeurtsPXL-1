@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {of, throwError} from "rxjs";
 import {ReactiveFormsModule} from "@angular/forms";
 import {Post} from "../../../shared/models/post.model";
-import {By} from "@angular/platform-browser";
 
 describe('PostDetailComponent', () => {
   let component: PostDetailComponent;
@@ -62,21 +61,7 @@ describe('PostDetailComponent', () => {
 
     component.submitPost();
 
-    expect(postServiceMock.submitPost).toHaveBeenCalledWith(1, 1);
+    expect(postServiceMock.submitPost).toHaveBeenCalledWith(1);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
-  });
-
-  it('should display error message when editPost fails', () => {
-    const errorResponse = {
-      error: {message: 'Failed to update the post'
-      },
-    };
-    postServiceMock.submitPost.and.returnValue(throwError(() => errorResponse));
-
-    component.submitPost();
-    fixture.detectChanges();
-
-    const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
-    expect(debugElement.nativeElement.textContent).toContain('Failed to update the post');
   });
 });

@@ -25,7 +25,6 @@ export class AddPostComponent implements OnInit{
   postForm: FormGroup = this.fb.group({
     title: ['', [Validators.required, Validators.maxLength(130)]],
     content: ['', Validators.required],
-    userId: [localStorage.getItem("userId")],
     category: ['', Validators.required]
   });
 

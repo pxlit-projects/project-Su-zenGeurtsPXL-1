@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from "../models/user.model";
-import {UserRequest} from "../models/user-request.model";
+import {LoginRequest} from "../models/login-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class AuthenticationService {
     { id: 10, username: 'kasper', fullName: 'Kasper De Smet', password: 'us123', role: 'user' }
   ];
 
-  login(login: UserRequest): User | null {
+  login(login: LoginRequest): User | null {
     const username = login.username;
     const password = login.password;
 

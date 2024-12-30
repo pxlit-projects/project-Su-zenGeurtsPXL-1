@@ -21,6 +21,7 @@ export class FilterComponent {
   @Output() filterChanged = new EventEmitter<Filter>();
 
   onSubmit(form: any) {
+    console.log(typeof this.filter.date);
     if (form.valid) {
       this.filterChanged.emit(this.filter);
     }

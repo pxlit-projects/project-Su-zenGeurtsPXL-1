@@ -23,7 +23,7 @@ describe('FilterComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should navigate to addPostback on addPost', () => {
+  it('should navigate to addPost Component on addPost', () => {
     component.addPost();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/addPost']);
   });
@@ -32,14 +32,14 @@ describe('FilterComponent', () => {
     const mockForm = { valid: true };
     spyOn(component.filterChanged, 'emit');
 
-    component.filter = { content: 'Test Content', author: 'Test Author', category: 'Test Category' };
+    component.filter = { content: 'Test Content', author: 'Test Author', date: '2024-12-12' };
 
     component.onSubmit(mockForm);
 
     expect(component.filterChanged.emit).toHaveBeenCalledWith({
       content: 'Test Content',
       author: 'Test Author',
-      category: 'Test Category',
+      date: '2024-12-12',
     });
   });
 

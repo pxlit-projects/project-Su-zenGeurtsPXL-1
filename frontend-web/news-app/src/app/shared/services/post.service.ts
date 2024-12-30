@@ -1,11 +1,11 @@
 import {inject, Injectable} from '@angular/core';
-import {Post} from "../models/post.model";
-import {HttpClient} from "@angular/common/http";
-import {map, Observable} from "rxjs";
+import {Post} from '../models/post.model';
+import {HttpClient} from '@angular/common/http';
+import {map, Observable} from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {PostRequest} from "../models/post-request.model";
-import {Filter} from "../models/filter.model";
-import {AuthenticationService} from "./authentication.service";
+import {PostRequest} from '../models/post-request.model';
+import {Filter} from '../models/filter.model';
+import {AuthenticationService} from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class PostService {
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
   getPost(id: number): Observable<Post> {
-    return this.http.get<Post>(this.api + "/" + id);
+    return this.http.get<Post>(this.api + '/' + id);
   }
 
   getCategories(): Observable<string[]> {
@@ -27,24 +27,20 @@ export class PostService {
     return this.http.get<Post[]>(this.api + '/published');
   }
 
-  getMyPosts(userId: string | null): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + "/user/" + userId);
+  getMyPosts(): Observable<Post[]> {
+    return this.http.get<Post[]>(this.api + '/mine',  { headers: this.getHeaders() });
   }
 
   addPost(post: PostRequest): Observable<Post> {
-    return this.http.post<Post>(this.api, post);
+    return this.http.post<Post>(this.api, post, { headers: this.getHeaders() });
   }
 
-  submitPost(id: number, userId: number | null): Observable<void> {
-    if (userId == null) {
-      throw new Error("Nobody is signed in.");
-    } else {
-      return this.http.post<void>(this.api + "/submit/" + id, userId);
-    }
+  submitPost(id: number): Observable<void> {
+    return this.http.post<void>(this.api + '/' + id + '/submit', null, { headers:this.getHeaders() });
   }
 
   editPost(id: number, post: PostRequest): Observable<Post> {
-    return this.http.put<Post>(this.api + "/" + id, post);
+    return this.http.put<Post>(this.api + '/' + id, post, { headers: this.getHeaders() });
   }
 
   filterPublishedPosts(filter: Filter): Observable<Post[]> {
@@ -53,12 +49,11 @@ export class PostService {
     );
   }
 
-  filterMyPosts(filter: Filter, userId: string | null): Observable<Post[]> {
-    return this.getMyPosts(userId).pipe(
+  filterMyPosts(filter: Filter): Observable<Post[]> {
+    return this.getMyPosts().pipe(
       map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
     );
   }
-
 
   public transformDate(date: string): string {
     const dateDate = new Date(date);
@@ -69,14 +64,13 @@ export class PostService {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   }
 
-
   public isPostMatchingFilter(post: Post, filter: Filter): boolean {
     const user = this.authenticationService.getUserById(post.userId);
     if (user == undefined) return false;
 
     const matchesContent = this.checkInclusion(post.content, filter.content);
     const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
-    const matchesDate = filter.date === ""? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
+    const matchesDate = filter.date === '' ? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
     return matchesContent && matchesAuthor && matchesDate;
   }
 
@@ -95,5 +89,11 @@ export class PostService {
   public orderToMostRecent(posts: Observable<Post[]>): Observable<Post[]> {
     return posts.pipe(map((posts: Post[]) =>
       posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
+  }
+
+  public getHeaders(): any {
+    let userId = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userId');
+    let userRole = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userRole');
+    return { userId: userId, userRole: userRole, 'Content-Type': 'application/json' };
   }
 }

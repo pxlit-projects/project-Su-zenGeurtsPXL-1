@@ -4,7 +4,7 @@ import {NgClass, NgOptimizedImage} from "@angular/common";
 import {Router} from "@angular/router";
 
 import {AuthenticationService} from "../../shared/services/authentication.service";
-import {UserRequest} from "../../shared/models/user-request.model";
+import {LoginRequest} from "../../shared/models/login-request.model";
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +32,7 @@ export class LoginComponent {
     if (this.loginForm.invalid) {
       this.invalidLoginForm = true;
     } else {
-      const login: UserRequest = {
+      const login: LoginRequest = {
         ...this.loginForm.value
       };
 

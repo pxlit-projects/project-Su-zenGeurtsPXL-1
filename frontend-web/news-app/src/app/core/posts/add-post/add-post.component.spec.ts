@@ -36,7 +36,6 @@ describe('AddPostComponent', () => {
     expect(component.postForm).toBeTruthy();
     expect(component.postForm.controls['title'].valid).toBeFalse();
     expect(component.postForm.controls['content'].valid).toBeFalse();
-    expect(component.postForm.controls['userId'].value).toBe(localStorage.getItem("userId"));
     expect(component.postForm.controls['category'].valid).toBeFalse();
   });
 
@@ -44,7 +43,6 @@ describe('AddPostComponent', () => {
     const postRequest = {
       title: 'Title',
       content: 'Content...',
-      userId: 1,
       category: 'ACADEMIC',
     };
 

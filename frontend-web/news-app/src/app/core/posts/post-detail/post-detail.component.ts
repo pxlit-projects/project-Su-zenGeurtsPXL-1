@@ -31,14 +31,8 @@ export class PostDetailComponent implements OnInit {
   }
 
   submitPost() {
-    let element = document.getElementById('errorMessage');
-      this.postService.submitPost(this.id, this.userId$).subscribe({
-        next: () => {
-          this.router.navigate(['/myPost']);
-        },
-        error: (err) => {
-          if (element) element.innerText = err.error.message;
-        }
+      this.postService.submitPost(this.id).subscribe(() => {
+        this.router.navigate(['/myPost']);
       });
   }
 }

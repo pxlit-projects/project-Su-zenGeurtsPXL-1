@@ -76,54 +76,59 @@ describe('PostService', () => {
 
   // getMyPosts()
   it('should retrieve posts by USERID via GET', () => {
-    const userId = '1';
 
-    service.getMyPosts(userId).subscribe(post => {
+    service.getMyPosts().subscribe(post => {
       expect(post).toEqual(mockPosts);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/user/' + userId);
+    const req = httpTestingController.expectOne(service.api + '/mine');
     expect(req.request.method).toBe('GET');
     req.flush(mockPosts);
   });
 
   // addPost()
   it('should add a post via POST', () => {
-    const newPost = { id: 4, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-18 15:30:07', state: 'DRAFTED'};
+    const postRequest = {
+      title: 'Title',
+      content: 'Content...',
+      category: 'ACADEMIC',
+    };
 
-    service.addPost(newPost).subscribe(post => {
+    const newPost = {
+      id: 4,
+      title: 'Title',
+      content: 'Content...',
+      userId: 1,
+      category: 'ACADEMIC',
+      createdAt: '2024-12-18 15:30:07',
+      state: 'DRAFTED'
+    };
+
+    service.addPost(postRequest).subscribe(post => {
       expect(post).toEqual(newPost);
     });
 
     const req = httpTestingController.expectOne(service.api);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(newPost);
+    expect(req.request.body).toEqual(postRequest);
     req.flush(newPost);
   });
 
   // submitPost()
   it('should submit a post via POST', () => {
     const postId = 1;
-    const userId = 1;
 
-    service.submitPost(postId, userId).subscribe();
+    service.submitPost(postId).subscribe();
 
-    const req = httpTestingController.expectOne(service.api + '/submit/' + postId);
+    const req = httpTestingController.expectOne(service.api + '/' + postId + '/submit' );
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(userId);
     req.flush(null);
-  });
-
-  it('should throw error when submitting a post without a USERID', () => {
-    const postId = 1;
-    const userId = null;
-
-    expect(() => service.submitPost(postId, userId).subscribe()).toThrowError('Nobody is signed in.');
   });
 
   // editPost()
   it('should update a post via PUT', () => {
     const postId = 1;
+
     const updatedPost = { ...mockPosts[0], content: 'Updated content' };
 
     service.editPost(postId, updatedPost).subscribe(post => {
@@ -138,7 +143,7 @@ describe('PostService', () => {
 
   // filterPosts()
   it('should filter posts based on the filter criteria', () => {
-    const filter: Filter = { content: 'About', author: 'Milan', category: 'spo' };
+    const filter: Filter = { content: 'About', author: 'Milan', date: '2024-12-5' };
 
     service.filterPublishedPosts(filter).subscribe(posts => {
       expect(posts).toEqual([mockPosts[1]]);
@@ -149,19 +154,25 @@ describe('PostService', () => {
   });
 
   it('should filter posts by USERID based on the filter criteria', () => {
-    const userId = '1';
-    const filter: Filter = { content: 'About', author: 'Milan', category: 'spo' };
+    const filter: Filter = { content: 'About', author: 'Milan', date: '2024-12-5' };
 
-    service.filterMyPosts(filter, userId).subscribe(posts => {
+    service.filterMyPosts(filter).subscribe(posts => {
       expect(posts).toEqual([mockPosts[1]]);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/user/' + userId);
+    const req = httpTestingController.expectOne(service.api + '/mine');
     req.flush(mockPosts);
   });
 
   it('should match post correctly with the filter criteria', () => {
-    const filter: Filter = { content: 'About', author: 'Milan', category: 'spo' };
+    const filter: Filter = { content: 'About', author: 'Milan', date: '2024-12-5' };
+    expect(service.isPostMatchingFilter(mockPosts[0], filter)).toBeFalse();
+    expect(service.isPostMatchingFilter(mockPosts[1], filter)).toBeTrue();
+    expect(service.isPostMatchingFilter(mockPosts[2], filter)).toBeFalse();
+  });
+
+  it('should match post correctly with the filter criteria when no date is given', () => {
+    const filter: Filter = { content: 'About sport', author: 'Milan', date: '' };
     expect(service.isPostMatchingFilter(mockPosts[0], filter)).toBeFalse();
     expect(service.isPostMatchingFilter(mockPosts[1], filter)).toBeTrue();
     expect(service.isPostMatchingFilter(mockPosts[2], filter)).toBeFalse();
@@ -169,7 +180,7 @@ describe('PostService', () => {
 
   it('should not filter when filter criteria of user is broken', () => {
     mockPosts.push({ id: 4, title: 'Title', content: 'Content...', userId: 9999, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'});
-    const filter: Filter = { content: 'About', author: 'Milan', category: 'spo' };
+    const filter: Filter = { content: 'About', author: 'Milan', date: '2024-12-5' };
 
     expect(service.isPostMatchingFilter(mockPosts[mockPosts.length - 1], filter)).toBeFalse();
   })
@@ -199,5 +210,15 @@ describe('PostService', () => {
     service.orderToMostRecent(of(mockPosts)).subscribe(posts => {
       expect(posts).toEqual(expectedPosts);
     });
+  });
+
+  // getHeaders()
+  it('should return headers correctly', () => {
+    localStorage.clear();
+    expect(service.getHeaders()).toEqual({ userId: '', userRole: '', 'Content-Type': 'application/json' });
+
+    localStorage.setItem('userId', '1');
+    localStorage.setItem('userRole', 'editor');
+    expect(service.getHeaders()).toEqual({ userId: '1', userRole: 'editor', 'Content-Type': 'application/json' });
   });
 });
