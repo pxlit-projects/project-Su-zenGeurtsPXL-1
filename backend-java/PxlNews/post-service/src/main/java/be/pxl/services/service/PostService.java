@@ -82,8 +82,11 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse findPostByIdWithReviews(Long id) {
+    public PostResponse findPostByIdWithReviews(Long id, String userRole) {
         logger.info("Getting post by id {} with reviews", id);
+
+        checksUserRole(userRole);
+
         PostResponse postResponse = postRepository.findById(id)
                 .map(this::mapToPostResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
@@ -98,8 +101,11 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<PostResponse> findSubmittedPosts() {
+    public List<PostResponse> findSubmittedPosts(String userRole) {
         logger.info("Getting submitted posts");
+
+        checksUserRole(userRole);
+
         return postRepository.findByState(State.SUBMITTED)
                 .stream()
                 .map(this::mapToPostResponse)

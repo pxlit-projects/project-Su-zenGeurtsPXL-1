@@ -146,6 +146,7 @@ public class PostTests {
     public void getPublishedPosts_shouldReturnListOfPublishedPosts() throws Exception {
         List<Post> expectedPosts = postRepository.findByState(State.PUBLISHED);
 
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/published"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedPosts)));
@@ -154,10 +155,21 @@ public class PostTests {
     @Test
     public void getSubmittedPosts_shouldReturnListOfSubmittedPosts() throws Exception {
         List<Post> expectedPosts = postRepository.findByState(State.SUBMITTED);
+        String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/submitted"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/submitted")
+                        .header("userRole", userRole))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedPosts)));
+    }
+
+    @Test
+    public void getSubmittedPosts_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
+        String userRole = "user";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/submitted")
+                        .header("userRole", userRole))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -178,11 +190,25 @@ public class PostTests {
         }
 
         expectedPost.setReviews(expectedReviews);
+
         Mockito.when(reviewClient.getReviewsByPostId(expectedPost.getId())).thenReturn(expectedReviews);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId() + "/with-reviews"))
+        String userRole = "editor";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId() + "/with-reviews")
+                        .header("userRole", userRole))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(expectedPost)));
+    }
+
+    @Test
+    public void getPostByIdWithReviews_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
+        Post expectedPost = postRepository.findAll().get(1);
+        String userRole = "user";
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId() + "/with-reviews")
+                        .header("userRole", userRole))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

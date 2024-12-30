@@ -42,15 +42,15 @@ public class PostController {
 
     @GetMapping(path = "/submitted")
     @ResponseStatus(HttpStatus.OK)
-    public List<PostResponse> getSubmittedPosts() {
-        return postService.findSubmittedPosts();
+    public List<PostResponse> getSubmittedPosts(@RequestHeader String userRole) {
+        return postService.findSubmittedPosts(userRole);
     }
 
 
     @GetMapping(path = "/{id}/with-reviews")
     @ResponseStatus(HttpStatus.OK)
-    public PostResponse getPostByIdWithReviews(@PathVariable Long id) {
-        return postService.findPostByIdWithReviews(id);
+    public PostResponse getPostByIdWithReviews(@PathVariable Long id, @RequestHeader String userRole) {
+        return postService.findPostByIdWithReviews(id, userRole);
     }
 
     @GetMapping(path = "/mine")
