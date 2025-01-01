@@ -46,7 +46,6 @@ public class PostController {
         return postService.findSubmittedPosts(userRole);
     }
 
-
     @GetMapping(path = "/{id}/with-reviews")
     @ResponseStatus(HttpStatus.OK)
     public PostResponse getPostByIdWithReviews(@PathVariable Long id, @RequestHeader String userRole) {
