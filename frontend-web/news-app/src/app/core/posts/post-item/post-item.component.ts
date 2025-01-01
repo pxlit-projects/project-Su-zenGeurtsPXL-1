@@ -19,6 +19,7 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
 })
 export class PostItemComponent {
   @Input() post!: Post;
+  @Input() mine!: boolean;
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 }

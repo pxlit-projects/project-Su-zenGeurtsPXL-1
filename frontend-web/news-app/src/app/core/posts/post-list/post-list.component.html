@@ -12,7 +12,7 @@
     </div>
   <div class="grid grid-cols-3 gap-6">
     @for(post of posts$ | async; track post.id) {
-      <app-post-item [post]="post"></app-post-item>
+      <app-post-item [post]="post" [mine]="mine"></app-post-item>
     }
   </div>
 </div>
