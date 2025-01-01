@@ -1,6 +1,6 @@
 <div class="max-w-md mx-auto bg-white rounded overflow-hidden shadow-md border-2"
      [ngClass]="{'border-gray-500': post.state === 'DRAFTED',
-      'border-blue-500': post.state === 'SUBMITTED',
+      'border-blue-500': post.state === 'SUBMITTED' && mine,
       'border-pxlGreen': post.state === 'APPROVED',
       'border-red-500': post.state === 'REJECTED',
       'border-yellow-500': post.state === 'PUBLISHED' && mine

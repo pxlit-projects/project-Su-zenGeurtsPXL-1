@@ -16,12 +16,11 @@ export class FilterComponent {
   router: Router = inject(Router);
   @Input() mine!: boolean;
   filter: Filter = { content: '', author: '', date: '' };
-  userRole$: string | null = localStorage.getItem('userRole');
 
   @Output() filterChanged = new EventEmitter<Filter>();
+  @Input() review!: boolean;
 
   onSubmit(form: any) {
-    console.log(typeof this.filter.date);
     if (form.valid) {
       this.filterChanged.emit(this.filter);
     }

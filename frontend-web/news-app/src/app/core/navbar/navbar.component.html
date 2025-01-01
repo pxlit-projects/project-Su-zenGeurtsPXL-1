@@ -26,6 +26,7 @@
             <a [routerLink]="['/post']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">Posts</a>
             @if (localStorage.getItem('userRole') === 'editor'){
               <a [routerLink]="['/myPost']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">My posts</a>
+              <a [routerLink]="['/review']" routerLinkActive="border-b-2 border-b-pxlGreen"  class="px-3 py-2 text-sm font-medium text-white hover:text-pxlGreen">Review</a>
             }
           </div>
         </div>

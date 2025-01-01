@@ -22,6 +22,7 @@ export class PostListComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
   mine: boolean = this.url[0].path === 'myPost';
+  review: boolean = this.url[0].path === 'review';
   posts$!: Observable<Post[]>;
   postService: PostService = inject(PostService);
 
@@ -30,12 +31,26 @@ export class PostListComponent implements OnInit {
   }
 
   handleFilter(filter: Filter) {
-    this.posts$ =  this.mine ? this.postService.filterMyPosts(filter) : this.postService.filterPublishedPosts(filter);
+    if (this.mine) {
+      this.posts$ = this.postService.filterMyPosts(filter);
+    } else if (this.review) {
+      this.posts$ = this.postService.filterSubmittedPosts(filter);
+    } else {
+      this.posts$ = this.postService.filterPublishedPosts(filter);
+    }
+
     this.posts$ = this.postService.orderToMostRecent(this.posts$);
   }
 
   fetchPosts(): void {
-    this.posts$ = this.mine ? this.postService.getMyPosts() : this.postService.getPublishedPosts();
+    if (this.mine) {
+      this.posts$ = this.postService.getMyPosts();
+    } else if (this.review) {
+      this.posts$ = this.postService.getSubmittedPosts();
+    } else {
+      this.posts$ = this.postService.getPublishedPosts();
+    }
+
     this.posts$ = this.postService.orderToMostRecent(this.posts$);
   }
 }

@@ -4,11 +4,14 @@
         @if (mine) {
           My posts
         }
+        @else if (review){
+          Review
+        }
         @else {
           Posts
         }
       </h1>
-      <app-filter class="inline-block" (filterChanged)="handleFilter($event)" [mine]="mine"></app-filter>
+      <app-filter class="inline-block" (filterChanged)="handleFilter($event)" [mine]="mine" [review]="review"></app-filter>
     </div>
   <div class="grid grid-cols-3 gap-6">
     @for(post of posts$ | async; track post.id) {
