@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import { Post } from '../../../shared/models/post.model';
 import { Observable} from 'rxjs';
-import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive, UrlSegment} from '@angular/router';
 import {PostService} from "../../../shared/services/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication.service";
 
@@ -16,6 +16,8 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
 export class PostDetailComponent implements OnInit {
   router: Router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
+  url: UrlSegment[] = this.route.snapshot.url;
+  mine: boolean = this.url[0].path === 'myPost';
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
