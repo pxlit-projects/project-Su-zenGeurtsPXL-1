@@ -42,7 +42,18 @@ public class PostService implements IPostService {
             Integer postIdInt = (Integer) review.get("postId");
             Integer reviewerIdInt = (Integer) review.get("reviewerId");
 
-            if (review.get("type") == "REJECTION")  backToDraft(postIdInt.longValue(), reviewerIdInt.longValue());
+            String reviewType = (String) review.get("reviewType");
+            if (reviewType.equals("REJECTION") || reviewType.equals("APPROVAL")) {
+                logger.info("Updating state to after {} of post with id {}", reviewType, postIdInt);
+
+                State[] validStates = {State.SUBMITTED};
+                Post post = checksToUpdatePost(postIdInt.longValue(), reviewerIdInt.longValue(), false, validStates);
+
+                State newState = reviewType.equals("APPROVAL") ? State.APPROVED : State.REJECTED;
+                logger.info("New state is {}", newState);
+                post.setState(newState);
+                postRepository.save(post);
+            }
 
         } catch (Exception e) {
             logger.error("Error occurred: {}", e.getMessage());
@@ -91,7 +102,7 @@ public class PostService implements IPostService {
                 .map(this::mapToPostResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
-        List<ReviewResponse> reviews = reviewClient.getReviewsByPostId(id)
+        List<ReviewResponse> reviews = reviewClient.getReviewsByPostId(id, userRole)
                 .stream()
                 .map(this::mapToReviewResponse)
                 .toList();
@@ -117,19 +128,10 @@ public class PostService implements IPostService {
         logger.info("Publishing post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, true, State.SUBMITTED);
+        State[] validStates = {State.APPROVED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
 
         post.setState(State.PUBLISHED);
-        postRepository.save(post);
-    }
-
-    @Override
-    public void backToDraft(Long id, Long userId) {
-        logger.info("Making post with id {} a draft again", id);
-
-        Post post = checksToUpdatePost(id, userId, false, State.SUBMITTED);
-
-        post.setState(State.DRAFTED);
         postRepository.save(post);
     }
 
@@ -169,7 +171,8 @@ public class PostService implements IPostService {
         logger.info("Submitting post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, true, State.DRAFTED);
+        State[] validStates = {State.DRAFTED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
@@ -180,7 +183,8 @@ public class PostService implements IPostService {
         logger.info("Updating post with id {}", id);
 
         checksUserRole(userRole);
-        Post post = checksToUpdatePost(id, userId, true, State.DRAFTED);
+        State[] validStates = new State[]{State.DRAFTED, State.REJECTED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
         post.setContent(postRequest.getContent());
         return mapToPostResponse(postRepository.save(post));
     }
@@ -191,7 +195,7 @@ public class PostService implements IPostService {
         }
     }
 
-    private Post checksToUpdatePost(Long id, Long userId, boolean ownerAllowed, State validState) {
+    private Post checksToUpdatePost(Long id, Long userId, boolean ownerAllowed, State[] validStates) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
@@ -199,17 +203,15 @@ public class PostService implements IPostService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
         }
 
-        if (post.getState() == State.DRAFTED && validState != State.DRAFTED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is still a draft.");
+        boolean postStateValid = false;
+        for (State state : validStates) {
+            if (post.getState() == state) {
+                postStateValid = true;
+                break;
+            }
         }
 
-        if (post.getState() == State.SUBMITTED && validState != State.SUBMITTED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already submitted.");
-        }
-
-        if (post.getState() == State.PUBLISHED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is already published.");
-        }
+        if (!postStateValid) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " does not have the right state.");
 
         return post;
     }

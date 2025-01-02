@@ -7,7 +7,6 @@ import be.pxl.services.domain.Review;
 import be.pxl.services.domain.State;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.repository.PostRepository;
-import be.pxl.services.service.IPostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +48,6 @@ public class PostTests {
     @Autowired
     private PostRepository postRepository;
 
-    @Autowired
-    private IPostService postService;
-
     @Container
     private static final MySQLContainer sqlContainer =
             new MySQLContainer("mysql:5.7.37");
@@ -68,15 +64,13 @@ public class PostTests {
         postRepository.deleteAll();
 
         for (int i = 0; i < 10; i++) {
-            State state = i % 3 == 0 ? State.PUBLISHED : i % 3 == 1 ? State.SUBMITTED : State.DRAFTED;
-
             Post post = Post.builder()
                     .title("Post " + i)
                     .content("Content...")
                     .userId((long)(i))
                     .category(Category.values()[i % Category.values().length])
                     .createdAt(LocalDateTime.now())
-                    .state(state)
+                    .state(State.DRAFTED)
                     .build();
             postRepository.save(post);
         }
@@ -174,7 +168,7 @@ public class PostTests {
 
     @Test
     public void getPostByIdWithReviews_shouldReturnRequestedPostWithReviews() throws Exception {
-        Post expectedPost = postRepository.findAll().get(1);
+        Post expectedPost = postRepository.findAll().get(0);
 
         List<Review> expectedReviews = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -191,9 +185,8 @@ public class PostTests {
 
         expectedPost.setReviews(expectedReviews);
 
-        Mockito.when(reviewClient.getReviewsByPostId(expectedPost.getId())).thenReturn(expectedReviews);
-
         String userRole = "editor";
+        Mockito.when(reviewClient.getReviewsByPostId(expectedPost.getId(), userRole )).thenReturn(expectedReviews);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId() + "/with-reviews")
                         .header("userRole", userRole))
@@ -203,7 +196,7 @@ public class PostTests {
 
     @Test
     public void getPostByIdWithReviews_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
-        Post expectedPost = postRepository.findAll().get(1);
+        Post expectedPost = postRepository.findAll().get(0);
         String userRole = "user";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId() + "/with-reviews")
@@ -266,20 +259,10 @@ public class PostTests {
     }
 
     @Test
-    public void backToDraft_shouldChangeStateToDraftedOfRequestedPost() {
-        Post post = postRepository.findAll().get(1);
-        Long userId = post.getUserId() + 1;
-
-        postService.backToDraft(post.getId(), userId);
-
-        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        assertEquals(State.DRAFTED, updatedPost.getState());
-    }
-
-
-    @Test
     public void submitPost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
-        Post post = postRepository.findAll().get(2);
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.DRAFTED);
+        postRepository.save(post);
 
         Long userId = post.getUserId();
         String userRole = "editor";
@@ -307,6 +290,8 @@ public class PostTests {
     @Test
     public void submitPost_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
         Post post = postRepository.findAll().get(0);
+        post.setState(State.DRAFTED);
+        postRepository.save(post);
 
         Long userId = post.getUserId();
         String userRole = "user";
@@ -319,7 +304,9 @@ public class PostTests {
 
     @Test
     public void submitPost_withInvalidUserId_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(2);
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.DRAFTED);
+        postRepository.save(post);
 
         Long userId = post.getUserId() + 1;
         String userRole = "editor";
@@ -331,34 +318,29 @@ public class PostTests {
     }
 
     @Test
-    public void submitPost_withStateSubmitted_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(1);
-
-        Long userId = post.getUserId();
-        String userRole = "editor";
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
-                        .header("userId", userId)
-                        .header("userRole", userRole))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void submitPost_withStatePublished_shouldReturnBadRequest() throws Exception {
+    public void submitPost_withInvalidState_shouldReturnBadRequest() throws Exception {
         Post post = postRepository.findAll().get(0);
-
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
-                        .header("userId", userId)
-                        .header("userRole", userRole))
-                .andExpect(status().isBadRequest());
+        List<State> invalidStates = List.of(State.SUBMITTED, State.REJECTED, State.APPROVED, State.PUBLISHED);
+
+        for (State state : invalidStates) {
+            post.setState(state);
+            postRepository.save(post);
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
+                            .header("userId", userId)
+                            .header("userRole", userRole))
+                    .andExpect(status().isBadRequest());
+        }
     }
 
     @Test
     public void publishPost_shouldChangeStateToPublishedOfRequestedPost() throws Exception {
-        Post post = postRepository.findAll().get(1);
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.APPROVED);
+        postRepository.save(post);
 
         Long userId = post.getUserId();
         String userRole = "editor";
@@ -384,7 +366,9 @@ public class PostTests {
 
     @Test
     public void publishPost_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(1);
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.APPROVED);
+        postRepository.save(post);
 
         Long userId = post.getUserId();
         String userRole = "user";
@@ -397,7 +381,9 @@ public class PostTests {
 
     @Test
     public void publishPost_withInvalidUserId_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(2);
+        Post post = postRepository.findAll().get(0);
+        post.setState(State.APPROVED);
+        postRepository.save(post);
 
         Long userId = post.getUserId() + 1;
         String userRole = "editor";
@@ -409,35 +395,28 @@ public class PostTests {
     }
 
     @Test
-    public void publishPost_withStateDrafted_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(2);
-
-        Long userId = post.getUserId();
-        String userRole = "editor";
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
-                        .header("userId", userId)
-                        .header("userRole", userRole))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void publishPost_withStatePublished_shouldReturnBadRequest() throws Exception {
+    public void publishPost_withInvalidState_shouldReturnBadRequest() throws Exception {
         Post post = postRepository.findAll().get(0);
-
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
-                .header("userId", userId)
-                .header("userRole", userRole))
-                .andExpect(status().isBadRequest());
+        List<State> invalidStates = List.of(State.DRAFTED, State.SUBMITTED, State.REJECTED, State.PUBLISHED);
+
+        for (State state : invalidStates) {
+            post.setState(state);
+            postRepository.save(post);
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/publish")
+                            .header("userId", userId)
+                            .header("userRole", userRole))
+                    .andExpect(status().isBadRequest());
+        }
     }
 
 
     @Test
     public void updatePost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
-        Post post = postRepository.findAll().get(2);
+        Post post = postRepository.findAll().get(0);
 
         String content = "Updated content...";
         PostRequest postRequest = PostRequest.builder()
@@ -447,15 +426,22 @@ public class PostTests {
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
-                        .header("userId", userId)
-                        .header("userRole", userRole)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postRequest)))
-                .andExpect(status().isOk());
+        List<State> validStates = List.of(State.DRAFTED, State.REJECTED);
 
-        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        assertEquals(content, updatedPost.getContent());
+        for (State state : validStates) {
+            post.setState(state);
+            postRepository.save(post);
+
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
+                            .header("userId", userId)
+                            .header("userRole", userRole)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(postRequest)))
+                    .andExpect(status().isOk());
+
+            Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
+            assertEquals(content, updatedPost.getContent());
+        }
     }
 
     @Test
@@ -514,31 +500,8 @@ public class PostTests {
     }
 
     @Test
-    public void updatePost_withStateSubmitted_shouldReturnBadRequest() throws Exception {
-        Post post = postRepository.findAll().get(1);
-        post.setState(State.SUBMITTED);
-        postRepository.save(post);
-
-        PostRequest postRequest = PostRequest.builder()
-                .content("Updated content...")
-                .build();
-
-        Long userId = post.getUserId();
-        String userRole = "editor";
-
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
-                        .header("userId", userId)
-                        .header("userRole", userRole)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postRequest)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void updatePost_withStatePublished_shouldReturnBadRequest() throws Exception {
+    public void updatePost_withInvalidState_shouldReturnBadRequest() throws Exception {
         Post post = postRepository.findAll().get(0);
-        post.setState(State.PUBLISHED);
-        postRepository.save(post);
 
         PostRequest postRequest = PostRequest.builder()
                 .content("Updated content...")
@@ -547,11 +510,18 @@ public class PostTests {
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
-                        .header("userId", userId)
-                        .header("userRole", userRole)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postRequest)))
-                .andExpect(status().isBadRequest());
+        List<State> invalidStates = List.of(State.SUBMITTED, State.APPROVED, State.PUBLISHED);
+
+        for (State state : invalidStates) {
+            post.setState(state);
+            postRepository.save(post);
+
+            mockMvc.perform(MockMvcRequestBuilders.put("/api/post/" + post.getId())
+                            .header("userId", userId)
+                            .header("userRole", userRole)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(postRequest)))
+                    .andExpect(status().isBadRequest());
+        }
     }
 }

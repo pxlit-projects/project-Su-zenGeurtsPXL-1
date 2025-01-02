@@ -28,6 +28,4 @@ public interface IPostService {
     List<PostResponse> findSubmittedPosts(String userRole);
 
     void publish(Long id, Long userId, String userRole);
-
-    void backToDraft(Long id, Long userId);
 }
