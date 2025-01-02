@@ -18,5 +18,6 @@ export class ReviewListComponent implements OnInit {
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
   ngOnInit(): void {
-  }
+    this.reviews = this.reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    }
 }

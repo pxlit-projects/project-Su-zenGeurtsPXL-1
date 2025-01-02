@@ -264,19 +264,24 @@ public class PostTests {
     @Test
     public void submitPost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
         Post post = postRepository.findAll().get(0);
-        post.setState(State.DRAFTED);
-        postRepository.save(post);
-
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
-                        .header("userId", userId)
-                        .header("userRole", userRole))
-                .andExpect(status().isOk());
+        List<State> validStates = List.of(State.DRAFTED, State.REJECTED);
 
-        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        assertEquals(State.SUBMITTED, updatedPost.getState());
+        for (State state : validStates) {
+            post.setState(state);
+            postRepository.save(post);
+
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/post/" + post.getId() + "/submit")
+                            .header("userId", userId)
+                            .header("userRole", userRole))
+                    .andExpect(status().isOk());
+
+            Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
+            assertEquals(State.SUBMITTED, updatedPost.getState());
+        }
     }
 
     @Test
@@ -326,7 +331,7 @@ public class PostTests {
         Long userId = post.getUserId();
         String userRole = "editor";
 
-        List<State> invalidStates = List.of(State.SUBMITTED, State.REJECTED, State.APPROVED, State.PUBLISHED);
+        List<State> invalidStates = List.of(State.SUBMITTED, State.APPROVED, State.PUBLISHED);
 
         for (State state : invalidStates) {
             post.setState(state);

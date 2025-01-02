@@ -172,7 +172,7 @@ public class PostService implements IPostService {
         logger.info("Submitting post with id {}", id);
 
         checksUserRole(userRole);
-        State[] validStates = {State.DRAFTED};
+        State[] validStates = {State.DRAFTED, State.REJECTED};
         Post post = checksToUpdatePost(id, userId, true, validStates);
 
         post.setState(State.SUBMITTED);

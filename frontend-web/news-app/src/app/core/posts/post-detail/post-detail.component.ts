@@ -8,12 +8,13 @@ import {PostService} from "../../../shared/services/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication.service";
 import {ReviewRequest} from "../../../shared/models/reviewRequest.model";
 import {ReviewListComponent} from "../../reviews/review-list/review-list.component";
+import {PostListComponent} from "../post-list/post-list.component";
 
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent],
+  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent, PostListComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
@@ -60,9 +61,7 @@ export class PostDetailComponent implements OnInit {
     };
 
     this.postService.reviewPost(type, review).subscribe(() => {
-      this.router.navigate(['/review']).then(() => {
-        window.location.reload();
-      });
+      this.router.navigate(['/review']);
     });
   }
 }
