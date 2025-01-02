@@ -25,7 +25,7 @@ public interface IPostService {
 
     PostResponse findPostByIdWithReviews(Long id, String userRole);
 
-    List<PostResponse> findSubmittedPosts(String userRole);
+    List<PostResponse> findSubmittedPosts(Long userId, String userRole);
 
     void publish(Long id, Long userId, String userRole);
 }

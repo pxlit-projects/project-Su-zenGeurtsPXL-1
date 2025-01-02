@@ -112,13 +112,14 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<PostResponse> findSubmittedPosts(String userRole) {
+    public List<PostResponse> findSubmittedPosts(Long userId, String userRole) {
         logger.info("Getting submitted posts");
 
         checksUserRole(userRole);
 
         return postRepository.findByState(State.SUBMITTED)
                 .stream()
+                .filter(post -> !post.getUserId().equals(userId))
                 .map(this::mapToPostResponse)
                 .toList();
     }
