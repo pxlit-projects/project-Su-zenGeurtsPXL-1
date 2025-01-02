@@ -12,4 +12,5 @@ public interface IReviewService {
     void approve(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException;
 
     void reject(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException;
+    void comment (ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException;
 }

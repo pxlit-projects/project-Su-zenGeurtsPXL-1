@@ -52,7 +52,9 @@ public class ReviewService implements IReviewService {
         logger.info("Approving post with id {}", reviewRequest.getPostId());
 
         checksUserRole(userRole);
-        checksToReviewPost(reviewRequest.getPostId(), userId);
+
+        String[] validStates = {"SUBMITTED"};
+        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
 
         Review review = Review.builder()
                 .userId(userId)
@@ -71,7 +73,9 @@ public class ReviewService implements IReviewService {
         logger.info("Rejecting post with id {}", reviewRequest.getPostId());
 
         checksUserRole(userRole);
-        checksToReviewPost(reviewRequest.getPostId(), userId);
+
+        String[] validStates = {"SUBMITTED"};
+        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
 
         Review review = Review.builder()
                 .userId(userId)
@@ -79,6 +83,28 @@ public class ReviewService implements IReviewService {
                 .content(reviewRequest.getContent())
                 .createdAt(LocalDateTime.now())
                 .type(Type.REJECTION)
+                .build();
+
+        Review savedReview = reviewRepository.save(review);
+
+        rabbitTemplate.convertAndSend("reviewQueue", createMessage(savedReview));
+    }
+
+    @Override
+    public void comment(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+        logger.info("Commenting on a post with id {}", reviewRequest.getPostId());
+
+        checksUserRole(userRole);
+
+        String[] validStates = {"SUBMITTED", "REJECTED", "APPROVED"};
+        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
+
+        Review review = Review.builder()
+                .userId(userId)
+                .postId(reviewRequest.getPostId())
+                .content(reviewRequest.getContent())
+                .createdAt(LocalDateTime.now())
+                .type(Type.COMMENT)
                 .build();
 
         Review savedReview = reviewRepository.save(review);
@@ -104,7 +130,7 @@ public class ReviewService implements IReviewService {
         }
     }
 
-    private void checksToReviewPost(Long postId, Long userId) {
+    private void checksToReviewPost(Long postId, Long userId, String[] validStates) {
         try {
             postClient.getPostById(postId);
         } catch (FeignException.NotFound e) {
@@ -116,17 +142,15 @@ public class ReviewService implements IReviewService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot review own post.");
         }
 
-        if (post.getState().equals("DRAFTED")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " is still a draft.");
+        boolean postStateValid = false;
+        for (String state : validStates) {
+            if (post.getState().equals(state)) {
+                postStateValid = true;
+                break;
+            }
         }
 
-        if (post.getState().equals("PUBLISHED")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " is already published.");
-        }
-
-        if (reviewRepository.findReviewsByPostId(postId).stream().anyMatch(review -> review.getType().equals(Type.APPROVAL))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " is already approved.");
-        }
+        if (!postStateValid) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " does not have the right state.");
     }
 
     private ReviewResponse mapToReviewResponse(Review review) {

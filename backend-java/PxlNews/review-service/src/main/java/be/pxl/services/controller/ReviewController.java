@@ -33,4 +33,10 @@ public class ReviewController {
     public void reject(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole) throws JsonProcessingException {
         reviewService.reject(reviewRequest, userId, userRole);
     }
+
+    @PostMapping(path = "comment")
+    @ResponseStatus(HttpStatus.OK)
+    public void comment(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole) throws JsonProcessingException {
+        reviewService.comment(reviewRequest, userId, userRole);
+    }
 }
