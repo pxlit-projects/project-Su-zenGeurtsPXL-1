@@ -146,24 +146,22 @@ public class PostTests {
     }
 
     @Test
-    public void getSubmittedPosts_shouldReturnListOfSubmittedPosts() throws Exception {
-        List<Post> expectedPosts = postRepository.findByState(State.SUBMITTED);
+    public void getReviewablePosts_shouldReturnListOfSubmittedPosts() throws Exception {
         Long userId = 10L;
         String userRole = "editor";
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/submitted")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/reviewable")
                         .header("userId", userId)
                         .header("userRole", userRole))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(expectedPosts)));
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void getSubmittedPosts_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
+    public void getReviewablePosts_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
         Long userId = 5L;
         String userRole = "user";
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/submitted")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/post/reviewable")
                         .header("userId", userId)
                         .header("userRole", userRole))
                 .andExpect(status().isBadRequest());

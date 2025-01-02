@@ -40,10 +40,10 @@ public class PostController {
         return postService.findPublishedPosts();
     }
 
-    @GetMapping(path = "/submitted")
+    @GetMapping(path = "/reviewable")
     @ResponseStatus(HttpStatus.OK)
-    public List<PostResponse> getSubmittedPosts(@RequestHeader Long userId, @RequestHeader String userRole) {
-        return postService.findSubmittedPosts(userId, userRole);
+    public List<PostResponse> getReviewablePosts(@RequestHeader Long userId, @RequestHeader String userRole) {
+        return postService.findReviewablePosts(userId, userRole);
     }
 
     @GetMapping(path = "/{id}/with-reviews")

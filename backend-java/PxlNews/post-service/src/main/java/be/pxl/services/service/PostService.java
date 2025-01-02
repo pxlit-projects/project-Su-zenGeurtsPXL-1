@@ -112,12 +112,16 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<PostResponse> findSubmittedPosts(Long userId, String userRole) {
-        logger.info("Getting submitted posts");
+    public List<PostResponse> findReviewablePosts(Long userId, String userRole) {
+        logger.info("Getting reviewable posts");
 
         checksUserRole(userRole);
 
-        return postRepository.findByState(State.SUBMITTED)
+        List<Post> reviewablePosts = new java.util.ArrayList<>(postRepository.findByState(State.SUBMITTED));
+        reviewablePosts.addAll(postRepository.findByState(State.REJECTED));
+        reviewablePosts.addAll(postRepository.findByState(State.APPROVED));
+
+        return reviewablePosts
                 .stream()
                 .filter(post -> !post.getUserId().equals(userId))
                 .map(this::mapToPostResponse)
