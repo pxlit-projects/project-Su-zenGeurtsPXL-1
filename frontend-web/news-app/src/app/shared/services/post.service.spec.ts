@@ -46,7 +46,7 @@ describe('PostService', () => {
       expect(post).toEqual(mockPosts[0]);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/' + postId);
+    const req = httpTestingController.expectOne(service.postApi + '/' + postId);
     expect(req.request.method).toBe('GET');
     req.flush(mockPosts[0]);
   });
@@ -58,7 +58,7 @@ describe('PostService', () => {
       expect(categories).toEqual(mockCategories);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/category');
+    const req = httpTestingController.expectOne(service.postApi + '/category');
     expect(req.request.method).toBe('GET');
     req.flush(mockCategories);
   });
@@ -69,7 +69,7 @@ describe('PostService', () => {
       expect(posts).toEqual(mockPosts);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/published');
+    const req = httpTestingController.expectOne(service.postApi + '/published');
     expect(req.request.method).toBe('GET');
     req.flush(mockPosts);
   });
@@ -81,7 +81,7 @@ describe('PostService', () => {
       expect(post).toEqual(mockPosts);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/mine');
+    const req = httpTestingController.expectOne(service.postApi + '/mine');
     expect(req.request.method).toBe('GET');
     req.flush(mockPosts);
   });
@@ -108,7 +108,7 @@ describe('PostService', () => {
       expect(post).toEqual(newPost);
     });
 
-    const req = httpTestingController.expectOne(service.api);
+    const req = httpTestingController.expectOne(service.postApi);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(postRequest);
     req.flush(newPost);
@@ -120,7 +120,7 @@ describe('PostService', () => {
 
     service.submitPost(postId).subscribe();
 
-    const req = httpTestingController.expectOne(service.api + '/' + postId + '/submit' );
+    const req = httpTestingController.expectOne(service.postApi + '/' + postId + '/submit' );
     expect(req.request.method).toBe('POST');
     req.flush(null);
   });
@@ -135,7 +135,7 @@ describe('PostService', () => {
       expect(post).toEqual(updatedPost);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/' + postId);
+    const req = httpTestingController.expectOne(service.postApi + '/' + postId);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(updatedPost);
     req.flush(updatedPost);
@@ -149,7 +149,7 @@ describe('PostService', () => {
       expect(posts).toEqual([mockPosts[1]]);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/published');
+    const req = httpTestingController.expectOne(service.postApi + '/published');
     req.flush(mockPosts);
   });
 
@@ -160,7 +160,7 @@ describe('PostService', () => {
       expect(posts).toEqual([mockPosts[1]]);
     });
 
-    const req = httpTestingController.expectOne(service.api + '/mine');
+    const req = httpTestingController.expectOne(service.postApi + '/mine');
     req.flush(mockPosts);
   });
 

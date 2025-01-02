@@ -13,7 +13,7 @@
       @if (mine) {
         <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
               [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
-       'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED',
+       'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED' ,
        'bg-pxlGreen text-pxlGreen ring-pxlGreen': post.state === 'APPROVED',
        'bg-red-500 text-red-500 ring-red-500': post.state === 'REJECTED',
        'bg-yellow-500 text-yellow-500 ring-yellow-500': post.state === 'PUBLISHED'
@@ -28,6 +28,5 @@
     <button [routerLink]="[post.id]" class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH">
       Read
     </button>
-
   </div>
 </div>

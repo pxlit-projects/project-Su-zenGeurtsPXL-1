@@ -1,0 +1,19 @@
+<div class="grid grid-cols-11 gap-2 py-2">
+  <div class="col-span-1 align-middle my-auto">
+    <img id="profile" class="border-2 border-pxlGreen rounded-full mx-auto"  [src]="'user-profiles/' + authenticationService.getUserById(review.userId)?.role + authenticationService.getUserById(review.userId)?.id + '.png'" alt="user profile">
+  </div>
+  <p class="col-span-8 inline-block align-middle my-auto text-justify">
+    {{ postService.toPascalCasing(review.type) }} by {{authenticationService.getUserById(review.userId)?.fullName}}
+    @if(review.content != '') {
+      <span>: {{ review.content }}</span>
+    }
+  </p>
+  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(review.createdAt) }}</p>
+</div>
+@if(!last) {
+  <div class="grid grid-cols-11 gap-2">
+    <div class="col-span-1 "><p class="mx-auto w-fit font-bold text-pxlGreen">|</p></div>
+    <div class="col-span-8"></div>
+    <div class="col-span-2"></div>
+  </div>
+}

@@ -6,45 +6,58 @@ import { environment } from '../../../environments/environment';
 import {PostRequest} from '../models/post-request.model';
 import {Filter} from '../models/filter.model';
 import {AuthenticationService} from './authentication.service';
+import {ReviewRequest} from "../models/reviewRequest.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  api: string = environment.apiUrl + '/post/api/post';
+  postApi: string = environment.apiUrl + '/post/api/post';
+  reviewApi: string = environment.apiUrl + '/review/api/review';
   http: HttpClient = inject(HttpClient);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
   getPost(id: number): Observable<Post> {
-    return this.http.get<Post>(this.api + '/' + id);
+    return this.http.get<Post>(this.postApi + '/' + id);
   }
 
   getCategories(): Observable<string[]> {
-    return this.http.get<string[]>(this.api + '/category');
+    return this.http.get<string[]>(this.postApi + '/category');
   }
 
   getPublishedPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/published');
+    return this.http.get<Post[]>(this.postApi + '/published');
   }
 
   getMyPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/mine',  { headers: this.getHeaders() });
+    return this.http.get<Post[]>(this.postApi + '/mine', { headers: this.getHeaders() });
   }
 
   getSubmittedPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/submitted',  { headers: this.getHeaders() });
+    return this.http.get<Post[]>(this.postApi + '/submitted', { headers: this.getHeaders() });
+  }
+
+  getPostWithReviews(id: number): Observable<Post> {
+    return this.http.get<Post>(this.postApi + '/' + id + '/with-reviews', { headers: this.getHeaders() });
   }
 
   addPost(post: PostRequest): Observable<Post> {
-    return this.http.post<Post>(this.api, post, { headers: this.getHeaders() });
+    return this.http.post<Post>(this.postApi, post, { headers: this.getHeaders() });
   }
 
   submitPost(id: number): Observable<void> {
-    return this.http.post<void>(this.api + '/' + id + '/submit', null, { headers:this.getHeaders() });
+    return this.http.post<void>(this.postApi + '/' + id + '/submit', null, { headers:this.getHeaders() });
   }
 
+  publishPost(id: number): Observable<void> {
+    return this.http.post<void>(this.postApi + '/' + id + '/publish', null, { headers:this.getHeaders() });
+  }
+
+  reviewPost(type: string, review: ReviewRequest): Observable<void> {
+    return this.http.post<void>(this.reviewApi + '/' + type, review, { headers:this.getHeaders() });
+  }
   editPost(id: number, post: PostRequest): Observable<Post> {
-    return this.http.put<Post>(this.api + '/' + id, post, { headers: this.getHeaders() });
+    return this.http.put<Post>(this.postApi + '/' + id, post, { headers: this.getHeaders() });
   }
 
   filterPublishedPosts(filter: Filter): Observable<Post[]> {
@@ -68,6 +81,17 @@ export class PostService {
   public transformDate(date: string): string {
     const dateDate = new Date(date);
     return dateDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+  }
+
+  public transformDateShort(date: string): string {
+    const dateDate = new Date(date);
+    const day = String(dateDate.getDate()).padStart(2, '0');
+    const month = String(dateDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = dateDate.getFullYear();
+    const hours = String(dateDate.getHours()).padStart(2, '0');
+    const minutes = String(dateDate.getMinutes()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
   }
 
   public toPascalCasing(word: string): string {
