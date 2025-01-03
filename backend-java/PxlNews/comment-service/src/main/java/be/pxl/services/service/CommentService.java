@@ -25,10 +25,8 @@ public class CommentService implements ICommentService {
     private static final Logger logger = LoggerFactory.getLogger(CommentService.class);
 
     @Override
-    public List<CommentResponse> findCommentsByPostId(Long postId, String userRole) {
+    public List<CommentResponse> findCommentsByPostId(Long postId) {
         logger.info("Getting comments by postId {}", postId);
-
-        checksUserRole(userRole);
 
         return commentRespository.findCommentsByPostId(postId)
                 .stream()

@@ -31,4 +31,6 @@ public interface IPostService {
     List<PostResponse> findReviewablePosts(Long userId, String userRole);
 
     void publish(Long id, Long userId, String userRole);
+
+    PostResponse findPostByIdWithComments(Long id);
 }

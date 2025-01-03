@@ -33,4 +33,7 @@ public class Post {
 
     @Transient
     private List<Review> reviews;
+
+    @Transient
+    private List<Comment> comments;
 }

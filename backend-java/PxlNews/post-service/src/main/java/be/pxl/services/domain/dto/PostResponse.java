@@ -23,4 +23,5 @@ public class PostResponse {
     private LocalDateTime createdAt;
     private State state;
     private List<ReviewResponse> reviews;
+    private List<CommentResponse> comments;
 }
