@@ -8,13 +8,14 @@ import {PostService} from "../../../shared/services/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication.service";
 import {ReviewRequest} from "../../../shared/models/reviewRequest.model";
 import {ReviewListComponent} from "../../reviews/review-list/review-list.component";
-import {PostListComponent} from "../post-list/post-list.component";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {CommentListComponent} from "../../comments/comment-list/comment-list.component";
+import {CommentRequest} from "../../../shared/models/comment-request.model";
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent, PostListComponent, FormsModule, ReactiveFormsModule],
+  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent, CommentListComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
@@ -39,6 +40,10 @@ export class PostDetailComponent implements OnInit {
       next: (post) => {
         if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED') {
           this.post$ = this.postService.getPostWithReviews(this.id);
+        }
+
+        if (post.state === 'PUBLISHED') {
+          this.post$ = this.postService.getPostWithComments(this.id);
         }
       },
       error: () => {
@@ -72,6 +77,20 @@ export class PostDetailComponent implements OnInit {
     }
     else {
       window.alert("Comment cannot be empty")
+    }
+  }
+
+  addComment() {
+    console.log("Adding comment")
+    const comment: CommentRequest = {
+      postId: this.id,
+      ...this.commentForm.value
+    };
+
+    if (this.commentForm.valid) {
+      this.postService.addComment(comment).subscribe(() => {
+        window.location.reload();
+      });
     }
   }
 }

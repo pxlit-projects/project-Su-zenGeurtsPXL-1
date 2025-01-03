@@ -1,0 +1,17 @@
+<div class="grid grid-cols-11 gap-2 py-2">
+  <div class="col-span-1 align-middle my-auto">
+    <img id="profile" class="border-2 border-pxlGreen rounded-full mx-auto" [src]="'user-profiles/' + authenticationService.getUserById(comment.userId)?.role + authenticationService.getUserById(comment.userId)?.id + '.png'" alt="user profile">
+  </div>
+  <p class="col-span-8 inline-block align-middle my-auto text-justify">
+    {{authenticationService.getUserById(comment.userId)?.fullName}} commented:
+    <span class="font-bold">{{ comment.content }}</span>
+  </p>
+  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(comment.createdAt) }}</p>
+</div>
+@if(!isLast) {
+  <div class="grid grid-cols-11 gap-2">
+    <div class="col-span-1"><p class="mx-auto w-fit font-bold text-pxlGreen">|</p></div>
+    <div class="col-span-8"></div>
+    <div class="col-span-2"></div>
+  </div>
+}

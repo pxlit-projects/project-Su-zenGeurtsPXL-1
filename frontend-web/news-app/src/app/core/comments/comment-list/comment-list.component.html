@@ -1,0 +1,15 @@
+<div class="border-t-2 border-pxlGreen px-6 py-4">
+  <div class="font-bold text-xl mb-2">Comments</div>
+  @if(comments.length != 0) {
+    @for(comment of comments; track comment.id) {
+        <app-comment-item
+          [comment]="comment"
+          [isLast]="comments.at(comments.length - 1) == comment"
+        ></app-comment-item>
+    }
+  }
+  @else {
+    No comments yet...
+  }
+</div>
+

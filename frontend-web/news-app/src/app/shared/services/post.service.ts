@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Post} from '../models/post.model';
+import {Comment} from '../models/comment.model';
 import {Notification} from '../models/notification.model';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
@@ -8,6 +9,7 @@ import {PostRequest} from '../models/post-request.model';
 import {Filter} from '../models/filter.model';
 import {AuthenticationService} from './authentication.service';
 import {ReviewRequest} from "../models/reviewRequest.model";
+import {CommentRequest} from "../models/comment-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ import {ReviewRequest} from "../models/reviewRequest.model";
 export class PostService {
   postApi: string = environment.apiUrl + '/post/api/post';
   reviewApi: string = environment.apiUrl + '/review/api/review';
+  commentApi: string = environment.apiUrl + '/comment/api/comment';
   http: HttpClient = inject(HttpClient);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
@@ -42,6 +45,10 @@ export class PostService {
     return this.http.get<Post>(this.postApi + '/' + id + '/with-reviews', { headers: this.getHeaders() });
   }
 
+  getPostWithComments(id: number): Observable<Post> {
+    return this.http.get<Post>(this.postApi + '/' + id + '/with-comments');
+  }
+
   getNotifications(): Observable<Notification[]> {
     return this.http.get<Notification[]>(this.postApi + '/notification', { headers: this.getHeaders() });
   }
@@ -65,6 +72,11 @@ export class PostService {
   reviewPost(type: string, review: ReviewRequest): Observable<void> {
     return this.http.post<void>(this.reviewApi + '/' + type, review, { headers:this.getHeaders() });
   }
+
+  addComment(comment: CommentRequest): Observable<Comment> {
+    return this.http.post<Comment>(this.commentApi, comment, { headers:this.getHeaders() });
+  }
+
   editPost(id: number, post: PostRequest): Observable<Post> {
     return this.http.put<Post>(this.postApi + '/' + id, post, { headers: this.getHeaders() });
   }
