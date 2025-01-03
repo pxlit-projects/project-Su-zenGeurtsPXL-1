@@ -1,6 +1,7 @@
 package be.pxl.services.service;
 
 import be.pxl.services.domain.Category;
+import be.pxl.services.domain.dto.NotificationResponse;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 
@@ -16,6 +17,7 @@ public interface IPostService {
     List<Category> findAllCategories();
 
     List<PostResponse> findPostsByUserId(Long userId, String userRole);
+    List<NotificationResponse> findNotificationsByUserId(Long userId, String userRole);
 
     void submit(Long id, Long userId, String userRole);
 

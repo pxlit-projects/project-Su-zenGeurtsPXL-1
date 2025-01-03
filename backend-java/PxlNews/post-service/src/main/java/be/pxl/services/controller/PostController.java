@@ -1,6 +1,7 @@
 package be.pxl.services.controller;
 
 import be.pxl.services.domain.Category;
+import be.pxl.services.domain.dto.NotificationResponse;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 import be.pxl.services.service.IPostService;
@@ -56,6 +57,12 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public List<PostResponse> getPostsByUserId(@RequestHeader Long userId, @RequestHeader String userRole) {
         return postService.findPostsByUserId(userId, userRole);
+    }
+
+    @GetMapping(path = "/notification")
+    @ResponseStatus(HttpStatus.OK)
+    public List<NotificationResponse> getNotificationsByUserId(@RequestHeader Long userId, @RequestHeader String userRole) {
+        return postService.findNotificationsByUserId(userId, userRole);
     }
 
     @PostMapping

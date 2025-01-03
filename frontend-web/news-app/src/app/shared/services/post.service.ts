@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Post} from '../models/post.model';
+import {Notification} from '../models/notification.model';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -40,6 +41,11 @@ export class PostService {
   getPostWithReviews(id: number): Observable<Post> {
     return this.http.get<Post>(this.postApi + '/' + id + '/with-reviews', { headers: this.getHeaders() });
   }
+
+  getNotifications(): Observable<Notification[]> {
+    return this.http.get<Notification[]>(this.postApi + '/notification', { headers: this.getHeaders() });
+  }
+
 
   addPost(post: PostRequest): Observable<Post> {
     return this.http.post<Post>(this.postApi, post, { headers: this.getHeaders() });

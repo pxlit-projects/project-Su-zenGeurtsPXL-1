@@ -1,14 +1,14 @@
 package be.pxl.services.service;
 
 import be.pxl.services.client.ReviewClient;
-import be.pxl.services.domain.Category;
-import be.pxl.services.domain.Post;
-import be.pxl.services.domain.Review;
-import be.pxl.services.domain.State;
+import be.pxl.services.domain.*;
+import be.pxl.services.domain.dto.NotificationResponse;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 import be.pxl.services.domain.dto.ReviewResponse;
+import be.pxl.services.repository.NotificationRepository;
 import be.pxl.services.repository.PostRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -30,6 +30,7 @@ public class PostService implements IPostService {
     private ObjectMapper objectMapper;
 
     private final PostRepository postRepository;
+    private final NotificationRepository notificationRepository;
     private final ReviewClient reviewClient;
     private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 
@@ -38,26 +39,47 @@ public class PostService implements IPostService {
         logger.info("Message read from reviewQueue : {}", in);
 
         try {
-            Map review = objectMapper.readValue(in, Map.class);
-            Integer postIdInt = (Integer) review.get("postId");
-            Integer reviewerIdInt = (Integer) review.get("reviewerId");
+            handleMessage(in);
+        } catch (Exception e) {
+            logger.error("Error occurred: {}", e.getMessage());
+        }
+    }
+
+    private void handleMessage(String message) throws JsonProcessingException {
+            Map review = objectMapper.readValue(message, Map.class);
+            Long postId = ((Integer) review.get("postId")).longValue();
+            Long reviewerId = ((Integer) review.get("reviewerId")).longValue();
+
+            Long userId = postRepository.findById(postId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + postId + " not found.")).getUserId();
+
+            LocalDateTime executedAt = LocalDateTime.parse((String) review.get("executedAt"));
+            logger.info("Creating notification");
+            Notification notification = Notification.builder()
+                    .postId(postId)
+                    .receiverId(userId)
+                    .executorId(reviewerId)
+                    .content((String) review.get("comment"))
+                    .action((String) review.get("reviewType"))
+                    .executedAt(executedAt)
+                    .isRead(false)
+                    .build();
+
+            logger.info("Saving notification");
+            notificationRepository.save(notification);
 
             String reviewType = (String) review.get("reviewType");
             if (reviewType.equals("REJECTION") || reviewType.equals("APPROVAL")) {
-                logger.info("Updating state to after {} of post with id {}", reviewType, postIdInt);
+                logger.info("Updating state to after {} of post with id {}", reviewType, postId);
 
                 State[] validStates = {State.SUBMITTED};
-                Post post = checksToUpdatePost(postIdInt.longValue(), reviewerIdInt.longValue(), false, validStates);
+                Post post = checksToUpdatePost(postId, reviewerId, false, validStates);
 
                 State newState = reviewType.equals("APPROVAL") ? State.APPROVED : State.REJECTED;
                 logger.info("New state is {}", newState);
                 post.setState(newState);
                 postRepository.save(post);
             }
-
-        } catch (Exception e) {
-            logger.error("Error occurred: {}", e.getMessage());
-        }
     }
 
     @Override
@@ -142,13 +164,25 @@ public class PostService implements IPostService {
 
     @Override
     public List<PostResponse> findPostsByUserId(Long userId, String userRole) {
-        logger.info("Getting post with userId {}", userId);
+        logger.info("Getting posts with userId {}", userId);
 
         checksUserRole(userRole);
 
         return postRepository.findByUserId(userId)
                 .stream()
                 .map(this::mapToPostResponse)
+                .toList();
+    }
+
+    @Override
+    public List<NotificationResponse> findNotificationsByUserId(Long userId, String userRole) {
+        logger.info("Getting notifications with userId {}", userId);
+
+        checksUserRole(userRole);
+
+        return notificationRepository.findByReceiverId(userId)
+                .stream()
+                .map(this::mapToNotificationResponse)
                 .toList();
     }
 
@@ -230,6 +264,19 @@ public class PostService implements IPostService {
                 .category(post.getCategory())
                 .createdAt(post.getCreatedAt())
                 .state(post.getState())
+                .build();
+    }
+
+    private NotificationResponse mapToNotificationResponse(Notification notification) {
+        return NotificationResponse.builder()
+                .id(notification.getId())
+                .postId(notification.getPostId())
+                .receiverId(notification.getReceiverId())
+                .executorId(notification.getExecutorId())
+                .content(notification.getContent())
+                .action(notification.getAction())
+                .executedAt(notification.getExecutedAt())
+                .isRead(notification.getIsRead())
                 .build();
     }
 
