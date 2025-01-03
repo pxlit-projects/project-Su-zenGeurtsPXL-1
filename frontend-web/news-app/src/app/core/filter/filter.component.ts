@@ -14,11 +14,11 @@ import {Router} from "@angular/router";
 
 export class FilterComponent {
   router: Router = inject(Router);
-  @Input() mine!: boolean;
+  @Input() isMine!: boolean;
   filter: Filter = { content: '', author: '', date: '' };
 
   @Output() filterChanged = new EventEmitter<Filter>();
-  @Input() review!: boolean;
+  @Input() isToReview!: boolean;
 
   onSubmit(form: any) {
     if (form.valid) {

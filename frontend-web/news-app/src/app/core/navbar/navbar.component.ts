@@ -14,10 +14,10 @@ export class NavbarComponent {
   protected readonly localStorage = localStorage;
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
-  hiddenUserMenu: boolean = true;
+  userMenuIsHidden: boolean = true;
 
   userMenu() {
-    this.hiddenUserMenu = !this.hiddenUserMenu;
+    this.userMenuIsHidden = !this.userMenuIsHidden;
   }
 
   login() {
@@ -25,7 +25,7 @@ export class NavbarComponent {
   }
 
   logout() {
-    this.hiddenUserMenu = true;
+    this.userMenuIsHidden = true;
     this.localStorage.removeItem('userId');
     this.localStorage.removeItem('userFullName');
     this.localStorage.removeItem('userRole');

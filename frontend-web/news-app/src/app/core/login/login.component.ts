@@ -21,8 +21,8 @@ export class LoginComponent {
   fb: FormBuilder = inject(FormBuilder);
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
-  invalidLogin: boolean = false;
-  invalidLoginForm: boolean = false;
+  loginIsInvalid: boolean = false;
+  formIsInvalid: boolean = false;
   loginForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required],
@@ -30,7 +30,7 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.invalid) {
-      this.invalidLoginForm = true;
+      this.formIsInvalid = true;
     } else {
       const login: LoginRequest = {
         ...this.loginForm.value
@@ -52,7 +52,7 @@ export class LoginComponent {
           this.router.navigate(['/post'])
         }
       } else {
-        this.invalidLogin = true;
+        this.loginIsInvalid = true;
       }
     }
   }

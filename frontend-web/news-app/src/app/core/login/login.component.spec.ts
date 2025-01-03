@@ -85,7 +85,7 @@ describe('LoginComponent', () => {
 
   it('should set invalidLoginForm to true when form is invalid', () => {
      component.onSubmit();
-    expect(component.invalidLoginForm).toBeTrue();
+    expect(component.formIsInvalid).toBeTrue();
   });
 
   it('should set invalidLoginForm to true when form is invalid', () => {
@@ -105,7 +105,7 @@ describe('LoginComponent', () => {
     expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
 
     expect(component.loginForm.pristine).toBeTrue();
-    expect(component.invalidLogin ).toBeTrue();
+    expect(component.loginIsInvalid ).toBeTrue();
   });
 
 });
