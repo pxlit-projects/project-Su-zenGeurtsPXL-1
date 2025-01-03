@@ -20,6 +20,12 @@
       </p>
       <p class="text-black text-justify mb-8">{{post.content}}</p>
 
+      @if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED' && post.reviews != undefined){
+        @if (post.reviews.length != 0) {
+          <app-review-list [reviews]="post.reviews"></app-review-list>
+        }
+      }
+
       @if (userId$ == post.userId) {
         @if (post.state === 'DRAFTED' || post.state === 'REJECTED') {
           <div class="grid grid-cols-2 gap-2">
@@ -50,25 +56,22 @@
               </div>
             </form>
           </div>
+
           <div class="grid grid-cols-3 gap-2">
             @if (post.state === 'SUBMITTED') {
               <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('approve')">Approve</button>
               <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('reject')">Reject</button>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Comment</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Review</button>
             }
+
             @if (post.state === 'REJECTED' || post.state === 'APPROVED') {
               <div></div>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Comment</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Review</button>
               <div></div>
             }
           </div>
         }
     </div>
     <button routerLink=".." class="w-full text-black font-bold py-2 px-2 rounded hover:text-pxlGreen">Back</button>
-    @if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED' && post.reviews != undefined){
-      @if (post.reviews.length != 0) {
-        <app-review-list [reviews]="post.reviews"></app-review-list>
-      }
-    }
   </div>
 }
