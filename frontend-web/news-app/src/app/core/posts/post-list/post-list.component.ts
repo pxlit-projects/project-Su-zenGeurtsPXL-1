@@ -34,7 +34,7 @@ export class PostListComponent implements OnInit {
     if (this.mine) {
       this.posts$ = this.postService.filterMyPosts(filter);
     } else if (this.review) {
-      this.posts$ = this.postService.filterSubmittedPosts(filter);
+      this.posts$ = this.postService.filterReviewablePosts(filter);
     } else {
       this.posts$ = this.postService.filterPublishedPosts(filter);
     }
@@ -46,7 +46,7 @@ export class PostListComponent implements OnInit {
     if (this.mine) {
       this.posts$ = this.postService.getMyPosts();
     } else if (this.review) {
-      this.posts$ = this.postService.getSubmittedPosts();
+      this.posts$ = this.postService.getReviewablePosts();
     } else {
       this.posts$ = this.postService.getPublishedPosts();
     }

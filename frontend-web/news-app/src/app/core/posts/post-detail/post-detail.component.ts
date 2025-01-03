@@ -9,12 +9,12 @@ import {AuthenticationService} from "../../../shared/services/authentication.ser
 import {ReviewRequest} from "../../../shared/models/reviewRequest.model";
 import {ReviewListComponent} from "../../reviews/review-list/review-list.component";
 import {PostListComponent} from "../post-list/post-list.component";
-
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-post-detail',
   standalone: true,
-  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent, PostListComponent],
+  imports: [NgIf, NgClass, AsyncPipe, RouterLinkActive, RouterLink, NgOptimizedImage, MatDividerModule, ReviewListComponent, PostListComponent, FormsModule, ReactiveFormsModule],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
@@ -23,11 +23,16 @@ export class PostDetailComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
   mine: boolean = this.url[0].path === 'myPost';
+  review: boolean = this.url[0].path === 'review';
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
   post$: Observable<Post> = this.postService.getPost(this.id);
   userId$: number | null = Number(localStorage.getItem('userId'));
+  fb: FormBuilder = inject(FormBuilder);
+  commentForm: FormGroup = this.fb.group({
+    content: [ '', Validators.required]
+  });
 
   ngOnInit(): void {
     this.post$.subscribe({
@@ -57,11 +62,16 @@ export class PostDetailComponent implements OnInit {
   reviewPost(type: string) {
     const review: ReviewRequest = {
       postId: this.id,
-      content: ''
+      ...this.commentForm.value
     };
 
-    this.postService.reviewPost(type, review).subscribe(() => {
-      this.router.navigate(['/review']);
-    });
+    if (this.commentForm.valid) {
+      this.postService.reviewPost(type, review).subscribe(() => {
+        this.router.navigate(['/review']);
+      });
+    }
+    else {
+      window.alert("Comment cannot be empty")
+    }
   }
 }

@@ -12,6 +12,7 @@ describe('PostDetailComponent', () => {
   let postServiceMock: jasmine.SpyObj<PostService>;
   let routerMock: jasmine.SpyObj<Router>;
   let routeMock: jasmine.SpyObj<ActivatedRoute>;
+  let windowMock: jasmine.SpyObj<Window>;
 
   beforeEach(() => {
     localStorage.setItem('userId', '1');
@@ -20,6 +21,8 @@ describe('PostDetailComponent', () => {
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('posts', {})], params: {'id': 1}}
     });
+
+    windowMock = jasmine.createSpyObj('Window', ['alert']);
 
     const mockPost = {
       title: 'Title',
@@ -37,7 +40,8 @@ describe('PostDetailComponent', () => {
       providers: [
         { provide: PostService, useValue: postServiceMock },
         { provide: Router, useValue: routerMock },
-        { provide: ActivatedRoute, useValue: routeMock }
+        { provide: ActivatedRoute, useValue: routeMock },
+        { provide: Window, useValue: windowMock }
       ]
     });
 
@@ -110,8 +114,10 @@ describe('PostDetailComponent', () => {
     let reviewType = 'approve';
     let reviewRequest = {
       postId: 1,
-      content: ''
+      content: 'Comment'
     }
+
+    component.commentForm.setValue({content: 'Comment'});
 
     postServiceMock.reviewPost.and.returnValue(of(undefined));
 
@@ -119,5 +125,18 @@ describe('PostDetailComponent', () => {
 
     expect(postServiceMock.reviewPost).toHaveBeenCalledWith(reviewType, reviewRequest);
     expect(routerMock.navigate).toHaveBeenCalledWith(['/review']);
+  });
+
+  it('should alert with an error when reviewPost fails', () => {
+    let reviewType = 'approve';
+    let reviewRequest = {
+      postId: 1,
+      content: ''
+    }
+
+    component.commentForm.setValue({content: ''});
+    expect(component.commentForm.valid).toBe(false);
+    // expect(windowMock.alert).toHaveBeenCalledWith('Comment cannot be empty!');
+    expect(postServiceMock.reviewPost).not.toHaveBeenCalledWith(reviewType, reviewRequest);
   });
 });

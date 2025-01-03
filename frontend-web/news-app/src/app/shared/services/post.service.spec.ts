@@ -92,13 +92,13 @@ describe('PostService', () => {
     req.flush(mockPosts);
   });
 
-  // getSubmittedPosts()
-  it('should retrieve submitted posts via GET', () => {
-    service.getSubmittedPosts().subscribe(posts => {
+  // getReviewablePosts()
+  it('should retrieve reviewable posts via GET', () => {
+    service.getReviewablePosts().subscribe(posts => {
       expect(posts).toEqual(mockPosts);
     });
 
-    const req = httpTestingController.expectOne(service.postApi + '/submitted');
+    const req = httpTestingController.expectOne(service.postApi + '/reviewable');
     expect(req.request.method).toBe('GET');
     expect(req.request.headers.get('Content-Type')).toEqual('application/json');
     expect(req.request.headers.get('userId')).toEqual('5');
@@ -245,15 +245,15 @@ describe('PostService', () => {
     req.flush(mockPosts);
   });
 
-  // filterSubmittedPosts()
-  it('should filter submitted posts based on the filter criteria', () => {
+  // filterReviewablePosts()
+  it('should filter reviewable posts based on the filter criteria', () => {
     const filter: Filter = { content: 'About', author: 'Milan', date: '2024-12-5' };
 
-    service.filterSubmittedPosts(filter).subscribe(posts => {
+    service.filterReviewablePosts(filter).subscribe(posts => {
       expect(posts).toEqual([mockPosts[1]]);
     });
 
-    const req = httpTestingController.expectOne(service.postApi + '/submitted');
+    const req = httpTestingController.expectOne(service.postApi + '/reviewable');
     req.flush(mockPosts);
   });
 

@@ -24,7 +24,7 @@ describe('PostListComponent', () => {
 
   beforeEach(() => {
     localStorage.setItem('userId', '1');
-    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'getSubmittedPosts', 'filterPublishedPosts', 'filterMyPosts', 'filterSubmittedPosts', 'orderToMostRecent']);
+    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'getReviewablePosts', 'filterPublishedPosts', 'filterMyPosts', 'filterReviewablePosts', 'orderToMostRecent']);
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('posts', {})] }
     });
@@ -102,14 +102,14 @@ describe('PostListComponent', () => {
       expect(data).toEqual(mockReversePosts);
     });
 
-    // if (review) getSubmittedPosts
+    // if (review) getReviewablePosts
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
     component.fetchPosts();
 
-    expect(postServiceMock.getSubmittedPosts).toHaveBeenCalled();
+    expect(postServiceMock.getReviewablePosts).toHaveBeenCalled();
     expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
     component.posts$.subscribe(data => {
       expect(data).toEqual(mockReversePosts);
@@ -148,14 +148,14 @@ describe('PostListComponent', () => {
       expect(data).toEqual(filteredPosts);
     });
 
-    // if (review) getSubmittedPosts
+    // if (review) getReviewablePosts
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
     component.handleFilter(filter);
 
-    expect(postServiceMock.filterSubmittedPosts).toHaveBeenCalledWith(filter);
+    expect(postServiceMock.filterReviewablePosts).toHaveBeenCalledWith(filter);
 
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);

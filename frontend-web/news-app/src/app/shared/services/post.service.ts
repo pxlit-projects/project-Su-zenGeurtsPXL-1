@@ -33,8 +33,8 @@ export class PostService {
     return this.http.get<Post[]>(this.postApi + '/mine', { headers: this.getHeaders() });
   }
 
-  getSubmittedPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.postApi + '/submitted', { headers: this.getHeaders() });
+  getReviewablePosts(): Observable<Post[]> {
+    return this.http.get<Post[]>(this.postApi + '/reviewable', { headers: this.getHeaders() });
   }
 
   getPostWithReviews(id: number): Observable<Post> {
@@ -72,8 +72,8 @@ export class PostService {
     );
   }
 
-  filterSubmittedPosts(filter: Filter): Observable<Post[]> {
-    return this.getSubmittedPosts().pipe(
+  filterReviewablePosts(filter: Filter): Observable<Post[]> {
+    return this.getReviewablePosts().pipe(
       map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
     );
   }
