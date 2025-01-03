@@ -22,8 +22,8 @@ export class PostDetailComponent implements OnInit {
   router: Router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
-  mine: boolean = this.url[0].path === 'myPost';
-  review: boolean = this.url[0].path === 'review';
+  isMine: boolean = this.url[0].path === 'myPost';
+  isToReview: boolean = this.url[0].path === 'review';
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);

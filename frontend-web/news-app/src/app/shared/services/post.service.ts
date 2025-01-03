@@ -82,13 +82,13 @@ export class PostService {
     const user = this.authenticationService.getUserById(post.userId);
     if (user == undefined) return false;
 
-    const matchesContent = this.checkInclusion(post.content, filter.content);
-    const matchesAuthor = this.checkInclusion(user.fullName, filter.author);
-    const matchesDate = filter.date === '' ? true : this.checkDate(new Date(post.createdAt), new Date(filter.date));
+    const matchesContent = this.isIncluded(post.content, filter.content);
+    const matchesAuthor = this.isIncluded(user.fullName, filter.author);
+    const matchesDate = filter.date === '' ? true : this.isDatesMatching(new Date(post.createdAt), new Date(filter.date));
     return matchesContent && matchesAuthor && matchesDate;
   }
 
-  public checkDate(postDate: Date, filterDate: Date): boolean {
+  public isDatesMatching(postDate: Date, filterDate: Date): boolean {
     const matchesDay = postDate.getDate() === filterDate.getDate();
     const matchesMonth = postDate.getMonth() === filterDate.getMonth();
     const matchesYear = postDate.getFullYear() === filterDate.getFullYear();
@@ -96,7 +96,7 @@ export class PostService {
     return matchesDay && matchesMonth && matchesYear;
   }
 
-  public checkInclusion(item: string, filter: string): boolean {
+  public isIncluded(item: string, filter: string): boolean {
     return item.toLowerCase().includes(filter.toLowerCase());
   }
 

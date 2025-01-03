@@ -200,23 +200,23 @@ public class PostService implements IPostService {
         }
     }
 
-    private Post checksToUpdatePost(Long id, Long userId, boolean ownerAllowed, State[] validStates) {
+    private Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
-        if (post.getUserId().equals(userId) != ownerAllowed) {
+        if (post.getUserId().equals(userId) != ownerIsAllowed) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
         }
 
-        boolean postStateValid = false;
+        boolean hasValidState = false;
         for (State state : validStates) {
             if (post.getState() == state) {
-                postStateValid = true;
+                hasValidState = true;
                 break;
             }
         }
 
-        if (!postStateValid) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " does not have the right state.");
+        if (!hasValidState) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " does not have the right state.");
 
         return post;
     }

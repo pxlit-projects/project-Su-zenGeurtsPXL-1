@@ -1,21 +1,21 @@
 <div class="container mx-auto mt-5 px-2">
   <div class="flex justify-between mb-8">
       <h1 class="text-2xl font-bold inline-block align-bottom py-3 ">
-        @if (mine) {
+        @if (isMine) {
           My posts
         }
-        @else if (review){
+        @else if (isToReview){
           Review
         }
         @else {
           Posts
         }
       </h1>
-      <app-filter class="inline-block" (filterChanged)="handleFilter($event)" [mine]="mine" [review]="review"></app-filter>
+      <app-filter class="inline-block" (filterChanged)="handleFilter($event)" [isMine]="isMine" [isToReview]="isToReview"></app-filter>
     </div>
   <div class="grid grid-cols-3 gap-6">
     @for(post of posts$ | async; track post.id) {
-      <app-post-item [post]="post" [mine]="mine" [review]="review"></app-post-item>
+      <app-post-item [post]="post" [isMine]="isMine" [isToReview]="isToReview"></app-post-item>
     }
   </div>
 </div>

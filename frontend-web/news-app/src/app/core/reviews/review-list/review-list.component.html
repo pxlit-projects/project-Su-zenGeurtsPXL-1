@@ -2,8 +2,8 @@
   <div class="font-bold text-xl mb-2">Reviews</div>
 @for(review of reviews; track review.id) {
     <app-review-item
-      [review]="review"
-      [last]="reviews.at(reviews.length - 1) == review"
+      [isToReview]="review"
+      [isLast]="reviews.at(reviews.length - 1) == review"
     ></app-review-item>
 }
 </div>

@@ -21,8 +21,8 @@ import {Filter} from "../../../shared/models/filter.model";
 export class PostListComponent implements OnInit {
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
-  mine: boolean = this.url[0].path === 'myPost';
-  review: boolean = this.url[0].path === 'review';
+  isMine: boolean = this.url[0].path === 'myPost';
+  isToReview: boolean = this.url[0].path === 'review';
   posts$!: Observable<Post[]>;
   postService: PostService = inject(PostService);
 
@@ -31,9 +31,9 @@ export class PostListComponent implements OnInit {
   }
 
   handleFilter(filter: Filter) {
-    if (this.mine) {
+    if (this.isMine) {
       this.posts$ = this.postService.filterMyPosts(filter);
-    } else if (this.review) {
+    } else if (this.isToReview) {
       this.posts$ = this.postService.filterReviewablePosts(filter);
     } else {
       this.posts$ = this.postService.filterPublishedPosts(filter);
@@ -43,9 +43,9 @@ export class PostListComponent implements OnInit {
   }
 
   fetchPosts(): void {
-    if (this.mine) {
+    if (this.isMine) {
       this.posts$ = this.postService.getMyPosts();
-    } else if (this.review) {
+    } else if (this.isToReview) {
       this.posts$ = this.postService.getReviewablePosts();
     } else {
       this.posts$ = this.postService.getPublishedPosts();

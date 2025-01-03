@@ -45,28 +45,28 @@ describe('PostListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize "mine" based on route URL', () => {
-    // !mine
-    expect(component.mine).toBe(false);
+  it('should initialize "isMine" based on route URL', () => {
+    // !isMine
+    expect(component.isMine).toBe(false);
 
-    // mine
+    // isMine
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
-    expect(component.mine).toBe(true);
+    expect(component.isMine).toBe(true);
   });
 
   it('should initialize "review" based on route URL', () => {
-    // !review
-    expect(component.review).toBe(false);
+    // !isToReview
+    expect(component.isToReview).toBe(false);
 
-    // mine
+    // isMine
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
 
-    expect(component.review).toBe(true);
+    expect(component.isToReview).toBe(true);
   });
 
   it('should call fetchPosts on initialization', () => {
@@ -80,7 +80,7 @@ describe('PostListComponent', () => {
     postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
     postServiceMock.orderToMostRecent.and.returnValue(of(mockReversePosts));
 
-    // if (!mine) getPublishedPosts
+    // if (!isMine) getPublishedPosts
     component.fetchPosts();
 
     expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('PostListComponent', () => {
       expect(data).toEqual(mockReversePosts);
     });
 
-    // if (mine) getMyPosts
+    // if (isMine) getMyPosts
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -125,7 +125,7 @@ describe('PostListComponent', () => {
     postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
     postServiceMock.orderToMostRecent.and.returnValue(of(filteredPosts));
 
-    // if (!mine) filterPublishedPosts
+    // if (!isMine) filterPublishedPosts
     component.handleFilter(filter);
 
     expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
@@ -135,7 +135,7 @@ describe('PostListComponent', () => {
       expect(data).toEqual(filteredPosts);
     });
 
-    // if (mine) filterMyPosts
+    // if (isMine) filterMyPosts
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;

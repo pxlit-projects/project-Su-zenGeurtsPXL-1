@@ -142,15 +142,15 @@ public class ReviewService implements IReviewService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot review own post.");
         }
 
-        boolean postStateValid = false;
+        boolean hasValidState = false;
         for (String state : validStates) {
             if (post.getState().equals(state)) {
-                postStateValid = true;
+                hasValidState = true;
                 break;
             }
         }
 
-        if (!postStateValid) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " does not have the right state.");
+        if (!hasValidState) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " does not have the right state.");
     }
 
     private ReviewResponse mapToReviewResponse(Review review) {

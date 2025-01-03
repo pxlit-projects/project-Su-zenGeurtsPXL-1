@@ -50,16 +50,16 @@ describe('PostDetailComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should initialize "mine" based on route URL', () => {
-    // !mine
-    expect(component.mine).toBe(false);
+  it('should initialize "isMine" based on route URL', () => {
+    // !isMine
+    expect(component.isMine).toBe(false);
 
-    // mine
+    // isMine
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostDetailComponent);
     component = fixture.componentInstance;
 
-    expect(component.mine).toBe(true);
+    expect(component.isMine).toBe(true);
   });
 
   it('should navigate to pageNotFound when getPost fails in ngOnInit', () => {

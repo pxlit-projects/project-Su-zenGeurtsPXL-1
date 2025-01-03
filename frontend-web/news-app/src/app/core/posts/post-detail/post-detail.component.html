@@ -7,7 +7,7 @@
       <div class="font-bold text-xl mb-2">{{post.title}}</div>
       <p class="text-gray-500 font-medium text-sm my-auto mb-5">By {{authenticationService.getUserById(post.userId)?.fullName}} | {{postService.transformDate(post.createdAt)}}
         <span class="inline-flex items-center rounded bg-pxlGreen bg-opacity-20 px-2 py-1 text-sm font-medium text-pxlGreen ring-1 ring-inset ring-pxlGreen ml-2">{{postService.toPascalCasing(post.category)}}</span>
-        @if (mine || review) {
+        @if (isMine || isToReview) {
           <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
                 [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
                 'bg-blue-500 text-blue-500 ring-blue-500': post.state === 'SUBMITTED',

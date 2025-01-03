@@ -12,8 +12,8 @@ import {PostService} from "../../../shared/services/post.service";
 })
 
 export class ReviewItemComponent {
-  @Input() review!: Review;
-  @Input() last!: boolean;
+  @Input() isToReview!: Review;
+  @Input() isLast!: boolean;
   authenticationService: AuthenticationService = inject(AuthenticationService);
   postService: PostService = inject(PostService);
 }
