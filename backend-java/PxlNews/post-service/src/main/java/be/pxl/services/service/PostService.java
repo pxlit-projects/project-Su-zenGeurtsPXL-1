@@ -218,6 +218,16 @@ public class PostService implements IPostService {
     }
 
     @Override
+    public void putNotificationOnRead(Long notificationId, Long userId, String userRole) {
+        logger.info("Putting notification with id {} on read", notificationId);
+        checksUserRole(userRole);
+
+        Notification notification = checksToUpdateNotification(notificationId, userId);
+        notification.setIsRead(true);
+        notificationRepository.save(notification);
+    }
+
+    @Override
     public PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest) {
         logger.info("Updating post with id {}", id);
 
@@ -253,6 +263,21 @@ public class PostService implements IPostService {
         if (!hasValidState) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " does not have the right state.");
 
         return post;
+    }
+
+    private Notification checksToUpdateNotification(Long id, Long userId){
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification with id " + id + " not found."));
+
+        if (!notification.getReceiverId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this notification.");
+        }
+
+        if (notification.getIsRead()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification with id " + id + " is already read.");
+        }
+
+        return notification;
     }
 
     private PostResponse mapToPostResponse(Post post) {

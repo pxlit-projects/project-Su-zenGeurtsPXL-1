@@ -1,11 +1,14 @@
 package be.pxl.services.controller;
 
+import be.pxl.services.PostServiceApplication;
 import be.pxl.services.domain.Category;
 import be.pxl.services.domain.dto.NotificationResponse;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 import be.pxl.services.service.IPostService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final IPostService postService;
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -63,6 +67,13 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public List<NotificationResponse> getNotificationsByUserId(@RequestHeader Long userId, @RequestHeader String userRole) {
         return postService.findNotificationsByUserId(userId, userRole);
+    }
+
+    @PostMapping(path = "/notification/{notificationId}/read")
+    @ResponseStatus(HttpStatus.OK)
+    public void readNotification(@PathVariable Long notificationId, @RequestHeader Long userId, @RequestHeader String userRole) {
+        logger.info("On endpoint: readNotification");
+        postService.putNotificationOnRead(notificationId, userId, userRole);
     }
 
     @PostMapping

@@ -64,19 +64,19 @@
           <div [hidden]="notificationsMenuIsHidden" class="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             @if(hasNoNotifications) {
               <p class="block px-4 py-2 text-sm text-black">No notifications</p>
+            } @else {
+              @for(notification of notifications$ | async; track notification.id) {
+                @if(!notification.isRead) {
+                  <a (click)="openPost(notification.postId, notification.id)" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">
+                    {{authenticationService.getUserById(notification.executorId)?.fullName}}
+                    @if(notification.action === "REJECTION") {rejected}
+                    @else if (notification.action === "APPROVAL") {approved}
+                    @else {commented on }
+                    your post.
+                  </a>
+                }
+              }
             }
-
-            @for(notification of notifications$ | async; track notification.id) {
-              <a (click)="openPost(notification.postId)" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">
-                {{authenticationService.getUserById(notification.executorId)?.fullName}}
-                @if(notification.action === "REJECTION") {rejected}
-                @else if (notification.action === "APPROVAL") {approved}
-                @else {commented on }
-                your post.
-              </a>
-            }
-
-
           </div>
           <div [hidden]="userMenuIsHidden" class="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
             <a (click)="logout()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">Sign out</a>

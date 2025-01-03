@@ -1,5 +1,5 @@
 export interface Notification {
-  id?: number;
+  id: number;
   postId: number;
   receiverId: number;
   executorId: number;

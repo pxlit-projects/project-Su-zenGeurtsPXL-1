@@ -46,6 +46,9 @@ export class PostService {
     return this.http.get<Notification[]>(this.postApi + '/notification', { headers: this.getHeaders() });
   }
 
+  readNotification(notificationId: number): Observable<void> {
+    return this.http.post<void>(this.postApi + '/notification/' + notificationId + '/read', null, { headers:this.getHeaders() });
+  }
 
   addPost(post: PostRequest): Observable<Post> {
     return this.http.post<Post>(this.postApi, post, { headers: this.getHeaders() });

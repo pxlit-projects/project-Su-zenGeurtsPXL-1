@@ -37,23 +37,26 @@ export class NavbarComponent implements OnInit, OnDestroy{
 
   fetchNotifications() {
     let fetchedNotifications = this.postService.getNotifications();
-
     if (this.notifications$ === undefined) {
-      this.notifications$ = this.postService.getNotifications();
-      this.notifications$.subscribe(notifications => {
-        this.hasNoNotifications = notifications.length == 0;
-      });
+      this.handleFetch(fetchedNotifications);
     } else {
       fetchedNotifications.subscribe(fetchedNotificationsData => {
         this.notifications$.subscribe(notifications => {
-          this.hasNoNotifications = notifications.length == 0;
-          if (fetchedNotificationsData == notifications) {
-            this.notifications$ = this.postService.getNotifications();
+          if (notifications != fetchedNotificationsData) {
+            this.handleFetch(fetchedNotifications);
           }
         });
       });
     }
   }
+
+  handleFetch(data: Observable<Notification[]>) {
+    this.notifications$ = data;
+    this.notifications$.subscribe(notifications => {
+      const unreadNotifications = notifications.filter(notification => !notification.isRead)
+      this.hasNoNotifications = unreadNotifications.length == 0;
+    });
+}
 
   userMenu() {
     this.userMenuIsHidden = !this.userMenuIsHidden;
@@ -78,9 +81,11 @@ export class NavbarComponent implements OnInit, OnDestroy{
     this.router.navigate(['/post']);
   }
 
-  openPost(id: number) {
-    this.router.navigate(['/myPost/' + id]);
-    this.userMenuIsHidden = true;
-    this.notificationsMenuIsHidden = true;
+  openPost(postId: number, notificationId: number) {
+    this.postService.readNotification(notificationId).subscribe(() => {
+      this.router.navigate(['/myPost/' + postId]);
+      this.userMenuIsHidden = true;
+      this.notificationsMenuIsHidden = true;
+    });
   }
 }
