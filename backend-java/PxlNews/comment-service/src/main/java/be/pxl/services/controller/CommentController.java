@@ -17,8 +17,8 @@ public class CommentController {
 
     @GetMapping(path = "post/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<CommentResponse> getCommentsByPostId(@PathVariable Long postId, @RequestHeader String userRole) {
-        return commentService.findCommentsByPostId(postId, userRole);
+    public List<CommentResponse> getCommentsByPostId(@PathVariable Long postId) {
+        return commentService.findCommentsByPostId(postId);
     }
 
     @PostMapping

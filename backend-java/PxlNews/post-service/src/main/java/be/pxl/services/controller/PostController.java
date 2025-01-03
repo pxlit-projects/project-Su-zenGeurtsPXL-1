@@ -1,6 +1,5 @@
 package be.pxl.services.controller;
 
-import be.pxl.services.PostServiceApplication;
 import be.pxl.services.domain.Category;
 import be.pxl.services.domain.dto.NotificationResponse;
 import be.pxl.services.domain.dto.PostRequest;
@@ -55,6 +54,12 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public PostResponse getPostByIdWithReviews(@PathVariable Long id, @RequestHeader String userRole) {
         return postService.findPostByIdWithReviews(id, userRole);
+    }
+
+    @GetMapping(path = "/{id}/with-comments")
+    @ResponseStatus(HttpStatus.OK)
+    public PostResponse getPostByIdWithComments(@PathVariable Long id) {
+        return postService.findPostByIdWithComments(id);
     }
 
     @GetMapping(path = "/mine")

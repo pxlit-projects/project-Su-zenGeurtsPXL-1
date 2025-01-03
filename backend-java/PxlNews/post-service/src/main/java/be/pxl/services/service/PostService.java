@@ -1,11 +1,9 @@
 package be.pxl.services.service;
 
+import be.pxl.services.client.CommentClient;
 import be.pxl.services.client.ReviewClient;
 import be.pxl.services.domain.*;
-import be.pxl.services.domain.dto.NotificationResponse;
-import be.pxl.services.domain.dto.PostRequest;
-import be.pxl.services.domain.dto.PostResponse;
-import be.pxl.services.domain.dto.ReviewResponse;
+import be.pxl.services.domain.dto.*;
 import be.pxl.services.repository.NotificationRepository;
 import be.pxl.services.repository.PostRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +30,7 @@ public class PostService implements IPostService {
     private final PostRepository postRepository;
     private final NotificationRepository notificationRepository;
     private final ReviewClient reviewClient;
+    private final CommentClient commentClient;
     private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 
     @RabbitListener(queues = "reviewQueue")
@@ -132,6 +131,24 @@ public class PostService implements IPostService {
         postResponse.setReviews(reviews);
         return postResponse;
     }
+
+    @Override
+    public PostResponse findPostByIdWithComments(Long id) {
+        logger.info("Getting post by id {} with comments", id);
+
+        PostResponse postResponse = postRepository.findById(id)
+                .map(this::mapToPostResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
+
+        List<CommentResponse> comments = commentClient.getCommentsByPostId(id)
+                .stream()
+                .map(this::mapToCommentResponse)
+                .toList();
+
+        postResponse.setComments(comments);
+        return postResponse;
+    }
+
 
     @Override
     public List<PostResponse> findReviewablePosts(Long userId, String userRole) {
@@ -313,6 +330,16 @@ public class PostService implements IPostService {
                 .content(review.getContent())
                 .createdAt(review.getCreatedAt())
                 .type(review.getType())
+                .build();
+    }
+
+    private CommentResponse mapToCommentResponse(Comment comment) {
+        return CommentResponse.builder()
+                .id(comment.getId())
+                .userId(comment.getUserId())
+                .postId(comment.getPostId())
+                .content(comment.getContent())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }
