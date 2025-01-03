@@ -27,6 +27,7 @@
         <module>discovery-service</module>
         <module>gateway-service</module>
         <module>review-service</module>
+        <module>comment-service</module>
     </modules>
     <scm>
         <connection/>
