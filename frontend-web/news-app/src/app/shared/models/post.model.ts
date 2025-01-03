@@ -1,4 +1,5 @@
 import {Review} from "./review.model";
+import {Comment} from "./comment.model";
 
 export interface Post {
   id?: number;
@@ -9,4 +10,5 @@ export interface Post {
   createdAt: string;
   state: string;
   reviews?: Review[];
+  comments?: Comment[];
 }

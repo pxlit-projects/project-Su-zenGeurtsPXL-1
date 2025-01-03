@@ -21,9 +21,11 @@
       <p class="text-black text-justify mb-8">{{post.content}}</p>
 
       @if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED' && post.reviews != undefined){
-        @if (post.reviews.length != 0) {
           <app-review-list [reviews]="post.reviews"></app-review-list>
-        }
+      }
+
+      @if (post.state === 'PUBLISHED' && post.comments != undefined){
+          <app-comment-list [comments]="post.comments"></app-comment-list>
       }
 
       @if (userId$ == post.userId) {
@@ -47,8 +49,10 @@
           <div class="container mx-auto mt-5 px-2" >
             <form [formGroup]="commentForm">
               <div class="mb-4">
-                <label for="content" class="block text-sm/6 font-medium text-gray-900 mb-1">Add comment*</label>
-                <textarea name="content" id="content" formControlName="content" class="h-full shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+<!--                @if (isToReview) {-->
+<!--                <label for="content" class="block text-sm/6 font-medium text-gray-900 mb-1">Add comment*</label>-->
+<!--                }-->
+                <textarea name="content" id="content" formControlName="content" class="h-full shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write comment..."
                           oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                 @if (commentForm.get('content')?.touched && commentForm.get('content')?.hasError('required')){
                   <div class="text-red-500 text-sm mt-1 hidden">Comment is required</div>
@@ -67,6 +71,12 @@
             @if (post.state === 'REJECTED' || post.state === 'APPROVED') {
               <div></div>
               <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Review</button>
+              <div></div>
+            }
+
+            @if (post.state === 'PUBLISHED') {
+              <div></div>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="addComment()">Add comment</button>
               <div></div>
             }
           </div>

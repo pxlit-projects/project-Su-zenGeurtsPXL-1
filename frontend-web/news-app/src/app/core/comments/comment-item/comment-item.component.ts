@@ -1,18 +1,18 @@
 import {Component, inject, Input} from "@angular/core";
-import {Review} from "../../../shared/models/review.model";
+import {Comment} from "../../../shared/models/comment.model";
 import {AuthenticationService} from "../../../shared/services/authentication.service";
 import {PostService} from "../../../shared/services/post.service";
 
 @Component({
-  selector: 'app-review-item',
+  selector: 'app-comment-item',
   standalone: true,
   imports: [],
-  templateUrl: './review-item.component.html',
-  styleUrl: './review-item.component.css'
+  templateUrl: './comment-item.component.html',
+  styleUrl: './comment-item.component.css'
 })
 
-export class ReviewItemComponent {
-  @Input() review!: Review;
+export class CommentItemComponent {
+  @Input() comment!: Comment;
   @Input() isLast!: boolean;
   authenticationService: AuthenticationService = inject(AuthenticationService);
   postService: PostService = inject(PostService);
