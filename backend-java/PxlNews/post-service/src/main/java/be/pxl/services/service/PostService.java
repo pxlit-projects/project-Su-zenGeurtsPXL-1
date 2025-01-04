@@ -235,7 +235,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void putNotificationOnRead(Long notificationId, Long userId, String userRole) {
+    public void markAsRead(Long notificationId, Long userId, String userRole) {
         logger.info("Putting notification with id {} on read", notificationId);
         checksUserRole(userRole);
 

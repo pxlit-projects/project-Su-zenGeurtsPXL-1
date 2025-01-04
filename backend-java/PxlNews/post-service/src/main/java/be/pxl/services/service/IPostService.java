@@ -20,7 +20,7 @@ public interface IPostService {
     List<NotificationResponse> findNotificationsByUserId(Long userId, String userRole);
 
     void submit(Long id, Long userId, String userRole);
-    void putNotificationOnRead(Long notificationId, Long userId, String userRole);
+    void markAsRead(Long notificationId, Long userId, String userRole);
 
     PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest);
 
