@@ -168,7 +168,19 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void publish(Long id, Long userId, String userRole) {
+    public void updatePostStateToSubmitted(Long id, Long userId, String userRole) {
+        logger.info("Submitting post with id {}", id);
+
+        checksUserRole(userRole);
+        State[] validStates = {State.DRAFTED, State.REJECTED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
+
+        post.setState(State.SUBMITTED);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void updatePostStateToPublished(Long id, Long userId, String userRole) {
         logger.info("Publishing post with id {}", id);
 
         checksUserRole(userRole);
@@ -180,7 +192,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<PostResponse> findPostsByUserId(Long userId, String userRole) {
+    public List<PostResponse> findMyPosts(Long userId, String userRole) {
         logger.info("Getting posts with userId {}", userId);
 
         checksUserRole(userRole);
@@ -192,7 +204,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<NotificationResponse> findNotificationsByUserId(Long userId, String userRole) {
+    public List<NotificationResponse> findMyNotifications(Long userId, String userRole) {
         logger.info("Getting notifications with userId {}", userId);
 
         checksUserRole(userRole);
@@ -223,19 +235,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void submit(Long id, Long userId, String userRole) {
-        logger.info("Submitting post with id {}", id);
-
-        checksUserRole(userRole);
-        State[] validStates = {State.DRAFTED, State.REJECTED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
-
-        post.setState(State.SUBMITTED);
-        postRepository.save(post);
-    }
-
-    @Override
-    public void markAsRead(Long notificationId, Long userId, String userRole) {
+    public void updateNotificationIsReadToTrue(Long notificationId, Long userId, String userRole) {
         logger.info("Putting notification with id {} on read", notificationId);
         checksUserRole(userRole);
 
@@ -245,13 +245,13 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse updatePost(Long id, Long userId, String userRole, PostRequest postRequest) {
+    public PostResponse updatePost(Long id, Long userId, String userRole, String content) {
         logger.info("Updating post with id {}", id);
 
         checksUserRole(userRole);
         State[] validStates = new State[]{State.DRAFTED, State.REJECTED};
         Post post = checksToUpdatePost(id, userId, true, validStates);
-        post.setContent(postRequest.getContent());
+        post.setContent(content);
         return mapToPostResponse(postRepository.save(post));
     }
 
