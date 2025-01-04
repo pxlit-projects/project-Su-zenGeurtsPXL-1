@@ -77,12 +77,16 @@ export class PostService {
     return this.http.post<Comment>(this.commentApi, comment, { headers:this.getHeaders() });
   }
 
-  deleteComment(id: number | undefined): Observable<void> {
+  deleteComment(id: number): Observable<void> {
     return this.http.delete<void>(this.commentApi + '/' + id, { headers:this.getHeaders() });
   }
 
   editPost(id: number, post: PostRequest): Observable<Post> {
     return this.http.put<Post>(this.postApi + '/' + id, post, { headers: this.getHeaders() });
+  }
+
+  editComment(id: number, comment: CommentRequest): Observable<Comment> {
+    return this.http.put<Comment>(this.commentApi + '/' + id, comment, { headers: this.getHeaders() });
   }
 
   filterPublishedPosts(filter: Filter): Observable<Post[]> {
@@ -105,10 +109,10 @@ export class PostService {
 
   public isPostMatchingFilter(post: Post, filter: Filter): boolean {
     const user = this.authenticationService.getUserById(post.userId);
-    if (user == undefined) return false;
+    // if (user == undefined) return false;
 
     const matchesContent = this.isIncluded(post.content, filter.content);
-    const matchesAuthor = this.isIncluded(user.fullName, filter.author);
+    const matchesAuthor = this.isIncluded(user!.fullName, filter.author);
     const matchesDate = filter.date === '' ? true : this.isDatesMatching(new Date(post.createdAt), new Date(filter.date));
     return matchesContent && matchesAuthor && matchesDate;
   }

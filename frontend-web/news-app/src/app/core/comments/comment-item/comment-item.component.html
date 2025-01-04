@@ -1,14 +1,44 @@
 <div (click)="openMenu()"
-     class="grid grid-cols-11 gap-2 py-2 hover:bg-gray-200 hover:cursor-pointer"
-     [ngClass]="{'hover:bg-gray-200 hover:cursor-pointer': comment.userId.toString() == localStorage.getItem('userId')}"
+     class="grid grid-cols-11 gap-2 py-2"
+     [ngClass]="{'hover:bg-gray-200 hover:cursor-pointer': comment.userId.toString() == localStorage.getItem('userId') && !isInProgress}"
 >
   <div class="col-span-1 align-middle my-auto">
     <img id="profile" class="border-2 border-pxlGreen rounded-full mx-auto" [src]="'user-profiles/' + authenticationService.getUserById(comment.userId)?.role + authenticationService.getUserById(comment.userId)?.id + '.png'" alt="user profile">
   </div>
-  <p class="col-span-8 inline-block align-middle my-auto ">
-    {{authenticationService.getUserById(comment.userId)?.fullName}} commented:
-    <span class="font-bold inline-block text-justify">{{ comment.content }}</span>
-  </p>
+  @if (isInProgress) {
+    <div class=" col-span-8 inline-block align-middle my-auto" >
+      <div class="grid grid-cols-12 gap-0">
+        <div class="col-span-10">
+          <form [formGroup]="commentForm">
+          <div>
+          <textarea name="content" id="content" formControlName="content" class="h-full shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write comment..."
+                    oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
+            @if (commentForm.get('content')?.touched && commentForm.get('content')?.hasError('required')){
+              <div class="text-red-500 text-sm mt-1 hidden">Comment is required</div>
+            }
+          </div>
+        </form>
+        </div>
+
+        <button class="bg-pxlGreen text-white font-bold w-7 h-7 m-auto px-2 rounded-full hover:bg-pxlGreenH" (click)="onSubmit()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="stroke-white size-3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+        </svg>
+        </button>
+        <button class="bg-red-700 text-white font-bold w-7 h-7 m-auto py-2 px-2 rounded-full hover:bg-red-800" (click)="cancel()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="stroke-white size-3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  }
+  @else {
+    <p class="col-span-8 inline-block align-middle my-auto ">
+      {{authenticationService.getUserById(comment.userId)?.fullName}} commented:
+      <span class="font-bold inline-block text-justify">{{ comment.content }}</span>
+    </p>
+  }
   <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(comment.createdAt) }}</p>
 </div>
 <div [hidden]="menuIsHidden" class="absolute left-80 z-10 mt-2 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">

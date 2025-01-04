@@ -80,7 +80,7 @@ export class PostDetailComponent implements OnInit {
       });
     }
     else {
-      window.alert("Comment cannot be empty")
+      alert("Comment cannot be empty")
     }
   }
 
@@ -93,7 +93,7 @@ export class PostDetailComponent implements OnInit {
 
     if (this.commentForm.valid) {
       this.postService.addComment(comment).subscribe(() => {
-        window.location.reload();
+        location.reload();
       });
     }
   }

@@ -9,7 +9,7 @@ module.exports = {
         pxlGreen: '#58a518',
         pxlGreenH: '#468413'
       }
-    },
+    }
   },
   plugins: [],
 }
