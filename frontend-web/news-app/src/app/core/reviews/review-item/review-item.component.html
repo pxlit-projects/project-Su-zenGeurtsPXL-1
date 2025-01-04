@@ -2,10 +2,10 @@
   <div class="col-span-1 align-middle my-auto">
     <img id="profile" class="border-2 border-pxlGreen rounded-full mx-auto" [src]="'user-profiles/' + authenticationService.getUserById(review.userId)?.role + authenticationService.getUserById(review.userId)?.id + '.png'" alt="user profile">
   </div>
-  <p class="col-span-8 inline-block align-middle my-auto text-justify">
+  <p class="col-span-8 inline-block align-middle my-auto">
     {{ postService.toPascalCasing(review.type) }} by {{authenticationService.getUserById(review.userId)?.fullName}}
     @if(review.content != '') {
-      <span>: <span class="font-bold">{{ review.content }}</span> </span>
+      <span>: <span class="font-bold inline-block text-justify">{{ review.content }}</span> </span>
     }
   </p>
   <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(review.createdAt) }}</p>

@@ -18,6 +18,6 @@ export class CommentListComponent implements OnInit {
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
   ngOnInit(): void {
-    this.comments = this.comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    }
+    this.comments = this.comments.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
 }

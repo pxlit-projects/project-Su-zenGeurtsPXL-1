@@ -77,6 +77,10 @@ export class PostService {
     return this.http.post<Comment>(this.commentApi, comment, { headers:this.getHeaders() });
   }
 
+  deleteComment(id: number | undefined): Observable<void> {
+    return this.http.delete<void>(this.commentApi + '/' + id, { headers:this.getHeaders() });
+  }
+
   editPost(id: number, post: PostRequest): Observable<Post> {
     return this.http.put<Post>(this.postApi + '/' + id, post, { headers: this.getHeaders() });
   }

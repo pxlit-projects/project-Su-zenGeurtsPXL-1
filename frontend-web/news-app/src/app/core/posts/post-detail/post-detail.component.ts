@@ -36,6 +36,10 @@ export class PostDetailComponent implements OnInit {
   });
 
   ngOnInit(): void {
+   this.fetchPost();
+  }
+
+  fetchPost() {
     this.post$.subscribe({
       next: (post) => {
         if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED') {

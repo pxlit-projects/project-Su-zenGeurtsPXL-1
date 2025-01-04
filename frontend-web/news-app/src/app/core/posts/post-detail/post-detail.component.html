@@ -45,7 +45,7 @@
           </div>
         }
       }
-        @else {
+
           <div class="container mx-auto mt-5 px-2" >
             <form [formGroup]="commentForm">
               <div class="mb-4">
@@ -60,7 +60,7 @@
               </div>
             </form>
           </div>
-
+      @if(userId$ != post.userId) {
           <div class="grid grid-cols-3 gap-2">
             @if (post.state === 'SUBMITTED') {
               <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('approve')">Approve</button>
@@ -69,18 +69,16 @@
             }
 
             @if (post.state === 'REJECTED' || post.state === 'APPROVED') {
-              <div></div>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Review</button>
-              <div></div>
-            }
-
-            @if (post.state === 'PUBLISHED') {
-              <div></div>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="addComment()">Add comment</button>
-              <div></div>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" (click)="reviewPost('comment')">Review</button>
             }
           </div>
-        }
+      }
+
+        @if (post.state === 'PUBLISHED') {
+          <div class="grid grid-cols-3 gap-2">
+          <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" (click)="addComment()">Add comment</button>
+          </div>
+            }
     </div>
     <button routerLink=".." class="w-full text-black font-bold py-2 px-2 rounded hover:text-pxlGreen">Back</button>
   </div>
