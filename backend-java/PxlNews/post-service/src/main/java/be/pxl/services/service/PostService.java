@@ -6,7 +6,6 @@ import be.pxl.services.domain.*;
 import be.pxl.services.domain.dto.*;
 import be.pxl.services.repository.NotificationRepository;
 import be.pxl.services.repository.PostRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,8 +28,10 @@ public class PostService implements IPostService {
 
     private final PostRepository postRepository;
     private final NotificationRepository notificationRepository;
+
     private final ReviewClient reviewClient;
     private final CommentClient commentClient;
+
     private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 
     @RabbitListener(queues = "reviewQueue")
@@ -38,14 +39,7 @@ public class PostService implements IPostService {
         logger.info("Message read from reviewQueue : {}", in);
 
         try {
-            handleMessage(in);
-        } catch (Exception e) {
-            logger.error("Error occurred: {}", e.getMessage());
-        }
-    }
-
-    private void handleMessage(String message) throws JsonProcessingException {
-            Map review = objectMapper.readValue(message, Map.class);
+            Map review = objectMapper.readValue(in, Map.class);
             Long postId = ((Integer) review.get("postId")).longValue();
             Long reviewerId = ((Integer) review.get("reviewerId")).longValue();
 
@@ -79,6 +73,9 @@ public class PostService implements IPostService {
                 post.setState(newState);
                 postRepository.save(post);
             }
+        } catch (Exception e) {
+            logger.error("Error occurred: {}", e.getMessage());
+        }
     }
 
     @Override
@@ -91,17 +88,15 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse findPostById(Long id) {
-        logger.info("Getting post by id {}", id);
-        return postRepository.findById(id)
-                .map(this::mapToPostResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
-    }
+    public List<PostResponse> findMyPosts(Long userId, String userRole) {
+        logger.info("Getting posts with userId {}", userId);
 
-    @Override
-    public List<Category> findAllCategories() {
-        logger.info("Getting all categories");
-        return List.of(Category.values());
+        checksUserRole(userRole);
+
+        return postRepository.findByUserId(userId)
+                .stream()
+                .map(this::mapToPostResponse)
+                .toList();
     }
 
     @Override
@@ -111,6 +106,31 @@ public class PostService implements IPostService {
                 .stream()
                 .map(this::mapToPostResponse)
                 .toList();
+    }
+
+    @Override
+    public List<PostResponse> findReviewablePosts(Long userId, String userRole) {
+        logger.info("Getting reviewable posts");
+
+        checksUserRole(userRole);
+
+        List<Post> reviewablePosts = new java.util.ArrayList<>(postRepository.findByState(State.SUBMITTED));
+        reviewablePosts.addAll(postRepository.findByState(State.REJECTED));
+        reviewablePosts.addAll(postRepository.findByState(State.APPROVED));
+
+        return reviewablePosts
+                .stream()
+                .filter(post -> !post.getUserId().equals(userId))
+                .map(this::mapToPostResponse)
+                .toList();
+    }
+
+    @Override
+    public PostResponse findPostById(Long id) {
+        logger.info("Getting post by id {}", id);
+        return postRepository.findById(id)
+                .map(this::mapToPostResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
     }
 
     @Override
@@ -149,58 +169,10 @@ public class PostService implements IPostService {
         return postResponse;
     }
 
-
     @Override
-    public List<PostResponse> findReviewablePosts(Long userId, String userRole) {
-        logger.info("Getting reviewable posts");
-
-        checksUserRole(userRole);
-
-        List<Post> reviewablePosts = new java.util.ArrayList<>(postRepository.findByState(State.SUBMITTED));
-        reviewablePosts.addAll(postRepository.findByState(State.REJECTED));
-        reviewablePosts.addAll(postRepository.findByState(State.APPROVED));
-
-        return reviewablePosts
-                .stream()
-                .filter(post -> !post.getUserId().equals(userId))
-                .map(this::mapToPostResponse)
-                .toList();
-    }
-
-    @Override
-    public void updatePostStateToSubmitted(Long id, Long userId, String userRole) {
-        logger.info("Submitting post with id {}", id);
-
-        checksUserRole(userRole);
-        State[] validStates = {State.DRAFTED, State.REJECTED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
-
-        post.setState(State.SUBMITTED);
-        postRepository.save(post);
-    }
-
-    @Override
-    public void updatePostStateToPublished(Long id, Long userId, String userRole) {
-        logger.info("Publishing post with id {}", id);
-
-        checksUserRole(userRole);
-        State[] validStates = {State.APPROVED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
-
-        post.setState(State.PUBLISHED);
-        postRepository.save(post);
-    }
-
-    @Override
-    public List<PostResponse> findMyPosts(Long userId, String userRole) {
-        logger.info("Getting posts with userId {}", userId);
-
-        checksUserRole(userRole);
-
-        return postRepository.findByUserId(userId)
-                .stream()
-                .map(this::mapToPostResponse)
-                .toList();
+    public List<Category> findAllCategories() {
+        logger.info("Getting all categories");
+        return List.of(Category.values());
     }
 
     @Override
@@ -235,16 +207,6 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public void updateNotificationIsReadToTrue(Long notificationId, Long userId, String userRole) {
-        logger.info("Putting notification with id {} on read", notificationId);
-        checksUserRole(userRole);
-
-        Notification notification = checksToUpdateNotification(notificationId, userId);
-        notification.setIsRead(true);
-        notificationRepository.save(notification);
-    }
-
-    @Override
     public PostResponse updatePost(Long id, Long userId, String userRole, String content) {
         logger.info("Updating post with id {}", id);
 
@@ -255,13 +217,49 @@ public class PostService implements IPostService {
         return mapToPostResponse(postRepository.save(post));
     }
 
-    private void checksUserRole(String role) {
+    @Override
+    public void updatePostStateToSubmitted(Long id, Long userId, String userRole) {
+        logger.info("Submitting post with id {}", id);
+
+        checksUserRole(userRole);
+        State[] validStates = {State.DRAFTED, State.REJECTED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
+
+        post.setState(State.SUBMITTED);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void updatePostStateToPublished(Long id, Long userId, String userRole) {
+        logger.info("Publishing post with id {}", id);
+
+        checksUserRole(userRole);
+        State[] validStates = {State.APPROVED};
+        Post post = checksToUpdatePost(id, userId, true, validStates);
+
+        post.setState(State.PUBLISHED);
+        postRepository.save(post);
+    }
+
+    @Override
+    public void updateNotificationIsReadToTrue(Long notificationId, Long userId, String userRole) {
+        logger.info("Putting notification with id {} on read", notificationId);
+        checksUserRole(userRole);
+
+        Notification notification = checksToUpdateNotification(notificationId, userId);
+        notification.setIsRead(true);
+        notificationRepository.save(notification);
+    }
+
+    @Override
+    public void checksUserRole(String role) {
         if (!role.equals("editor")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
         }
     }
 
-    private Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates) {
+    @Override
+    public Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
@@ -282,16 +280,17 @@ public class PostService implements IPostService {
         return post;
     }
 
-    private Notification checksToUpdateNotification(Long id, Long userId){
-        Notification notification = notificationRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification with id " + id + " not found."));
+    @Override
+    public Notification checksToUpdateNotification(Long notificationId, Long userId){
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification with id " + notificationId + " not found."));
 
         if (!notification.getReceiverId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this notification.");
         }
 
         if (notification.getIsRead()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification with id " + id + " is already read.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification with id " + notificationId + " is already read.");
         }
 
         return notification;

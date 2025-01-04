@@ -1,6 +1,9 @@
 package be.pxl.services.service;
 
 import be.pxl.services.domain.Category;
+import be.pxl.services.domain.Notification;
+import be.pxl.services.domain.Post;
+import be.pxl.services.domain.State;
 import be.pxl.services.domain.dto.PostRequest;
 import be.pxl.services.domain.dto.PostResponse;
 import be.pxl.services.domain.dto.NotificationResponse;
@@ -8,6 +11,7 @@ import be.pxl.services.domain.dto.NotificationResponse;
 import java.util.List;
 
 public interface IPostService {
+    void listen(String message);
     List<PostResponse> findAllPosts();
 
     List<PostResponse> findMyPosts(Long userId, String userRole);
@@ -35,4 +39,10 @@ public interface IPostService {
     void updatePostStateToPublished(Long id, Long userId, String userRole);
 
     void updateNotificationIsReadToTrue(Long notificationId, Long userId, String userRole);
+
+    void checksUserRole(String role);
+
+    Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates);
+
+    Notification checksToUpdateNotification(Long notificationId, Long userId);
 }
