@@ -1,1 +1,52 @@
-# This file will contain a script in orde to start up the system (all microservices) 
+version: '3.8'
+services:
+  post-service:
+    image: mysql:8.0
+    container_name: postservice_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: postservice_db
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - post_db_data:/var/lib/mysql
+
+  review-service:
+    image: mysql:8.0
+    container_name: reviewservice_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: reviewservice_db
+    ports:
+      - "3307:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - review_db_data:/var/lib/mysql
+
+  comment-service:
+    image: mysql:8.0
+    container_name: commentservice_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: commentservice_db
+    ports:
+      - "3308:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - comment_db_data:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "15672:15672"  # Management console
+      - "5672:5672"    # AMQP protocol port
+
+volumes:
+  post_db_data:
+  review_db_data:
+  comment_db_data:
