@@ -1,6 +1,6 @@
-import {Post} from "../../../shared/models/post.model";
-import {PostRequest} from "../../../shared/models/post-request.model";
-import {PostService} from "../../../shared/services/post.service";
+import {Post} from "../../../shared/models/posts/post.model";
+import {PostRequest} from "../../../shared/models/posts/post-request.model";
+import {PostService} from "../../../shared/services/post/post.service";
 import {EditPostComponent} from "./edit-post.component";
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';

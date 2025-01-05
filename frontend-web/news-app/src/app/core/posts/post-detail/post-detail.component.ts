@@ -1,16 +1,16 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {MatDividerModule} from "@angular/material/divider";
-import { Post } from '../../../shared/models/post.model';
+import { Post } from '../../../shared/models/posts/post.model';
 import { Observable} from 'rxjs';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, UrlSegment} from '@angular/router';
-import {PostService} from "../../../shared/services/post.service";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
-import {ReviewRequest} from "../../../shared/models/reviewRequest.model";
+import {PostService} from "../../../shared/services/post/post.service";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
+import {ReviewRequest} from "../../../shared/models/reviews/reviewRequest.model";
 import {ReviewListComponent} from "../../reviews/review-list/review-list.component";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommentListComponent} from "../../comments/comment-list/comment-list.component";
-import {CommentRequest} from "../../../shared/models/comment-request.model";
+import {CommentRequest} from "../../../shared/models/comments/comment-request.model";
 
 @Component({
   selector: 'app-post-detail',

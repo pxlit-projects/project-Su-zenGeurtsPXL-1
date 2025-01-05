@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnInit} from "@angular/core";
-import {Comment} from "../../../shared/models/comment.model";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
+import {Comment} from "../../../shared/models/comments/comment.model";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
 import {CommentItemComponent} from "../comment-item/comment-item.component";
 
 @Component({

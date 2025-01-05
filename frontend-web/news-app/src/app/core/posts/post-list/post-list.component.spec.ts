@@ -1,5 +1,5 @@
-import {Post} from "../../../shared/models/post.model";
-import {PostService} from "../../../shared/services/post.service";
+import {Post} from "../../../shared/models/posts/post.model";
+import {PostService} from "../../../shared/services/post/post.service";
 import {PostListComponent} from "./post-list.component";
 import {Filter} from "../../../shared/models/filter.model";
 

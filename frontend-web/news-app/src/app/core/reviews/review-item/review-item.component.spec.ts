@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ReviewItemComponent} from "./review-item.component";
-import {PostService} from "../../../shared/services/post.service";
+import {PostService} from "../../../shared/services/post/post.service";
 
 describe('ReviewItemComponent', () => {
   let component: ReviewItemComponent;

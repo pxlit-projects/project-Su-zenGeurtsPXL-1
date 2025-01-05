@@ -1,5 +1,5 @@
-import {Review} from "./review.model";
-import {Comment} from "./comment.model";
+import {Review} from "../reviews/review.model";
+import {Comment} from "../comments/comment.model";
 
 export interface Post {
   id?: number;

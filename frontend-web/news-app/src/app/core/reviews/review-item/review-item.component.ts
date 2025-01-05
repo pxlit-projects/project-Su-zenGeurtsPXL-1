@@ -1,7 +1,7 @@
 import {Component, inject, Input} from "@angular/core";
-import {Review} from "../../../shared/models/review.model";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
-import {PostService} from "../../../shared/services/post.service";
+import {Review} from "../../../shared/models/reviews/review.model";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
+import {PostService} from "../../../shared/services/post/post.service";
 
 @Component({
   selector: 'app-review-item',

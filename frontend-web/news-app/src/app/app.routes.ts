@@ -3,10 +3,10 @@ import {PostListComponent} from "./core/posts/post-list/post-list.component";
 import {AddPostComponent} from "./core/posts/add-post/add-post.component";
 import {LoginComponent} from "./core/login/login.component";
 import {PageNotFoundComponent} from "./core/page-not-found/page-not-found.component";
-import {confirmLeaveGuard} from "./shared/routeguards/confirm-leave.guard";
+import {confirmLeaveGuard} from "./shared/routeguards/confirm-leave/confirm-leave.guard";
 import {HomeComponent} from "./core/home/home.component";
 import {PostDetailComponent} from "./core/posts/post-detail/post-detail.component";
-import {AuthGuard} from "./shared/routeguards/auth.guard";
+import {AuthGuard} from "./shared/routeguards/auth/auth.guard";
 import {EditPostComponent} from "./core/posts/edit-post/edit-post.component";
 
 export const routes: Routes = [

@@ -1,6 +1,6 @@
-import {User} from "../../shared/models/user.model";
-import {LoginRequest} from "../../shared/models/login-request.model";
-import {AuthenticationService} from "../../shared/services/authentication.service";
+import {User} from "../../shared/models/authentication/user.model";
+import {LoginRequest} from "../../shared/models/authentication/login-request.model";
+import {AuthenticationService} from "../../shared/services/authentication/authentication.service";
 import {LoginComponent} from "./login.component";
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';

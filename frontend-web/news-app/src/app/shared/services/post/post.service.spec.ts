@@ -1,6 +1,6 @@
-import {Post} from "../models/post.model";
+import {Post} from "../../models/posts/post.model";
 import {PostService} from "./post.service";
-import {Filter} from "../models/filter.model";
+import {Filter} from "../../models/filter.model";
 
 import {HttpTestingController, provideHttpClientTesting} from "@angular/common/http/testing";
 import {TestBed} from "@angular/core/testing";

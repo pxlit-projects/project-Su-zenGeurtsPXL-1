@@ -1,6 +1,6 @@
 import { confirmLeaveGuard } from './confirm-leave.guard';
-import { AddPostComponent } from '../../core/posts/add-post/add-post.component';
-import { EditPostComponent } from '../../core/posts/edit-post/edit-post.component';
+import { AddPostComponent } from '../../../core/posts/add-post/add-post.component';
+import { EditPostComponent } from '../../../core/posts/edit-post/edit-post.component';
 
 import { TestBed } from '@angular/core/testing';
 import { CanDeactivateFn } from '@angular/router';

@@ -1,5 +1,5 @@
-import {Post} from "../../../shared/models/post.model";
-import {PostService} from "../../../shared/services/post.service";
+import {Post} from "../../../shared/models/posts/post.model";
+import {PostService} from "../../../shared/services/post/post.service";
 import {PostItemComponent} from "./post-item.component";
 
 import {ComponentFixture, TestBed} from "@angular/core/testing";

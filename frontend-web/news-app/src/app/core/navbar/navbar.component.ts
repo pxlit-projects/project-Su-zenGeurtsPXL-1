@@ -1,9 +1,9 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
-import {AuthenticationService} from "../../shared/services/authentication.service";
-import {PostService} from "../../shared/services/post.service";
-import {Notification} from "../../shared/models/notification.model";
+import {AuthenticationService} from "../../shared/services/authentication/authentication.service";
+import {PostService} from "../../shared/services/post/post.service";
+import {Notification} from "../../shared/models/posts/notification.model";
 import {interval, Observable, Subscription} from "rxjs";
 import {PostItemComponent} from "../posts/post-item/post-item.component";
 

@@ -1,10 +1,10 @@
 import {Component, inject, Input} from "@angular/core";
-import {Comment} from "../../../shared/models/comment.model";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
-import {PostService} from "../../../shared/services/post.service";
+import {Comment} from "../../../shared/models/comments/comment.model";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
+import {PostService} from "../../../shared/services/post/post.service";
 import {NgClass} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CommentRequest} from "../../../shared/models/comment-request.model";
+import {CommentRequest} from "../../../shared/models/comments/comment-request.model";
 import {Router} from "@angular/router";
 
 @Component({

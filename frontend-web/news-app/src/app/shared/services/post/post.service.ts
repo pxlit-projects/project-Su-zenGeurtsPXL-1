@@ -1,15 +1,15 @@
 import {inject, Injectable} from '@angular/core';
-import {Post} from '../models/post.model';
-import {Comment} from '../models/comment.model';
-import {Notification} from '../models/notification.model';
+import {Post} from '../../models/posts/post.model';
+import {Comment} from '../../models/comments/comment.model';
+import {Notification} from '../../models/posts/notification.model';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
-import { environment } from '../../../environments/environment';
-import {PostRequest} from '../models/post-request.model';
-import {Filter} from '../models/filter.model';
-import {AuthenticationService} from './authentication.service';
-import {ReviewRequest} from "../models/reviewRequest.model";
-import {CommentRequest} from "../models/comment-request.model";
+import { environment } from '../../../../environments/environment';
+import {PostRequest} from '../../models/posts/post-request.model';
+import {Filter} from '../../models/filter.model';
+import {AuthenticationService} from '../authentication/authentication.service';
+import {ReviewRequest} from "../../models/reviews/reviewRequest.model";
+import {CommentRequest} from "../../models/comments/comment-request.model";
 
 @Injectable({
   providedIn: 'root'

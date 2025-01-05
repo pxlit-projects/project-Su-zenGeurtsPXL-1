@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnInit} from "@angular/core";
-import {Review} from "../../../shared/models/review.model";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
+import {Review} from "../../../shared/models/reviews/review.model";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
 import {ReviewItemComponent} from "../review-item/review-item.component";
 
 @Component({

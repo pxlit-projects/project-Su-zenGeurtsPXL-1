@@ -3,8 +3,8 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {NgClass, NgOptimizedImage} from "@angular/common";
 import {Router} from "@angular/router";
 
-import {AuthenticationService} from "../../shared/services/authentication.service";
-import {LoginRequest} from "../../shared/models/login-request.model";
+import {AuthenticationService} from "../../shared/services/authentication/authentication.service";
+import {LoginRequest} from "../../shared/models/authentication/login-request.model";
 
 @Injectable({
   providedIn: 'root',

@@ -1,10 +1,10 @@
 import {Component, inject, Input} from '@angular/core';
 import {NgClass} from "@angular/common";
 
-import {Post} from "../../../shared/models/post.model";
+import {Post} from "../../../shared/models/posts/post.model";
 import {RouterLink, RouterLinkActive} from "@angular/router";
-import {PostService} from "../../../shared/services/post.service";
-import {AuthenticationService} from "../../../shared/services/authentication.service";
+import {PostService} from "../../../shared/services/post/post.service";
+import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
 
 @Component({
   selector: 'app-post-item',

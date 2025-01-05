@@ -5,9 +5,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 
 import {PostItemComponent} from "../post-item/post-item.component";
-import {PostRequest} from "../../../shared/models/post-request.model";
-import {PostService} from "../../../shared/services/post.service";
-import {Post} from "../../../shared/models/post.model";
+import {PostRequest} from "../../../shared/models/posts/post-request.model";
+import {PostService} from "../../../shared/services/post/post.service";
+import {Post} from "../../../shared/models/posts/post.model";
 
 
 @Component({

@@ -1,10 +1,10 @@
-import {PostService} from "../../../shared/services/post.service";
+import {PostService} from "../../../shared/services/post/post.service";
 import {PostDetailComponent} from "./post-detail.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ActivatedRoute, Router, UrlSegment} from "@angular/router";
 import {of, throwError} from "rxjs";
 import {ReactiveFormsModule} from "@angular/forms";
-import {Post} from "../../../shared/models/post.model";
+import {Post} from "../../../shared/models/posts/post.model";
 
 describe('PostDetailComponent', () => {
   let component: PostDetailComponent;
