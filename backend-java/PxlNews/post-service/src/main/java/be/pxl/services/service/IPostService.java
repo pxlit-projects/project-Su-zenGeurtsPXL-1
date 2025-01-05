@@ -32,7 +32,7 @@ public interface IPostService {
 
     PostResponse createPost(Long userId, String userRole, PostRequest postRequest);
 
-    PostResponse updatePost(Long id, Long userId, String userRole, String content);
+    PostResponse updatePostContent(Long id, Long userId, String userRole, String content);
 
     void updatePostStateToSubmitted(Long id, Long userId, String userRole);
 

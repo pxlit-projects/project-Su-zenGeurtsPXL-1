@@ -207,7 +207,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse updatePost(Long id, Long userId, String userRole, String content) {
+    public PostResponse updatePostContent(Long id, Long userId, String userRole, String content) {
         logger.info("Updating post with id {}", id);
 
         checksUserRole(userRole);

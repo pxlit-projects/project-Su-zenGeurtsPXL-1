@@ -94,7 +94,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public PostResponse editPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody String content) {
         logger.info("[PUT] /api/post/{}: editPost()", id);
-        return postService.updatePost(id, userId, userRole, content);
+        return postService.updatePostContent(id, userId, userRole, content);
     }
 
     @PutMapping(path = "{id}/submit")
