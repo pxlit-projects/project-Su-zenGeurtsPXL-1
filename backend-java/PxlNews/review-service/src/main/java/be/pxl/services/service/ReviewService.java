@@ -48,94 +48,51 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public void approve(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeApproval(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
         logger.info("Approving post with id {}", reviewRequest.getPostId());
 
-        checksUserRole(userRole);
-
         String[] validStates = {"SUBMITTED"};
-        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
 
-        Review review = Review.builder()
-                .userId(userId)
-                .postId(reviewRequest.getPostId())
-                .content(reviewRequest.getContent())
-                .createdAt(LocalDateTime.now())
-                .type(Type.APPROVAL)
-                .build();
-
-        Review savedReview = reviewRepository.save(review);
-        rabbitTemplate.convertAndSend("reviewQueue", createMessage(savedReview));
+        createReview(reviewRequest, userId, userRole, Type.APPROVAL,  validStates);
     }
 
     @Override
-    public void reject(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeRejection(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
         logger.info("Rejecting post with id {}", reviewRequest.getPostId());
 
-        checksUserRole(userRole);
-
         String[] validStates = {"SUBMITTED"};
-        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
 
-        Review review = Review.builder()
-                .userId(userId)
-                .postId(reviewRequest.getPostId())
-                .content(reviewRequest.getContent())
-                .createdAt(LocalDateTime.now())
-                .type(Type.REJECTION)
-                .build();
-
-        Review savedReview = reviewRepository.save(review);
-
-        rabbitTemplate.convertAndSend("reviewQueue", createMessage(savedReview));
+        createReview(reviewRequest, userId, userRole, Type.REJECTION,  validStates);
     }
 
     @Override
-    public void comment(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeComment(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
         logger.info("Commenting on a post with id {}", reviewRequest.getPostId());
 
-        checksUserRole(userRole);
-
         String[] validStates = {"SUBMITTED", "REJECTED", "APPROVED"};
-        checksToReviewPost(reviewRequest.getPostId(), userId, validStates);
 
-        Review review = Review.builder()
-                .userId(userId)
-                .postId(reviewRequest.getPostId())
-                .content(reviewRequest.getContent())
-                .createdAt(LocalDateTime.now())
-                .type(Type.COMMENT)
-                .build();
-
-        Review savedReview = reviewRepository.save(review);
-
-        rabbitTemplate.convertAndSend("reviewQueue", createMessage(savedReview));
+        createReview(reviewRequest, userId, userRole, Type.COMMENT,  validStates);
     }
 
-    private String createMessage(Review review) throws JsonProcessingException {
-        Map<String, Object> message = new HashMap<>();
-        message.put("postId", review.getPostId());
-        message.put("reviewId", review.getId());
-        message.put("reviewerId", review.getUserId());
-        message.put("reviewType", review.getType());
-        message.put("comment", review.getContent());
-        message.put("executedAt", review.getCreatedAt());
-
-        return objectMapper.writeValueAsString(message);
-    }
-
-    private void checksUserRole(String role) {
+    @Override
+    public void checksUserRole(String role) {
         if (!role.equals("editor")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
         }
     }
 
-    private void checksToReviewPost(Long postId, Long userId, String[] validStates) {
+    @Override
+    public void createReview(ReviewRequest reviewRequest, Long userId, String userRole, Type reviewType, String[] validStates) throws JsonProcessingException {
+        checksUserRole(userRole);
+
+        long postId = reviewRequest.getPostId();
+
         try {
             postClient.getPostById(postId);
         } catch (FeignException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + postId + " not found.");
         }
+
         Post post = postClient.getPostById(postId);
 
         if (post.getUserId().equals(userId)) {
@@ -151,6 +108,28 @@ public class ReviewService implements IReviewService {
         }
 
         if (!hasValidState) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + postId + " does not have the right state.");
+
+        Review review = Review.builder()
+                .userId(userId)
+                .postId(reviewRequest.getPostId())
+                .content(reviewRequest.getContent())
+                .createdAt(LocalDateTime.now())
+                .type(reviewType)
+                .build();
+
+        Review savedReview = reviewRepository.save(review);
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("postId", savedReview.getPostId());
+        message.put("reviewId", savedReview.getId());
+        message.put("reviewerId", savedReview.getUserId());
+        message.put("reviewType", savedReview.getType());
+        message.put("comment", savedReview.getContent());
+        message.put("executedAt", savedReview.getCreatedAt());
+
+        String messageString = objectMapper.writeValueAsString(message);
+
+        rabbitTemplate.convertAndSend("reviewQueue", messageString);
     }
 
     private ReviewResponse mapToReviewResponse(Review review) {
