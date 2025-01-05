@@ -5,7 +5,7 @@ import be.pxl.services.domain.Comment;
 import be.pxl.services.domain.Post;
 import be.pxl.services.domain.dto.CommentRequest;
 import be.pxl.services.domain.dto.CommentResponse;
-import be.pxl.services.repository.CommentRespository;
+import be.pxl.services.repository.CommentRepository;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommentService implements ICommentService {
-    private final CommentRespository commentRespository;
+    private final CommentRepository commentRepository;
     private final PostClient postClient;
     private static final Logger logger = LoggerFactory.getLogger(CommentService.class);
 
@@ -28,27 +28,19 @@ public class CommentService implements ICommentService {
     public List<CommentResponse> findCommentsByPostId(Long postId) {
         logger.info("Getting comments by postId {}", postId);
 
-        return commentRespository.findCommentsByPostId(postId)
+        return commentRepository.findCommentsByPostId(postId)
                 .stream()
                 .map(this::mapToCommentResponse)
                 .toList();
     }
 
     @Override
-    public CommentResponse createComment(CommentRequest commentRequest, Long userId, String userRole) {
+    public void createComment(CommentRequest commentRequest, Long userId, String userRole) {
         logger.info("Creating comment");
 
         checksUserRole(userRole);
 
-        try {
-            Post post = postClient.getPostById(commentRequest.getPostId());
-
-            if(!post.getState().equals("PUBLISHED")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot comment on a post that is not published yet.");
-            }
-        } catch (FeignException.NotFound e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + commentRequest.getPostId() + " not found.");
-        }
+        checkPost(commentRequest.getPostId());
 
         Comment comment = Comment.builder()
                 .userId(userId)
@@ -58,19 +50,19 @@ public class CommentService implements ICommentService {
                 .build();
 
         logger.info("Saving comment");
-        return mapToCommentResponse(commentRespository.save(comment));
+        commentRepository.save(comment);
 
     }
 
     @Override
-    public CommentResponse updateComment(Long id, Long userId, String userRole, String content) {
+    public void updateCommentContent(Long id, Long userId, String userRole, String content) {
         logger.info("Updating comment with id {}", id);
 
         checksUserRole(userRole);
 
-        Comment comment = checksAccessToComment(id, userId);
+        Comment comment = checkComment(id, userId);
         comment.setContent(content);
-        return mapToCommentResponse(commentRespository.save(comment));
+        commentRepository.save(comment);
     }
 
     @Override
@@ -79,22 +71,37 @@ public class CommentService implements ICommentService {
 
         checksUserRole(userRole);
 
-        Comment comment = checksAccessToComment(id, userId);
-        commentRespository.delete(comment);
+        Comment comment = checkComment(id, userId);
+        commentRepository.delete(comment);
     }
 
-    private void checksUserRole(String role) {
+    @Override
+    public void checksUserRole(String role) {
         if (!role.equals("editor") && !role.equals("user")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not logged in.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not logged in.");
         }
     }
 
-    private Comment checksAccessToComment(Long id, Long userId) {
-        Comment comment = commentRespository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+    @Override
+    public void checkPost(Long id) {
+        try {
+            Post post = postClient.getPostById(id);
+
+            if(!post.getState().equals("PUBLISHED")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Post with id " + id + " is not published yet.");
+            }
+        } catch (FeignException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found.");
+        }
+    }
+
+    @Override
+    public Comment checkComment(Long id, Long userId) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment with id " + id + " not found"));
 
         if (!comment.getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have access to this comment");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User with id " + userId + " does not have access to this comment");
         }
 
         return comment;
