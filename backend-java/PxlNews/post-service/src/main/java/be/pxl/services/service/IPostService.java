@@ -30,9 +30,9 @@ public interface IPostService {
 
     List<NotificationResponse> findMyNotifications(Long userId, String userRole);
 
-    PostResponse createPost(Long userId, String userRole, PostRequest postRequest);
+    void createPost(Long userId, String userRole, PostRequest postRequest);
 
-    PostResponse updatePostContent(Long id, Long userId, String userRole, String content);
+    void updatePostContent(Long id, Long userId, String userRole, String content);
 
     void updatePostStateToSubmitted(Long id, Long userId, String userRole);
 

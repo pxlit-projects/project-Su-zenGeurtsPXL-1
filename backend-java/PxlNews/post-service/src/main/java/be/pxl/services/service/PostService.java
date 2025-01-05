@@ -188,7 +188,7 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostResponse createPost(Long userId, String userRole, PostRequest postRequest) {
+    public void createPost(Long userId, String userRole, PostRequest postRequest) {
         logger.info("Creating post");
 
         checksUserRole(userRole);
@@ -203,18 +203,18 @@ public class PostService implements IPostService {
                 .build();
 
         logger.info("Saving post");
-        return mapToPostResponse(postRepository.save(post));
+        postRepository.save(post);
     }
 
     @Override
-    public PostResponse updatePostContent(Long id, Long userId, String userRole, String content) {
+    public void updatePostContent(Long id, Long userId, String userRole, String content) {
         logger.info("Updating post with id {}", id);
 
         checksUserRole(userRole);
         State[] validStates = new State[]{State.DRAFTED, State.REJECTED};
         Post post = checksToUpdatePost(id, userId, true, validStates);
         post.setContent(content);
-        return mapToPostResponse(postRepository.save(post));
+        postRepository.save(post);
     }
 
     @Override

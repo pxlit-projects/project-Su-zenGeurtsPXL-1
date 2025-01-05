@@ -85,16 +85,16 @@ public class PostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PostResponse addPost(@RequestHeader Long userId, @RequestHeader String userRole, @RequestBody PostRequest postRequest) {
+    public void addPost(@RequestHeader Long userId, @RequestHeader String userRole, @RequestBody PostRequest postRequest) {
         logger.info("[POST] /api/post: addPost()");
-        return postService.createPost(userId, userRole, postRequest);
+        postService.createPost(userId, userRole, postRequest);
     }
 
     @PutMapping(path = "{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public PostResponse editPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody String content) {
+    public void editPost(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody String content) {
         logger.info("[PUT] /api/post/{}: editPost()", id);
-        return postService.updatePostContent(id, userId, userRole, content);
+        postService.updatePostContent(id, userId, userRole, content);
     }
 
     @PutMapping(path = "{id}/submit")
