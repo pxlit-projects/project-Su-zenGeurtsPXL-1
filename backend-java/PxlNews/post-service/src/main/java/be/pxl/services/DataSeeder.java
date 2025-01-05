@@ -1,8 +1,10 @@
 package be.pxl.services;
 
 import be.pxl.services.domain.Category;
+import be.pxl.services.domain.Notification;
 import be.pxl.services.domain.Post;
 import be.pxl.services.domain.State;
+import be.pxl.services.repository.NotificationRepository;
 import be.pxl.services.repository.PostRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +18,12 @@ import java.time.Month;
 public class DataSeeder implements CommandLineRunner {
 
     private final PostRepository postRepository;
+    private final NotificationRepository notificationRepository;
     private static final Logger logger = LoggerFactory.getLogger(DataSeeder.class);
 
-    public DataSeeder(PostRepository postRepository) {
+    public DataSeeder(PostRepository postRepository, NotificationRepository notificationRepository) {
         this.postRepository = postRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
@@ -135,10 +139,109 @@ public class DataSeeder implements CommandLineRunner {
                     .userId(3L)
                     .category(Category.ALUMNI)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 8, 14, 56, 0))
-                    .state(State.DRAFTED)
+                    .state(State.REJECTED)
                     .build();
 
             postRepository.save(post6);
+        }
+
+        if (notificationRepository.count() == 0) {
+            logger.info("Seeding notifications");
+            Notification notification1 = Notification.builder()
+                    .postId(1L)
+                    .receiverId(4L)
+                    .executorId(1L)
+                    .content("Focus on the results.")
+                    .action("REJECTION")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 9, 0, 0))
+                    .isRead(true)
+                    .build();
+
+            notificationRepository.save(notification1);
+
+            Notification notification2 = Notification.builder()
+                    .postId(1L)
+                    .receiverId(4L)
+                    .executorId(5L)
+                    .content("And implement more details.")
+                    .action("COMMENT")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 9, 5, 0))
+                    .isRead(true)
+                    .build();
+
+            notificationRepository.save(notification2);
+
+            Notification notification3 = Notification.builder()
+                    .postId(1L)
+                    .receiverId(4L)
+                    .executorId(5L)
+                    .content("Great!")
+                    .action("APPROVAL")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15, 35, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification3);
+
+            Notification notification4 = Notification.builder()
+                    .postId(1L)
+                    .receiverId(4L)
+                    .executorId(7L)
+                    .content("I also love it!")
+                    .action("COMMENT")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15,53, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification4);
+
+            Notification notification5 = Notification.builder()
+                    .postId(1L)
+                    .receiverId(4L)
+                    .executorId(3L)
+                    .content("Well done!")
+                    .action("COMMENT")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15,58, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification5);
+
+            Notification notification6 = Notification.builder()
+                    .postId(3L)
+                    .receiverId(4L)
+                    .executorId(6L)
+                    .content("This is way too short!")
+                    .action("REJECTION")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 5, 16,28, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification6);
+
+            Notification notification7 = Notification.builder()
+                    .postId(4L)
+                    .receiverId(4L)
+                    .executorId(1L)
+                    .content("Also focus on the reason why")
+                    .action("REJECTION")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 14, 17,13, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification7);
+
+            Notification notification8 = Notification.builder()
+                    .postId(6L)
+                    .receiverId(3L)
+                    .executorId(7L)
+                    .content("This is way too short!")
+                    .action("REJECTION")
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 8, 15,42, 0))
+                    .isRead(false)
+                    .build();
+
+            notificationRepository.save(notification8);
         }
     }
 }
