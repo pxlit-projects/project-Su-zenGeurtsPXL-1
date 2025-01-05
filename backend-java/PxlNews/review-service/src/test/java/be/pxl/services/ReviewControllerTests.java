@@ -111,7 +111,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId() + 1;
+        long userId = post.getUserId() + 1;
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -136,7 +136,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = 1L;
+        long userId = 1L;
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -166,7 +166,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId() + 1;
+        long userId = post.getUserId() + 1;
         String userRole = "user";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -196,7 +196,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId();
+        long userId = post.getUserId();
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -229,7 +229,7 @@ public class ReviewControllerTests {
                     .content("Content...")
                     .build();
 
-            Long userId = post.getUserId() + 1;
+            long userId = post.getUserId() + 1;
             String userRole = "editor";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
@@ -261,7 +261,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId() + 1;
+        long userId = post.getUserId() + 1;
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -295,7 +295,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = 1L;
+        long userId = 1L;
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -325,7 +325,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId() + 1;
+        long userId = post.getUserId() + 1;
         String userRole = "user";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -355,7 +355,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId();
+        long userId = post.getUserId();
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -388,7 +388,7 @@ public class ReviewControllerTests {
                     .content("Content...")
                     .build();
 
-            Long userId = post.getUserId() + 1;
+            long userId = post.getUserId() + 1;
             String userRole = "editor";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
@@ -422,7 +422,7 @@ public class ReviewControllerTests {
                     .content("Content...")
                     .build();
 
-            Long userId = post.getUserId() + 1;
+            long userId = post.getUserId() + 1;
             String userRole = "editor";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
@@ -457,7 +457,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = 1L;
+        long userId = 1L;
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
@@ -487,7 +487,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId() + 1;
+        long userId = post.getUserId() + 1;
         String userRole = "user";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
@@ -517,7 +517,7 @@ public class ReviewControllerTests {
                 .content("Content...")
                 .build();
 
-        Long userId = post.getUserId();
+        long userId = post.getUserId();
         String userRole = "editor";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
@@ -550,7 +550,7 @@ public class ReviewControllerTests {
                     .content("Content...")
                     .build();
 
-            Long userId = post.getUserId() + 1;
+            long userId = post.getUserId() + 1;
             String userRole = "editor";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
