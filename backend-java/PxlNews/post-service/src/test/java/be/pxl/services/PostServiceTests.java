@@ -34,7 +34,7 @@ public class PostServiceTests {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"REJECTION\"," +
-                "\"comment\":\"Give more information about the reason why.\"," +
+                "\"comment\":\"Content\"," +
                 "\"postId\":3," +
                 "\"reviewId\":102}";
 
@@ -44,24 +44,8 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(3L)).thenReturn(Optional.of(post));
 
-        Notification expectedNotification = new Notification();
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("REJECTION");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
-
-        Notification savedNotification = new Notification();
-        savedNotification.setId(1L);
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("REJECTION");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
+        Notification expectedNotification = new Notification(null, 3L, 1L, 2L, "Content", "REJECTION", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
+        Notification savedNotification = new Notification(1L, 3L, 1L, 2L,"Content", "REJECTION", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
 
         Mockito.when(notificationRepository.save(expectedNotification)).thenReturn(savedNotification);
 
@@ -79,7 +63,7 @@ public class PostServiceTests {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"APPROVAL\"," +
-                "\"comment\":\"Give more information about the reason why.\"," +
+                "\"comment\":\"Content\"," +
                 "\"postId\":3," +
                 "\"reviewId\":102}";
 
@@ -89,24 +73,8 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(3L)).thenReturn(Optional.of(post));
 
-        Notification expectedNotification = new Notification();
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
-
-        Notification savedNotification = new Notification();
-        savedNotification.setId(1L);
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
+        Notification expectedNotification = new Notification(null, 3L, 1L, 2L, "Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
+        Notification savedNotification = new Notification(1L, 3L, 1L, 2L,"Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
 
         Mockito.when(notificationRepository.save(expectedNotification)).thenReturn(savedNotification);
 
@@ -129,24 +97,8 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(3L)).thenReturn(Optional.of(post));
 
-        Notification expectedNotification = new Notification();
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
-
-        Notification savedNotification = new Notification();
-        savedNotification.setId(1L);
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
+        Notification expectedNotification = new Notification(null, 3L, 1L, 2L, "Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
+        Notification savedNotification = new Notification(1L, 3L, 1L, 2L,"Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
 
         Mockito.when(notificationRepository.save(expectedNotification)).thenReturn(savedNotification);
 
@@ -164,7 +116,7 @@ public class PostServiceTests {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"INVALID\"," +
-                "\"comment\":\"Give more information about the reason why.\"," +
+                "\"comment\":\"Content\"," +
                 "\"postId\":3," +
                 "\"reviewId\":102}";
 
@@ -174,24 +126,8 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(3L)).thenReturn(Optional.of(post));
 
-        Notification expectedNotification = new Notification();
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
-
-        Notification savedNotification = new Notification();
-        savedNotification.setId(1L);
-        expectedNotification.setPostId(3L);
-        expectedNotification.setReceiverId(1L);
-        expectedNotification.setExecutorId(2L);
-        expectedNotification.setContent("Give more information about the reason why.");
-        expectedNotification.setAction("APPROVAL");
-        expectedNotification.setExecutedAt(LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569));
-        expectedNotification.setIsRead(false);
+        Notification expectedNotification = new Notification(null, 3L, 1L, 2L, "Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
+        Notification savedNotification = new Notification(1L, 3L, 1L, 2L,"Content", "APPROVAL", LocalDateTime.of(2024, 12, 29, 20, 36, 52, 5590569), false);
 
         Mockito.when(notificationRepository.save(expectedNotification)).thenReturn(savedNotification);
 
