@@ -45,7 +45,7 @@ public class ReviewServiceTests {
         String userRole = "user";
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.checksUserRole(userRole));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         assertEquals("User is not an editor.", exception.getReason());
     }
 
@@ -61,7 +61,6 @@ public class ReviewServiceTests {
                 .content("Content...")
                 .build();
 
-        String errorMessage = "Post with id " + postId + " not found.";
         Mockito.when(postClient.getPostById(postId)).thenThrow(new FeignException.NotFound(
                 "Post not found",
                 Request.create(Request.HttpMethod.GET, "/api/post/" + postId,
@@ -71,7 +70,7 @@ public class ReviewServiceTests {
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals(errorMessage, exception.getReason());
+        assertEquals("Post with id " + postId + " not found.", exception.getReason());
     }
 
     @Test
@@ -92,7 +91,7 @@ public class ReviewServiceTests {
         Mockito.when(postClient.getPostById(postId)).thenReturn(post);
 
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         assertEquals("User with id " + userId + " cannot review own post.", exception.getReason());
     }
 

@@ -42,7 +42,7 @@ public interface IPostService {
 
     void checksUserRole(String role);
 
-    Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates);
+    Post checkPost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates);
 
-    Notification checksToUpdateNotification(Long notificationId, Long userId);
+    Notification checkNotification(Long notificationId, Long userId);
 }

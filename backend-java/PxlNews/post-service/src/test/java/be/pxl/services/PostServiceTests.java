@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -88,7 +89,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void listen_withInvalidMessage_shouldCreateNotification_andUpdatePostContentStateToApproved() {
+    public void listen_withInvalidMessage_shouldLogTheError() {
         String message = "This is an invalid message.";
 
         Post post = new Post();
@@ -112,7 +113,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void listen_withInvalidReviewType_shouldCreateNotification_andUpdatePostContentStateToApproved() {
+    public void listen_withInvalidReviewType_shouldLogTheError() {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"INVALID\"," +
@@ -144,11 +145,13 @@ public class PostServiceTests {
     public void checksUserRole_withInvalidUserRole_shouldThrowAResponseStatusException() {
         String userRole = "user";
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksUserRole(userRole));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checksUserRole(userRole));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        assertEquals("User is not an editor.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdatePost_Content_withInvalidId_shouldThrowAResponseStatusException() {
+    public void checkPost_withInvalidId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -156,11 +159,13 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdatePost(id, userId, ownerIsAllowed, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkPost(id, userId, ownerIsAllowed, validStates));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Post with id " + id + " not found.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdatePost_Content_withOwnerNotAllowed_shouldThrowAResponseStatusException() {
+    public void checkPost_Content_withOwnerNotAllowed_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -171,11 +176,13 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(id)).thenReturn(Optional.of(post));
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdatePost(id, userId, ownerIsAllowed, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkPost(id, userId, ownerIsAllowed, validStates));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        assertEquals("User with id " + userId + " cannot access this post.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdatePost_Content_withInvalidState_shouldThrowAResponseStatusException() {
+    public void checkPost_Content_withInvalidState_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -187,21 +194,25 @@ public class PostServiceTests {
 
         Mockito.when(postRepository.findById(id)).thenReturn(Optional.of(post));
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdatePost(id, userId, ownerIsAllowed, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkPost(id, userId, ownerIsAllowed, validStates));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals("Post with id " + id + " does not have the right state.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdateNotification_withInvalidId_shouldThrowAResponseStatusException() {
+    public void checkNotification_withInvalidId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 
         Mockito.when(notificationRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdateNotification(id, userId));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkNotification(id, userId));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("Notification with id " + id + " not found.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdateNotification_withInvalidUserId_shouldThrowAResponseStatusException() {
+    public void checkNotification_withInvalidUserId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 
@@ -210,11 +221,13 @@ public class PostServiceTests {
 
         Mockito.when(notificationRepository.findById(id)).thenReturn(Optional.of(notification));
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdateNotification(id, userId));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkNotification(id, userId));
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        assertEquals("User with id " + userId + " cannot access this notification.", exception.getReason());
     }
 
     @Test
-    public void checksToUpdateNotification_withNotificationAlreadyRead_shouldThrowAResponseStatusException() {
+    public void checkNotification_withNotificationAlreadyRead_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 
@@ -224,6 +237,8 @@ public class PostServiceTests {
 
         Mockito.when(notificationRepository.findById(id)).thenReturn(Optional.of(notification));
 
-        assertThrows(ResponseStatusException.class, () -> postService.checksToUpdateNotification(id, userId));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> postService.checkNotification(id, userId));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertEquals("Notification with id " + id + " is already read.", exception.getReason());
     }
 }

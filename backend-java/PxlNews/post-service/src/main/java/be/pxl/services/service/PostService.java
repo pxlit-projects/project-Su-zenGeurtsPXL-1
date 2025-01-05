@@ -66,7 +66,7 @@ public class PostService implements IPostService {
                 logger.info("Updating state to after {} of post with id {}", reviewType, postId);
 
                 State[] validStates = {State.SUBMITTED};
-                Post post = checksToUpdatePost(postId, reviewerId, false, validStates);
+                Post post = checkPost(postId, reviewerId, false, validStates);
 
                 State newState = reviewType.equals("APPROVAL") ? State.APPROVED : State.REJECTED;
                 logger.info("New state is {}", newState);
@@ -212,7 +212,7 @@ public class PostService implements IPostService {
 
         checksUserRole(userRole);
         State[] validStates = new State[]{State.DRAFTED, State.REJECTED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
+        Post post = checkPost(id, userId, true, validStates);
         post.setContent(content);
         postRepository.save(post);
     }
@@ -223,7 +223,7 @@ public class PostService implements IPostService {
 
         checksUserRole(userRole);
         State[] validStates = {State.DRAFTED, State.REJECTED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
+        Post post = checkPost(id, userId, true, validStates);
 
         post.setState(State.SUBMITTED);
         postRepository.save(post);
@@ -235,7 +235,7 @@ public class PostService implements IPostService {
 
         checksUserRole(userRole);
         State[] validStates = {State.APPROVED};
-        Post post = checksToUpdatePost(id, userId, true, validStates);
+        Post post = checkPost(id, userId, true, validStates);
 
         post.setState(State.PUBLISHED);
         postRepository.save(post);
@@ -246,7 +246,7 @@ public class PostService implements IPostService {
         logger.info("Putting notification with id {} on read", notificationId);
         checksUserRole(userRole);
 
-        Notification notification = checksToUpdateNotification(notificationId, userId);
+        Notification notification = checkNotification(notificationId, userId);
         notification.setIsRead(true);
         notificationRepository.save(notification);
     }
@@ -254,17 +254,17 @@ public class PostService implements IPostService {
     @Override
     public void checksUserRole(String role) {
         if (!role.equals("editor")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not an editor.");
         }
     }
 
     @Override
-    public Post checksToUpdatePost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates) {
+    public Post checkPost(Long id, Long userId, boolean ownerIsAllowed, State[] validStates) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post with id " + id + " not found."));
 
         if (post.getUserId().equals(userId) != ownerIsAllowed) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this post.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User with id " + userId + " cannot access this post.");
         }
 
         boolean hasValidState = false;
@@ -281,16 +281,16 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public Notification checksToUpdateNotification(Long notificationId, Long userId){
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification with id " + notificationId + " not found."));
+    public Notification checkNotification(Long id, Long userId){
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notification with id " + id + " not found."));
 
         if (!notification.getReceiverId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot access this notification.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User with id " + userId + " cannot access this notification.");
         }
 
         if (notification.getIsRead()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification with id " + notificationId + " is already read.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Notification with id " + id + " is already read.");
         }
 
         return notification;

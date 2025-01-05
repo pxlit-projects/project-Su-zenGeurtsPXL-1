@@ -77,7 +77,7 @@ public class ReviewService implements IReviewService {
     @Override
     public void checksUserRole(String role) {
         if (!role.equals("editor")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is not an editor.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not an editor.");
         }
     }
 
@@ -96,7 +96,7 @@ public class ReviewService implements IReviewService {
         Post post = postClient.getPostById(postId);
 
         if (post.getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with id " + userId + " cannot review own post.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User with id " + userId + " cannot review own post.");
         }
 
         boolean hasValidState = false;
