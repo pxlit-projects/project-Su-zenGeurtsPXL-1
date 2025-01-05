@@ -63,13 +63,13 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    public CommentResponse updateComment(Long id, Long userId, String userRole, CommentRequest commentRequest) {
+    public CommentResponse updateComment(Long id, Long userId, String userRole, String content) {
         logger.info("Updating comment with id {}", id);
 
         checksUserRole(userRole);
 
         Comment comment = checksAccessToComment(id, userId);
-        comment.setContent(commentRequest.getContent());
+        comment.setContent(content);
         return mapToCommentResponse(commentRespository.save(comment));
     }
 

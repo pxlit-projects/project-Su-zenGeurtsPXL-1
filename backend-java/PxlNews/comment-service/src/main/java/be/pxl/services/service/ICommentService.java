@@ -10,7 +10,7 @@ public interface ICommentService {
 
     CommentResponse createComment(CommentRequest commentRequest, Long userId, String userRole);
 
-    CommentResponse updateComment(Long id, Long userId, String userRole, CommentRequest commentRequest);
+    CommentResponse updateComment(Long id, Long userId, String userRole, String content);
 
     void deleteComment(Long id, Long userId, String userRole);
 }

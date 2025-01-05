@@ -29,12 +29,12 @@ public class CommentController {
 
     @PutMapping(path = "{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentResponse editComment(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody CommentRequest commentRequest) {
-        return commentService.updateComment(id, userId, userRole, commentRequest);
+    public CommentResponse editComment(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole, @RequestBody String content) {
+        return commentService.updateComment(id, userId, userRole, content);
     }
 
     @DeleteMapping(path = "{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeComment(@PathVariable Long id, @RequestHeader Long userId, @RequestHeader String userRole) {
         commentService.deleteComment(id, userId, userRole);
     }
