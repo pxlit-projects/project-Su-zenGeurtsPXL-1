@@ -6,7 +6,6 @@ import be.pxl.services.domain.State;
 import be.pxl.services.repository.NotificationRepository;
 import be.pxl.services.repository.PostRepository;
 import be.pxl.services.service.IPostService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,8 @@ public class PostServiceTests {
     @MockBean
     private NotificationRepository notificationRepository;
 
-    @BeforeEach
-    public void initEach() {}
-
     @Test
-    public void listen_withRejection_shouldCreateNotification_andUpdatePostStateToRejected() {
+    public void listen_withRejection_shouldCreateNotification_andUpdatePostContentStateToRejected() {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"REJECTION\"," +
@@ -79,7 +75,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void listen_withApproval_shouldCreateNotification_andUpdatePostStateToApproved() {
+    public void listen_withApproval_shouldCreateNotification_andUpdatePostContentStateToApproved() {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"APPROVAL\"," +
@@ -124,7 +120,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void listen_withInvalidMessage_shouldCreateNotification_andUpdatePostStateToApproved() {
+    public void listen_withInvalidMessage_shouldCreateNotification_andUpdatePostContentStateToApproved() {
         String message = "This is an invalid message.";
 
         Post post = new Post();
@@ -164,7 +160,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void listen_withInvalidReviewType_shouldCreateNotification_andUpdatePostStateToApproved() {
+    public void listen_withInvalidReviewType_shouldCreateNotification_andUpdatePostContentStateToApproved() {
         String message = "{\"reviewerId\":2,\"" +
                 "executedAt\":\"2024-12-29T20:36:52.5590569\"," +
                 "\"reviewType\":\"INVALID\"," +
@@ -209,14 +205,14 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksUserRole_withInvalid_shouldThrowsException() {
+    public void checksUserRole_withInvalidUserRole_shouldThrowAResponseStatusException() {
         String userRole = "user";
 
         assertThrows(ResponseStatusException.class, () -> postService.checksUserRole(userRole));
     }
 
     @Test
-    public void checksToUpdatePost_withInvalidId_shouldThrowsException() {
+    public void checksToUpdatePost_Content_withInvalidId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -228,7 +224,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksToUpdatePost_withOwnerNotAllowed_shouldThrowsException() {
+    public void checksToUpdatePost_Content_withOwnerNotAllowed_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -243,7 +239,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksToUpdatePost_withInvalidState_shouldThrowsException() {
+    public void checksToUpdatePost_Content_withInvalidState_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
         boolean ownerIsAllowed = false;
@@ -259,7 +255,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksToUpdateNotification_withInvalidId_shouldThrowsException() {
+    public void checksToUpdateNotification_withInvalidId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 
@@ -269,7 +265,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksToUpdateNotification_withInvalidUserId_shouldThrowsException() {
+    public void checksToUpdateNotification_withInvalidUserId_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 
@@ -282,7 +278,7 @@ public class PostServiceTests {
     }
 
     @Test
-    public void checksToUpdateNotification_withNotificationAlreadyRead_shouldThrowsException() {
+    public void checksToUpdateNotification_withNotificationAlreadyRead_shouldThrowAResponseStatusException() {
         long id = 1L;
         long userId = 1L;
 

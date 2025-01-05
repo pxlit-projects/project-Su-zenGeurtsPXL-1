@@ -85,7 +85,7 @@ public class PostControllerTests {
             Notification notification = Notification.builder()
                     .postId((long)(i))
                     .receiverId((long)(i))
-                    .executorId((long)(i+ 1))
+                    .executorId((long)(i + 1))
                     .content("Content...")
                     .action("Action")
                     .executedAt(LocalDateTime.now())
@@ -96,7 +96,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getAllPosts_shouldReturnListOfRequestedPosts() throws Exception {
+    public void getAllPosts_shouldFindAllPosts() throws Exception {
         List<Post> expectedPosts = postRepository.findAll();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post"))
@@ -105,7 +105,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getMyPosts_shouldReturnListOfRequestedPosts() throws Exception {
+    public void getMyPosts_shouldFindPostsWithGivenUserId() throws Exception {
         long userId = 5L;
         String userRole = "editor";
 
@@ -119,7 +119,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getPublishedPosts_shouldReturnListOfPublishedPosts() throws Exception {
+    public void getPublishedPosts_shouldFindPublishedPosts() throws Exception {
         List<Post> expectedPosts = postRepository.findByState(State.PUBLISHED);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/published"))
@@ -128,7 +128,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getReviewablePosts_shouldReturnListOfSubmittedPosts() throws Exception {
+    public void getReviewablePosts_shouldFindReviewablePostsWithoutPostsOfGivenUserId() throws Exception {
         long userId = 10L;
         String userRole = "editor";
 
@@ -139,7 +139,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getPostById_shouldReturnRequestedPost() throws Exception {
+    public void getPostById_shouldFindPostWithGivenId() throws Exception {
         Post expectedPost = postRepository.findAll().get(0);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/" + expectedPost.getId()))
@@ -148,7 +148,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getPostByIdWithReviews_shouldReturnRequestedPostWithReviews() throws Exception {
+    public void getPostByIdWithReviews_shouldFindPostWithReviewsWithGivenId() throws Exception {
         Post expectedPost = postRepository.findAll().get(0);
 
         List<Review> expectedReviews = new ArrayList<>();
@@ -176,7 +176,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getPostByIdWithComments_shouldReturnRequestedPostWithComments() throws Exception {
+    public void getPostByIdWithComments_shouldFindPostWithCommentsWithGivenId() throws Exception {
         Post expectedPost = postRepository.findAll().get(0);
 
         List<Comment> expectedComments = new ArrayList<>();
@@ -201,7 +201,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getAllPostCategories_shouldReturnListOfCategories() throws Exception {
+    public void getAllPostCategories_shouldRFindAllCategories() throws Exception {
         List<Category> expectedCategories = List.of(Category.values());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/post/category"))
@@ -210,7 +210,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void getMyNotifications_shouldReturnListOfRequestedPosts() throws Exception {
+    public void getMyNotifications_shouldFindNotificationsWithGivenUserId() throws Exception {
         long userId = 2L;
         String userRole = "editor";
 
@@ -224,7 +224,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void addPost_shouldCreateDraftedPost() throws Exception {
+    public void addPost_shouldCreatePostWithStateDrafted() throws Exception {
         PostRequest postRequest = PostRequest.builder()
                 .title("Post title")
                 .content("Content...")
@@ -245,7 +245,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void editPost_shouldChangeContentOfRequestedPost() throws Exception {
+    public void editPost_shouldUpdateContentOfGivenPost() throws Exception {
         Post post = postRepository.findAll().get(0);
 
         String content = "Updated content...";
@@ -272,7 +272,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void submitPost_shouldChangeStateToSubmittedOfRequestedPost() throws Exception {
+    public void submitPost_shouldUpdateStateToSubmittedOfGivenPost() throws Exception {
         Post post = postRepository.findAll().get(0);
         long userId = post.getUserId();
         String userRole = "editor";
@@ -295,7 +295,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void publishPost_shouldChangeStateToPublishedOfRequestedPost() throws Exception {
+    public void publishPost_shouldUpdateStateToPublishedOfGivenPost() throws Exception {
         Post post = postRepository.findAll().get(0);
         post.setState(State.APPROVED);
         postRepository.save(post);
@@ -313,7 +313,7 @@ public class PostControllerTests {
     }
 
     @Test
-    public void markNotificationAsRead_shouldChangeIsReadToTrueOfRequestedNotification() throws Exception {
+    public void markNotificationAsRead_shouldMarkNotificationWithGivenIdAsRead() throws Exception {
         Notification notification = notificationRepository.findAll().get(0);
         notification.setIsRead(false);
         notificationRepository.save(notification);
