@@ -36,17 +36,19 @@ export class NavbarComponent implements OnInit, OnDestroy{
   }
 
   fetchNotifications() {
-    let fetchedNotifications = this.postService.getMyNotifications();
-    if (this.notifications$ === undefined) {
-      this.handleFetch(fetchedNotifications);
-    } else {
-      fetchedNotifications.subscribe(fetchedNotificationsData => {
-        this.notifications$.subscribe(notifications => {
-          if (notifications != fetchedNotificationsData) {
-            this.handleFetch(fetchedNotifications);
-          }
+    if (localStorage.getItem('userRole') === 'editor') {
+      let fetchedNotifications = this.postService.getMyNotifications();
+      if (this.notifications$ === undefined) {
+        this.handleFetch(fetchedNotifications);
+      } else {
+        fetchedNotifications.subscribe(fetchedNotificationsData => {
+          this.notifications$.subscribe(notifications => {
+            if (notifications != fetchedNotificationsData) {
+              this.handleFetch(fetchedNotifications);
+            }
+          });
         });
-      });
+      }
     }
   }
 
