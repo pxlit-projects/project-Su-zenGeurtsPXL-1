@@ -8,16 +8,16 @@ import {LoginRequest} from "../../models/authentication/login-request.model";
 
 export class AuthenticationService {
   private users: User[] = [
-    { id: 1, username: 'milan', fullName: 'Milan Dewaele', password: 'ed123', role: 'editor' },
-    { id: 2, username: 'lara', fullName: 'Lara Peeters', password: 'ed123', role: 'editor' },
-    { id: 3, username: 'johan', fullName: 'Johan Willems', password: 'ed123', role: 'editor' },
-    { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor' },
-    { id: 5, username: 'noah', fullName: 'Noah Verhoeven', password: 'ed123', role: 'editor' },
-    { id: 6, username: 'lukas', fullName: 'Lukas Meijer', password: 'ed123', role: 'editor' },
-    { id: 7, username: 'sofie', fullName: 'Sofie De Vries', password: 'ed123', role: 'editor' },
-    { id: 8, username: 'tom', fullName: 'Tom Jacobs', password: 'us123', role: 'user' },
-    { id: 9, username: 'anouk', fullName: 'Anouk Claes', password: 'us123', role: 'user' },
-    { id: 10, username: 'kasper', fullName: 'Kasper De Smet', password: 'us123', role: 'user' }
+    { id: 1, username: 'milan', fullName: 'Milan Dewaele', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com'},
+    { id: 2, username: 'lara', fullName: 'Lara Peeters', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 3, username: 'johan', fullName: 'Johan Willems', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com'},
+    { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 5, username: 'noah', fullName: 'Noah Verhoeven', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 6, username: 'lukas', fullName: 'Lukas Meijer', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 7, username: 'sofie', fullName: 'Sofie De Vries', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 8, username: 'tom', fullName: 'Tom Jacobs', password: 'us123', role: 'user', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 9, username: 'anouk', fullName: 'Anouk Claes', password: 'us123', role: 'user', email: 'sg.jiangxiuzhen@gmail.com' },
+    { id: 10, username: 'kasper', fullName: 'Kasper De Smet', password: 'us123', role: 'user', email: 'sg.jiangxiuzhen@gmail.com' }
   ];
 
   login(login: LoginRequest): User | null {
@@ -41,8 +41,9 @@ export class AuthenticationService {
   }
 
   getHeaders(): any {
-    let userId = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userId');
-    let userRole = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userRole');
-    return { userId: userId, userRole: userRole, 'Content-Type': 'application/json' };
+    const userId = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userId');
+    const userRole = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userRole');
+    const email = this.getUserById(userId)?.email;
+    return { userId: userId, userRole: userRole, email: email, 'Content-Type': 'application/json' };
   }
 }
