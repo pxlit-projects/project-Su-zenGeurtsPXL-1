@@ -22,10 +22,10 @@
         <developer/>
     </developers>
     <modules>
-        <module>post-service</module>
         <module>config-service</module>
         <module>discovery-service</module>
         <module>gateway-service</module>
+        <module>post-service</module>
         <module>review-service</module>
         <module>comment-service</module>
     </modules>
@@ -75,6 +75,10 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-web</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>
