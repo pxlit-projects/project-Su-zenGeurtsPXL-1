@@ -1,7 +1,7 @@
 import {Component, inject, Input} from "@angular/core";
 import {Review} from "../../../shared/models/reviews/review.model";
 import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
-import {PostService} from "../../../shared/services/post/post.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 @Component({
   selector: 'app-review-item',
@@ -15,5 +15,5 @@ export class ReviewItemComponent {
   @Input() review!: Review;
   @Input() isLast!: boolean;
   authenticationService: AuthenticationService = inject(AuthenticationService);
-  postService: PostService = inject(PostService);
+  helperService: HelperService = inject(HelperService);
 }

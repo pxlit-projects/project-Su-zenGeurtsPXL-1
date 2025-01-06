@@ -11,7 +11,7 @@ describe('PostItemComponent', () => {
   let component: PostItemComponent;
   let fixture: ComponentFixture<PostItemComponent>;
   let postServiceMock: jasmine.SpyObj<PostService>;
-  const mockPost: Post = { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'};
+  const mockPost: Post = { id: 1, title: 'Title', content: 'Content', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'};
 
   beforeEach(() => {
     postServiceMock = jasmine.createSpyObj('PostService', ['toPascalCasing', 'transformDate']);

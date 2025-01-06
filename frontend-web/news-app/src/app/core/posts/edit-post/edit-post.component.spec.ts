@@ -1,5 +1,4 @@
 import {Post} from "../../../shared/models/posts/post.model";
-import {PostRequest} from "../../../shared/models/posts/post-request.model";
 import {PostService} from "../../../shared/services/post/post.service";
 import {EditPostComponent} from "./edit-post.component";
 
@@ -66,16 +65,18 @@ describe('EditPostComponent', () => {
   });
 
   it('should call editPost on form submit and navigate on success', () => {
-    const postRequest = {
-      content: 'Updated content'
+    const content = "Updated content";
+
+    const form = {
+      content: content
     };
 
-    component.postForm.setValue(postRequest);
-    postServiceMock.editPost.and.returnValue(of(mockPost as Post));
+    component.postForm.setValue(form);
+    postServiceMock.editPost.and.returnValue(of(undefined));
 
     component.onSubmit();
 
-    expect(postServiceMock.editPost).toHaveBeenCalledWith(1, postRequest as PostRequest);
+    expect(postServiceMock.editPost).toHaveBeenCalledWith(1, content);
 
     expect(component.postForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost/1']);

@@ -11,6 +11,9 @@ import {ReviewListComponent} from "../../reviews/review-list/review-list.compone
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommentListComponent} from "../../comments/comment-list/comment-list.component";
 import {CommentRequest} from "../../../shared/models/comments/comment-request.model";
+import {ReviewService} from "../../../shared/services/review/review.service";
+import {CommentService} from "../../../shared/services/comment/comment.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 @Component({
   selector: 'app-post-detail',
@@ -20,16 +23,22 @@ import {CommentRequest} from "../../../shared/models/comments/comment-request.mo
   styleUrl: './post-detail.component.css'
 })
 export class PostDetailComponent implements OnInit {
+  postService: PostService = inject(PostService);
+  commentService: CommentService = inject(CommentService);
+  reviewService: ReviewService = inject(ReviewService);
+  authenticationService: AuthenticationService = inject(AuthenticationService);
+  helperService: HelperService = inject(HelperService);
+
   router: Router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
-  isMine: boolean = this.url[0].path === 'myPost';
-  isToReview: boolean = this.url[0].path === 'review';
   id: number = this.route.snapshot.params['id'];
-  postService: PostService = inject(PostService);
-  authenticationService: AuthenticationService = inject(AuthenticationService);
+
   post$: Observable<Post> = this.postService.getPost(this.id);
   userId$: number | null = Number(localStorage.getItem('userId'));
+  isMine: boolean = this.url[0].path === 'myPost';
+  isToReview: boolean = this.url[0].path === 'review';
+
   fb: FormBuilder = inject(FormBuilder);
   commentForm: FormGroup = this.fb.group({
     content: [ '', Validators.required]
@@ -75,26 +84,35 @@ export class PostDetailComponent implements OnInit {
     };
 
     if (this.commentForm.valid) {
-      this.postService.reviewPost(type, review).subscribe(() => {
-        this.router.navigate(['/review']);
+      this.reviewService.reviewPost(type, review).subscribe(() => {
+        let element = document.getElementById('errorMessage');
+        if (element) element.innerText = "";
+        this.fetchPost();
       });
     }
     else {
-      alert("Comment cannot be empty")
+      console.log("empty review")
+      let element = document.getElementById('errorMessage');
+      if (element) element.innerText = "Comment cannot be empty";
     }
   }
 
   addComment() {
-    console.log("Adding comment")
     const comment: CommentRequest = {
       postId: this.id,
       ...this.commentForm.value
     };
 
     if (this.commentForm.valid) {
-      this.postService.addComment(comment).subscribe(() => {
-        location.reload();
+      this.commentService.addComment(comment).subscribe(() => {
+        let element = document.getElementById('errorMessage');
+        if (element) element.innerText = "";
+        this.commentForm.reset();
+        this.fetchPost();
       });
+    } else {
+      let element = document.getElementById('errorMessage');
+      if (element) element.innerText = "Comment cannot be empty";
     }
   }
 }

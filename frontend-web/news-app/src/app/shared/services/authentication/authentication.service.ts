@@ -39,4 +39,10 @@ export class AuthenticationService {
     }
     return this.users.find(user => user.id === id);
   }
+
+  getHeaders(): any {
+    let userId = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userId');
+    let userRole = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userRole');
+    return { userId: userId, userRole: userRole, 'Content-Type': 'application/json' };
+  }
 }

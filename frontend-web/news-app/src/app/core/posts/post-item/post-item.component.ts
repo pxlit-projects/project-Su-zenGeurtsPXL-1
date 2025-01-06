@@ -5,6 +5,7 @@ import {Post} from "../../../shared/models/posts/post.model";
 import {RouterLink, RouterLinkActive} from "@angular/router";
 import {PostService} from "../../../shared/services/post/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 @Component({
   selector: 'app-post-item',
@@ -23,4 +24,5 @@ export class PostItemComponent {
   @Input() isToReview!: boolean;
   postService: PostService = inject(PostService);
   authenticationService: AuthenticationService = inject(AuthenticationService);
+  helperService: HelperService = inject(HelperService);
 }

@@ -10,23 +10,40 @@ import {ActivatedRoute, UrlSegment} from "@angular/router";
 describe('PostListComponent', () => {
   let component: PostListComponent;
   let fixture: ComponentFixture<PostListComponent>;
+
   let postServiceMock: jasmine.SpyObj<PostService>;
+
   let routeMock: jasmine.SpyObj<ActivatedRoute>;
+
   const mockPosts: Post[] = [
-    { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
-    { id: 2, title: 'Title2', content: 'Content2...', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
+    { id: 1, title: 'Title', content: 'Content', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-9 15:30:07', state: 'PUBLISHED'},
+    { id: 2, title: 'Title2', content: 'Content2', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
   ];
 
   const mockReversePosts: Post[] = [
-    { id: 2, title: 'Title2', content: 'Content2...', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
-    { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
+    { id: 2, title: 'Title2', content: 'Content2', userId: 4, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
+    { id: 1, title: 'Title', content: 'Content', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-9 15:30:07', state: 'PUBLISHED'},
   ];
 
+  const filter: Filter = { content: 'con', author: 'Mi', date: '2024-12-10' };
+
+  const filteredPosts: Post[] = [
+    { id: 1, title: 'Title', content: 'Content', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-9 15:30:07', state: 'PUBLISHED'},
+    { id: 2, title: 'Title2', content: 'Content2', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
+  ];
+
+  const mockReverseFilteredPosts: Post[] = [
+    { id: 2, title: 'Title2', content: 'Content2', userId: 1, category: 'SPORTS', createdAt: '2024-12-10 15:31:07', state: 'SUBMITTED'},
+    { id: 1, title: 'Title', content: 'Content', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-9 15:30:07', state: 'PUBLISHED'},
+  ];
+
+  localStorage.setItem('userId', '1');
+
   beforeEach(() => {
-    localStorage.setItem('userId', '1');
-    postServiceMock = jasmine.createSpyObj('PostService', ['getPublishedPosts', 'getMyPosts', 'getReviewablePosts', 'filterPublishedPosts', 'filterMyPosts', 'filterReviewablePosts', 'orderToMostRecent']);
+    postServiceMock = jasmine.createSpyObj('PostService', ['getMyPosts', 'getPublishedPosts', 'getReviewablePosts', 'filterPublishedPosts', 'filterMyPosts', 'filterReviewablePosts']);
+
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
-      snapshot: { url: [new UrlSegment('posts', {})] }
+      snapshot: { url: [new UrlSegment('post', {})] }
     });
 
     TestBed.configureTestingModule({
@@ -46,10 +63,10 @@ describe('PostListComponent', () => {
   });
 
   it('should initialize "isMine" based on route URL', () => {
-    // !isMine
+    // !MINE
     expect(component.isMine).toBe(false);
 
-    // isMine
+    // MINE
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -58,10 +75,10 @@ describe('PostListComponent', () => {
   });
 
   it('should initialize "review" based on route URL', () => {
-    // !isToReview
+    // !REVIEW
     expect(component.isToReview).toBe(false);
 
-    // isMine
+    // MINE
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -78,18 +95,18 @@ describe('PostListComponent', () => {
   it('should fetch posts correctly', () => {
     postServiceMock.getPublishedPosts.and.returnValue(of(mockPosts));
     postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
-    postServiceMock.orderToMostRecent.and.returnValue(of(mockReversePosts));
+    postServiceMock.getReviewablePosts.and.returnValue(of(mockPosts));
 
-    // if (!isMine) getPublishedPosts
+    // PUBLISHED
     component.fetchPosts();
 
-    expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
-    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(mockReversePosts);
-    });
+    component.posts$.subscribe(posts => {
+      expect(posts).toEqual(mockReversePosts);
+    })
 
-    // if (isMine) getMyPosts
+    expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
+
+    // MINE
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -97,12 +114,8 @@ describe('PostListComponent', () => {
     component.fetchPosts();
 
     expect(postServiceMock.getMyPosts).toHaveBeenCalled();
-    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(mockReversePosts);
-    });
 
-    // if (review) getReviewablePosts
+    // REVIEW
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -110,32 +123,27 @@ describe('PostListComponent', () => {
     component.fetchPosts();
 
     expect(postServiceMock.getReviewablePosts).toHaveBeenCalled();
-    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(mockReversePosts);
-    });
   });
 
   it('should filter posts based on the filter criteria correctly', () => {
-    const filter: Filter = { content: 'con', author: 'Mi', date: '2024-12-10' };
-    const filteredPosts: Post[] = [
-      { id: 1, title: 'Title', content: 'Content...', userId: 1, category: 'ACADEMIC', createdAt: '2024-12-10 15:30:07', state: 'PUBLISHED'},
-    ];
     postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
     postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
-    postServiceMock.orderToMostRecent.and.returnValue(of(filteredPosts));
+    postServiceMock.filterReviewablePosts.and.returnValue(of(filteredPosts));
 
-    // if (!isMine) filterPublishedPosts
+    // PUBLISHED
     component.handleFilter(filter);
 
+    component.posts$.subscribe(posts => {
+      expect(posts).toEqual(mockReverseFilteredPosts);
+    })
+
     expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
-    expect(postServiceMock.orderToMostRecent).toHaveBeenCalled();
 
     component.posts$.subscribe(data => {
       expect(data).toEqual(filteredPosts);
     });
 
-    // if (isMine) filterMyPosts
+    // MINE
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
@@ -148,7 +156,7 @@ describe('PostListComponent', () => {
       expect(data).toEqual(filteredPosts);
     });
 
-    // if (review) getReviewablePosts
+    // REVIEW
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;

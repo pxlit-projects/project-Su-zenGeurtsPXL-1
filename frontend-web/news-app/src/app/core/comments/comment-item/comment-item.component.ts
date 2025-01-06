@@ -1,11 +1,11 @@
 import {Component, inject, Input} from "@angular/core";
 import {Comment} from "../../../shared/models/comments/comment.model";
 import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
-import {PostService} from "../../../shared/services/post/post.service";
 import {NgClass} from "@angular/common";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {CommentRequest} from "../../../shared/models/comments/comment-request.model";
 import {Router} from "@angular/router";
+import {CommentService} from "../../../shared/services/comment/comment.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 @Component({
   selector: 'app-comment-item',
@@ -20,24 +20,27 @@ import {Router} from "@angular/router";
 })
 
 export class CommentItemComponent {
+  authenticationService: AuthenticationService = inject(AuthenticationService);
+  commentService: CommentService = inject(CommentService);
+  helperService: HelperService = inject(HelperService);
+
+  router: Router = inject(Router);
+  fb: FormBuilder = inject(FormBuilder);
+
   @Input() comment!: Comment;
   @Input() isLast!: boolean;
-  protected readonly localStorage = localStorage;
-  authenticationService: AuthenticationService = inject(AuthenticationService);
-  postService: PostService = inject(PostService);
   menuIsHidden: boolean = true;
   isInProgress: boolean = false;
-  fb: FormBuilder = inject(FormBuilder);
-  router: Router = inject(Router);
+
   commentForm: FormGroup = this.fb.group({
     content: [ '', Validators.required]
   });
 
-  deleteComment(id: number | undefined) {
+  protected readonly localStorage = localStorage;
+
+  deleteComment() {
     if (confirm("Are you sure you want to delete this comment?")) {
-        this.postService.deleteComment(id!).subscribe(() => {
-          location.reload();
-      });
+        this.commentService.deleteComment(this.comment.id!);
     }
     this.menuIsHidden = true;
   }
@@ -51,13 +54,11 @@ export class CommentItemComponent {
   }
 
   onSubmit() {
-    const editedComment: CommentRequest = {
-      ...this.commentForm.value
-    };
+    const content: string = this.commentForm.value.content;
 
-    this.postService.editComment(this.comment.id!, editedComment).subscribe({
-      next: (comment) => {
-        this.comment.content = comment.content;
+    this.commentService.editComment(this.comment.id!, content).subscribe({
+      next: () => {
+        this.comment.content = content;
         this.isInProgress = false;
       }
     });

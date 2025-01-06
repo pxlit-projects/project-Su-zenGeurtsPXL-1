@@ -3,12 +3,12 @@
     <img id="profile" class="border-2 border-pxlGreen rounded-full mx-auto" [src]="'user-profiles/' + authenticationService.getUserById(review.userId)?.role + authenticationService.getUserById(review.userId)?.id + '.png'" alt="user profile">
   </div>
   <p class="col-span-8 inline-block align-middle my-auto">
-    {{ postService.toPascalCasing(review.type) }} by {{authenticationService.getUserById(review.userId)?.fullName}}
+    {{ helperService.toPascalCasing(review.type) }} by {{authenticationService.getUserById(review.userId)?.fullName}}
     @if(review.content != '') {
       <span>: <span class="font-bold inline-block text-justify">{{ review.content }}</span> </span>
     }
   </p>
-  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(review.createdAt) }}</p>
+  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ helperService.transformDateShort(review.createdAt) }}</p>
 </div>
 @if(!isLast) {
   <div class="grid grid-cols-11 gap-2">

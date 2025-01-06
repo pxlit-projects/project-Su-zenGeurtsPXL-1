@@ -1,4 +1,3 @@
-import {Post} from "../../../shared/models/posts/post.model";
 import {PostRequest} from "../../../shared/models/posts/post-request.model";
 import {PostService} from "../../../shared/services/post/post.service";
 import {AddPostComponent} from "./add-post.component";
@@ -42,21 +41,12 @@ describe('AddPostComponent', () => {
   it('should call addPost on form submit and navigate on success', () => {
     const postRequest = {
       title: 'Title',
-      content: 'Content...',
+      content: 'Content',
       category: 'ACADEMIC',
-    };
-
-    const mockPost = {
-      title: 'Title',
-      content: 'Content...',
-      userId: 1,
-      category: 'ACADEMIC',
-      createdAt: '2024-12-10 15:30:07',
-      state: 'DRAFTED'
     };
 
     component.postForm.setValue(postRequest);
-    postServiceMock.addPost.and.returnValue(of(mockPost as Post));
+    postServiceMock.addPost.and.returnValue(of(undefined));
 
     component.onSubmit();
 

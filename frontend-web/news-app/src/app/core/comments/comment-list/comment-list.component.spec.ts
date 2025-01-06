@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {CommentListComponent} from "./comment-list.component";
 
-describe('ReviewListComponent', () => {
+describe('CommentListComponent', () => {
   let component: CommentListComponent;
   let fixture: ComponentFixture<CommentListComponent>;
 
@@ -27,8 +27,8 @@ describe('ReviewListComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.comments[0].createdAt).toBe('2024-12-10 15:30:07');
+    expect(component.comments[0].createdAt).toBe('2024-12-1 15:30:07');
     expect(component.comments[1].createdAt).toBe('2024-12-4 15:30:07');
-    expect(component.comments[2].createdAt).toBe('2024-12-1 15:30:07');
+    expect(component.comments[2].createdAt).toBe('2024-12-10 15:30:07');
   });
 });

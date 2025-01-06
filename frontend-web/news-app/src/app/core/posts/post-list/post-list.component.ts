@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 
@@ -39,7 +39,8 @@ export class PostListComponent implements OnInit {
       this.posts$ = this.postService.filterPublishedPosts(filter);
     }
 
-    this.posts$ = this.postService.orderToMostRecent(this.posts$);
+    this.posts$ = this.posts$.pipe(map((posts: Post[]) =>
+      posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
   }
 
   fetchPosts(): void {
@@ -51,6 +52,7 @@ export class PostListComponent implements OnInit {
       this.posts$ = this.postService.getPublishedPosts();
     }
 
-    this.posts$ = this.postService.orderToMostRecent(this.posts$);
+    this.posts$ = this.posts$.pipe(
+      map((posts: Post[]) => posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
   }
 }

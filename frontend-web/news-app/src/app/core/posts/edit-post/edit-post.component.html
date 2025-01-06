@@ -21,7 +21,7 @@
       <div class="mb-4">
         <label class="block text-sm/6 font-medium text-gray-900 mb-1">Category</label>
         <div class="bg-gray-100 text-gray-500 shadow appearance-none border w-full py-2 px-3 leading-tight rounded">
-        {{postService.toPascalCasing(post.category)}}
+        {{helperService.toPascalCasing(post.category)}}
         </div>
         @if(postForm.get('category')?.touched && postForm.get('category')?.hasError('required')){
           <div class="text-red-500 text-sm mt-1">Category is required</div>

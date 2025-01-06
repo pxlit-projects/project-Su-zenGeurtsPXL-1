@@ -17,6 +17,7 @@
               <div class="text-red-500 text-sm mt-1 hidden">Comment is required</div>
             }
           </div>
+            <div id="errorMessage" class="text-red-500 text-sm mt-1"></div>
         </form>
         </div>
 
@@ -39,10 +40,10 @@
       <span class="font-bold inline-block text-justify">{{ comment.content }}</span>
     </p>
   }
-  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ postService.transformDateShort(comment.createdAt) }}</p>
+  <p class="col-span-2 text-gray-500 align-middle my-auto">{{ helperService.transformDateShort(comment.createdAt) }}</p>
 </div>
 <div [hidden]="menuIsHidden" class="absolute left-80 z-10 mt-2 w-36 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-  <a (click)="deleteComment(comment.id)" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">Delete</a>
+  <a (click)="deleteComment()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">Delete</a>
   <a (click)="updateComment()" class="block px-4 py-2 text-sm text-black hover:bg-gray-100 cursor-pointer" role="menuitem" tabindex="-1">Update</a>
 </div>
 @if(!isLast) {

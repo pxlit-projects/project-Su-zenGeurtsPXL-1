@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ReviewItemComponent} from "./review-item.component";
-import {PostService} from "../../../shared/services/post/post.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 describe('ReviewItemComponent', () => {
   let component: ReviewItemComponent;
   let fixture: ComponentFixture<ReviewItemComponent>;
-  let postServiceMock: jasmine.SpyObj<PostService>;
+  let helperServiceMock: jasmine.SpyObj<HelperService>;
 
   beforeEach(() => {
-    postServiceMock = jasmine.createSpyObj('PostService', ['transformDateShort', 'toPascalCasing']);
+    helperServiceMock = jasmine.createSpyObj('HelperService', ['transformDateShort', 'toPascalCasing']);
 
     TestBed.configureTestingModule({
       imports: [ReviewItemComponent],
       providers: [
-        { provide: PostService, useValue: postServiceMock },
+        { provide: HelperService, useValue: helperServiceMock },
       ]
     });
 

@@ -7,6 +7,7 @@ import {Observable} from "rxjs";
 import {PostItemComponent} from "../post-item/post-item.component";
 import {PostRequest} from "../../../shared/models/posts/post-request.model";
 import {PostService} from "../../../shared/services/post/post.service";
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 
 @Component({
@@ -19,6 +20,7 @@ import {PostService} from "../../../shared/services/post/post.service";
 export class AddPostComponent implements OnInit{
   categories$!: Observable<string[]>;
   postService: PostService = inject(PostService);
+  helperService: HelperService = inject(HelperService);
   fb: FormBuilder = inject(FormBuilder);
   router: Router = inject(Router);
 

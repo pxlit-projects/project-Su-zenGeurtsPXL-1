@@ -9,7 +9,7 @@
   <img class="w-full h-36 object-cover" [src]="'post-backgrounds/' + post.category + '.png'" alt="Card image">
   <div class=" px-6 py-4">
     <div class="pb-2">
-      <span class="inline-flex items-center rounded bg-pxlGreen bg-opacity-20 px-2 py-1 text-sm font-medium text-pxlGreen ring-1 ring-inset ring-pxlGreen">{{postService.toPascalCasing(post.category)}}</span>
+      <span class="inline-flex items-center rounded bg-pxlGreen bg-opacity-20 px-2 py-1 text-sm font-medium text-pxlGreen ring-1 ring-inset ring-pxlGreen">{{helperService.toPascalCasing(post.category)}}</span>
       @if (isMine || isToReview) {
         <span class="inline-flex items-center rounded bg-opacity-20 px-2 py-1 text-sm font-medium ring-1 ring-inset ml-2"
               [ngClass]="{'bg-gray-500 text-gray-500 ring-gray-500': post.state === 'DRAFTED',
@@ -18,11 +18,11 @@
        'bg-red-500 text-red-500 ring-red-500': post.state === 'REJECTED',
        'bg-yellow-500 text-yellow-500 ring-yellow-500': post.state === 'PUBLISHED' && isMine
        }"
-        >{{postService.toPascalCasing(post.state)}}</span>
+        >{{helperService.toPascalCasing(post.state)}}</span>
       }
     </div>
     <p class="text-gray-500 font-bold text-sm my-auto mb-1">By {{authenticationService.getUserById(post.userId)?.fullName}}</p>
-    <p class="text-pxlGreen font-medium text-sm my-auto mb-1">{{postService.transformDate(post.createdAt)}}</p>
+    <p class="text-pxlGreen font-medium text-sm my-auto mb-1">{{helperService.transformDate(post.createdAt)}}</p>
     <p class="text-gray-500 font-medium text-sm my-auto mb-1"></p>
     <h1 class="text-black font-bold text-xl my-auto mb-2 min-h-40">{{post.title}}</h1>
     <button [routerLink]="[post.id]" class="bg-pxlGreen w-full text-white font-bold py-2 px-2 rounded hover:bg-pxlGreenH">

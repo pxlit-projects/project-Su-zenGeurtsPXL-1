@@ -1,5 +1,4 @@
 import {AuthenticationService} from "./authentication.service";
-
 import {TestBed} from "@angular/core/testing";
 
 describe('AuthenticationService', () => {
@@ -44,5 +43,14 @@ describe('AuthenticationService', () => {
   it('should format from string to number when ID is a string ', () => {
     const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor' };
     expect(service.getUserById('4')).toEqual(expectedUser);
+  });
+
+  it('should return headers correctly', () => {
+    localStorage.clear();
+    expect(service.getHeaders()).toEqual({ userId: '', userRole: '', 'Content-Type': 'application/json' });
+
+    localStorage.setItem('userId', '1');
+    localStorage.setItem('userRole', 'editor');
+    expect(service.getHeaders()).toEqual({ userId: '1', userRole: 'editor', 'Content-Type': 'application/json' });
   });
 });

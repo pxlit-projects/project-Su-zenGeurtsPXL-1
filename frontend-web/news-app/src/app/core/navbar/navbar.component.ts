@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy{
   }
 
   fetchNotifications() {
-    let fetchedNotifications = this.postService.getNotifications();
+    let fetchedNotifications = this.postService.getMyNotifications();
     if (this.notifications$ === undefined) {
       this.handleFetch(fetchedNotifications);
     } else {
@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit, OnDestroy{
   }
 
   openPost(postId: number, notificationId: number) {
-    this.postService.readNotification(notificationId).subscribe(() => {
+    this.postService.markNotificationAsRead(notificationId).subscribe(() => {
       this.router.navigate(['/myPost/' + postId]);
       this.userMenuIsHidden = true;
       this.notificationsMenuIsHidden = true;

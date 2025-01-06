@@ -5,10 +5,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 
 import {PostItemComponent} from "../post-item/post-item.component";
-import {PostRequest} from "../../../shared/models/posts/post-request.model";
 import {PostService} from "../../../shared/services/post/post.service";
 import {Post} from "../../../shared/models/posts/post.model";
-
+import {HelperService} from "../../../shared/services/helper/helper.service";
 
 @Component({
   selector: 'app-edit-post',
@@ -21,6 +20,7 @@ export class EditPostComponent implements OnInit{
   route: ActivatedRoute = inject(ActivatedRoute);
   id: number = this.route.snapshot.params['id'];
   postService: PostService = inject(PostService);
+  helperService: HelperService = inject(HelperService);
   post$: Observable<Post> = this.postService.getPost(this.id);
 
   fb: FormBuilder = inject(FormBuilder);
@@ -47,11 +47,9 @@ export class EditPostComponent implements OnInit{
   }
 
   onSubmit() {
-    const editedPost: PostRequest = {
-      ...this.postForm.value
-    };
+    const content: string = this.postForm.value.content;
 
-    this.postService.editPost(this.id, editedPost).subscribe({
+    this.postService.editPost(this.id, content).subscribe({
       next: () => {
         this.postForm.reset();
         this.router.navigate(['/myPost/' + this.id]);
