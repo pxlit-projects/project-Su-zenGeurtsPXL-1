@@ -31,15 +31,14 @@ public class DataSeeder implements CommandLineRunner {
         if (postRepository.count() == 0) {
             logger.info("Seeding posts");
             Post post1 = Post.builder()
-                    .title("1.000 Limburgse leerlingen strijden in Lego League op Hogeschool PXL")
+                    .title("1,000 Limburg Students Compete in LEGO League at PXL University of Applied Sciences")
                     .content("""
-                            De campus van Hogeschool PXL in Hasselt staat donderdag en vrijdag volledig in het teken van techniek en innovatie.
-                            Maar liefst duizend enthousiaste leerlingen van 76 scholen uit heel Limburg verzamelden zich hier om deel te
-                            nemen aan de twaalfde editie van de regionale finale van de FIRST LEGO League, een prestigieuze internationale wedstrijd.
-                            Het internationale evenement wil techniek en innovatie promoten bij kinderen tussen 9 en 14 jaar oud.
-                            De kinderen leren omgaan met techniek door zelf robotten te programmeren en hen bepaalde missies te laten uitvoeren.
-                            Ook Leela Schoyen (11) en Valerie Veracht (10) van het Go! Freinetschool De Step in Beringen waren aanwezig.
-                            “Op een paar strafpunten na, ging het echt goed”, lachen de twee.
+                            The PXL University of Applied Sciences campus in Hasselt was fully dedicated to technology and innovation on Thursday and Friday.
+                            A total of 1,000 enthusiastic students from 76 schools across Limburg gathered here to participate in the twelfth edition of the regional final of the FIRST LEGO League, a prestigious international competition.
+                            This international event aims to promote technology and innovation among children aged 9 to 14.
+                            The children learn to engage with technology by programming robots and having them carry out specific missions.
+                            Leela Schoyen (11) and Valerie Veracht (10) from Go! Freinetschool De Step in Beringen also attended.
+                            “Apart from a few penalties, things went really well,” the two laugh.
                             """)
                     .userId(4L)
                     .category(Category.CAMPUS)
@@ -50,17 +49,15 @@ public class DataSeeder implements CommandLineRunner {
             postRepository.save(post1);
 
             Post post2 = Post.builder()
-                    .title("PXL-studenten schitteren op Hack The Future hackathon")
+                    .title("PXL Students Shine at Hack The Future Hackathon")
                     .content("""
-                            PXL–Studenten hebben zich van hun beste kant laten zien tijdens de Hack The Future hackathon,
-                            de grootste technologie- en designwedstrijd van België, georganiseerd door technologiebedrijf Cronos.
-                            Gijs Rommers en Kiara Petillon, studenten Toegepaste Informatica, wonnen de hoofdprijs in een van de challenges.
-                            Gijs en Kiara maakten een webapplicatie genaamd 'Galactic Explorer', waarmee gebruikers een sterrenstelsel kunnen verkennen.
-                            Met Laravel en Vue.js ontwikkelden ze een gebruiksvriendelijk en innovatief platform.
-                            De jury prees hen voor de sterke technische uitwerking en creatieve aanpak.
-                            Ook de studenten van het graduaat Digitale Vormgeving namen deel aan de hackathon.
-                            Zij werkten aan design-opdrachten rond het thema ‘space discovery’, zoals het ontwerpen van branding voor een fictieve planeet
-                            of het bedenken van een marketingcampagne voor een ruimtereismaatschappij.
+                            PXL students showcased their best talents during the Hack The Future hackathon, the largest technology and design competition in Belgium, organized by technology company Cronos.
+                            Gijs Rommers and Kiara Petillon, Applied Informatics students, won the main prize in one of the challenges.
+                            Gijs and Kiara created a web application called 'Galactic Explorer,' allowing users to explore a galaxy.
+                            With Laravel and Vue.js, they developed a user-friendly and innovative platform.
+                            The jury praised them for their strong technical execution and creative approach.
+                            Students from the Digital Design program also participated in the hackathon.
+                            They worked on design tasks related to the theme of ‘space discovery,’ such as creating branding for a fictional planet or designing a marketing campaign for a space travel company.
                             """)
                     .userId(1L)
                     .category(Category.ACADEMIC)
@@ -71,14 +68,12 @@ public class DataSeeder implements CommandLineRunner {
             postRepository.save(post2);
 
             Post post3 = Post.builder()
-                    .title("Limburgs AI-team, met ook leerkracht Syntra-PXL, levert special effects voor Hollywoodfilm 'Here' met Tom Hanks en Robin Wright")
+                    .title("Limburg AI Team, Including a Teacher from Syntra-PXL, Creates Special Effects for Hollywood Film 'Here' Starring Tom Hanks and Robin Wright")
                     .content("""
-                            Pionier en specialist in artificiële intelligentie Chris Umé uit Beringen is zondag met familie,
-                            vrienden en z’n Belgische team van Metaphysic naar de film ‘Here’ gaan kijken in Kinepolis Hasselt.
-                            In de prent werden hoofdrolspelers Tom Hanks en Robin Wright door Metaphysic zowel (veel) jonger als ouder gemaakt met artificiële intelligentie.
-                            Niemand van het team, behalve Chris die op de Amerikaanse première was, had de film tot nog toe gezien. In dat team zaten ook een tiental Belgen,
-                            waarvan acht Limburgers: “Er zat ook een klein hecht groepje Limburgers bij waaronder verschillende studenten en een leerkracht van Syntra-PXL”,
-                            vertelt Umé. “Als we op zoek gaan naar mensen, is het enthousiasme en de wil om te werken belangrijker dan de studies of een diploma.”
+                            Pioneer and artificial intelligence specialist Chris Umé from Beringen, along with family, friends, and the Belgian Metaphysic team, went to see the film 'Here' at Kinepolis Hasselt.
+                            In the film, Metaphysic made main actors Tom Hanks and Robin Wright appear much younger and older using artificial intelligence.
+                            None of the team members, except Chris who attended the American premiere, had seen the film until then.
+                            The team included about ten Belgians, eight of whom were from Limburg: “We look for enthusiasm and a willingness to work, rather than just academic studies or diplomas,” says Umé.
                             """)
                     .userId(4L)
                     .category(Category.STUDENT)
@@ -89,18 +84,18 @@ public class DataSeeder implements CommandLineRunner {
             postRepository.save(post3);
 
             Post post4 = Post.builder()
-                    .title("Naaktkalender van PXL-roeiteam brengt 1.000 euro op voor Kom op tegen Kanker")
+                    .title("PXL Rowing Team’s Nude Calendar Raises €1,000 for Kom op tegen Kanker")
                     .content("""
-                            De ‘Naaktkalender 2024’ was een bijzondere mijlpaal voor het PXL-roeiteam, dat voor de zevende keer deze kalender samenstelde.
-                            De foto's werden dit keer genomen op het congresgebouw van PXL-NeXT in Hasselt door fotograaf Toon Van Den Broek, drukkerij Haletra zorgde voor de druk.
-                            Het PXL-roeiteam koos ervoor om de opbrengst van de kalenderverkoop te doneren aan Kom Op Tegen Kanker.
-                            Deze keuze, geïnspireerd door hun sportcoördinator Erik Vanmierlo, illustreerde de betrokkenheid van het team.
-                            De kalenders waren te koop voor 10 euro per stuk tijdens de schooluren aan de Stuvo-balie van Hogeschool PXL en waren al snel uitverkocht.
-                            “Met deze naaktkalender wilden we niet alleen de schoonheid van de sport vieren, maar ook ons steentje bijdragen aan de strijd tegen kanker“, zegt kapitein Lukas Gendera.
-                            “We zijn dankbaar voor de steun van onze PXL-gemeenschap en hopen dat de opbrengst van de verkoop van onze kalender een steentje zal bijdragen aan het verder onderzoek tegen kanker.”
-                            “Helaas is kanker ook aanwezig in de sportwereld”, zegt Tim Van Werde, districtscoördinator Limburg van Kom op tegen Kanker.
-                            “Het doet goed als sportieve jonge mensen ook hun steentje bijdragen om kanker de wereld uit te helpen.
-                            De meeste mensen weten wel dat bewegen goed is om hart- en vaatziekten en diabetes te voorkomen. Maar bewegen verkleint ook de kans op kanker.“
+                            The 'Nude Calendar 2024' was a special milestone for the PXL rowing team, who compiled this calendar for the seventh time.
+                            The photos were taken at PXL-NeXT’s conference building in Hasselt by photographer Toon Van Den Broek, and printing was done by Haletra.
+                            The PXL rowing team chose to donate the proceeds from the calendar sales to Kom Op Tegen Kanker.
+                            Inspired by their sports coordinator Erik Vanmierlo, this choice highlighted the team’s commitment.
+                            The calendars were sold for €10 each at the Stuvo counter at PXL University of Applied Sciences and were quickly sold out.
+                            “With this nude calendar, we wanted not only to celebrate the beauty of sport but also to contribute to the fight against cancer,” said captain Lukas Gendera.
+                            “We are grateful for the support from our PXL community and hope that the proceeds from our calendar sales will contribute to cancer research.”
+                            “Unfortunately, cancer is also present in the world of sports,” said Tim Van Werde, district coordinator Limburg for Kom op tegen Kanker.
+                            “It’s encouraging when active young people contribute to helping eliminate cancer. Most people know that exercise is good for preventing heart disease and diabetes.
+                            But it also reduces the risk of cancer.”
                             """)
                     .userId(4L)
                     .category(Category.SPORTS)
@@ -111,16 +106,16 @@ public class DataSeeder implements CommandLineRunner {
             postRepository.save(post4);
 
             Post post5 = Post.builder()
-                    .title("Expo De Research Group")
+                    .title("Expo The Research Group")
                     .content("""
-                            Het kunstenaarscollectief met Hugo Duchateau, Jos Jans, Hélène Keil, Dré Sprakenis, Vincent Van Den Meersch en Jan Withofs,
-                            dat actief was van 1967 tot 1972, creëerde met gebundelde krachten een keerpunt in de hedendaagse kunst in Limburg.
-                            Via opvallende en speelse performances en groepsexpo’s maakten ze een inhaalbeweging ten opzichte van de internationale kunstscène.
-                            Vijftig jaar later zijn de sporen nog steeds voelbaar en de werken nog steeds relevant. Tijd voor een terugblik!
-                            Opening tentoonstelling op vrijdag 20 september 2024 om 19.00 uur in Het Stadsmus, Hasselt. Van harte welkom!
-                            Gelieve je aanwezigheid hier te registreren vóór 15 september 2024.
-                            De avond van de opening heb je de mogelijkheid om de bijhorende publicatie aan te kopen. Een parel van auteur Edith Doove en vormgegeven door Geoffrey Brussatto.
-                            De tentoonstelling en publicatie kwamen tot stand in samenwerking met School of Arts PXL-MAD, met steun van de Vlaamse Gemeenschap.
+                            The artist collective featuring Hugo Duchateau, Jos Jans, Hélène Keil, Dré Sprakenis, Vincent Van Den Meersch, and Jan Withofs,
+                            active from 1967 to 1972, created a turning point in contemporary art in Limburg.
+                            Through striking and playful performances and group exhibitions, they made significant strides compared to the international art scene.
+                            Fifty years later, their impact is still felt, and their works remain relevant. Time for a retrospective!
+                            Opening of the exhibition on Friday, 20 September 2024, at 19:00 at Het Stadsmus, Hasselt. Welcome!
+                            Please register your attendance here before 15 September 2024.
+                            On the evening of the opening, you will have the opportunity to purchase the accompanying publication, authored by Edith Doove and designed by Geoffrey Brussatto.
+                            The exhibition and publication were made possible in collaboration with School of Arts PXL-MAD, with support from the Flemish Community.
                             """)
                     .userId(4L)
                     .category(Category.RESEARCH)
@@ -131,10 +126,10 @@ public class DataSeeder implements CommandLineRunner {
             postRepository.save(post5);
 
             Post post6 = Post.builder()
-                    .title("Alumni PXL-MAD genomineerd voor Global Creative Graduate Showcase 2024")
+                    .title("PXL-MAD Alumni Nominated for Global Creative Graduate Showcase 2024")
                     .content("""
-                            Tyana Verstraete en Jiawei Xu, alumni van School of Arts PXL-MAD, zijn genomineerd voor de Global Creative Graduate Showcase 2024 in samenwerking met WGSN,
-                            Coloro + Google Arts & Culture. De publieksstemming is officieel geopend tot en met vrijdag 11 oktober. De winnaars worden op maandag 14 oktober bekendgemaakt.
+                            Tyana Verstraete and Jiawei Xu, alumni of the School of Arts PXL-MAD, have been nominated for the Global Creative Graduate Showcase 2024 in collaboration with WGSN, Coloro, and Google Arts & Culture.
+                            The public vote is officially open until Friday, 11 October. The winners will be announced on Monday, 14 October.
                             """)
                     .userId(3L)
                     .category(Category.ALUMNI)
@@ -189,7 +184,7 @@ public class DataSeeder implements CommandLineRunner {
                     .executorId(7L)
                     .content("I also love it!")
                     .action("COMMENT")
-                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15,53, 0))
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15, 53, 0))
                     .isRead(false)
                     .build();
 
@@ -201,7 +196,7 @@ public class DataSeeder implements CommandLineRunner {
                     .executorId(3L)
                     .content("Well done!")
                     .action("COMMENT")
-                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15,58, 0))
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 15, 58, 0))
                     .isRead(false)
                     .build();
 
@@ -213,7 +208,7 @@ public class DataSeeder implements CommandLineRunner {
                     .executorId(6L)
                     .content("This is way too short!")
                     .action("REJECTION")
-                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 5, 16,28, 0))
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 5, 16, 28, 0))
                     .isRead(false)
                     .build();
 
@@ -225,7 +220,7 @@ public class DataSeeder implements CommandLineRunner {
                     .executorId(1L)
                     .content("Also focus on the reason why")
                     .action("REJECTION")
-                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 14, 17,13, 0))
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 14, 17, 13, 0))
                     .isRead(false)
                     .build();
 
@@ -237,7 +232,7 @@ public class DataSeeder implements CommandLineRunner {
                     .executorId(7L)
                     .content("This is way too short!")
                     .action("REJECTION")
-                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 8, 15,42, 0))
+                    .executedAt(LocalDateTime.of(2024, Month.DECEMBER, 8, 15, 42, 0))
                     .isRead(false)
                     .build();
 
@@ -245,4 +240,3 @@ public class DataSeeder implements CommandLineRunner {
         }
     }
 }
-
