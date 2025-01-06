@@ -28,22 +28,22 @@ public class ReviewController {
 
     @PostMapping(path = "approve")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void approvePost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole) throws JsonProcessingException {
+    public void approvePost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole, @RequestHeader String email) throws JsonProcessingException {
         logger.info("[POST] /api/review/approve: approvePost()");
-        reviewService.createReviewWithTypeApproval(reviewRequest, userId, userRole);
+        reviewService.createReviewWithTypeApproval(reviewRequest, userId, userRole, email);
     }
 
     @PostMapping(path = "reject")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void rejectPost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole) throws JsonProcessingException {
+    public void rejectPost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole, @RequestHeader String email) throws JsonProcessingException {
         logger.info("[POST] /api/review/reject: rejectPost()");
-        reviewService.createReviewWithTypeRejection(reviewRequest, userId, userRole);
+        reviewService.createReviewWithTypeRejection(reviewRequest, userId, userRole, email);
     }
 
     @PostMapping(path = "comment")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void commentOnPost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole) throws JsonProcessingException {
+    public void commentOnPost(@RequestBody ReviewRequest reviewRequest, @RequestHeader Long userId, @RequestHeader String userRole, @RequestHeader String email) throws JsonProcessingException {
         logger.info("[POST] /api/review/comment: commentOnPost()");
-        reviewService.createReviewWithTypeComment(reviewRequest, userId, userRole);
+        reviewService.createReviewWithTypeComment(reviewRequest, userId, userRole, email);
     }
 }

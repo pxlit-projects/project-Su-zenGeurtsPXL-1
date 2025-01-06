@@ -54,6 +54,7 @@ public class ReviewServiceTests {
         long postId = 1L;
         long userId = 1L;
         String userRole = "editor";
+        String mail = "john.doe@gmail.com";
         Type type = Type.APPROVAL;
         String[] validStates = {"SUBMITTED"};
         ReviewRequest reviewRequest = ReviewRequest.builder()
@@ -68,7 +69,7 @@ public class ReviewServiceTests {
                 null, null
         ));
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, mail, type, validStates));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertEquals("Post with id " + postId + " not found.", exception.getReason());
     }
@@ -78,6 +79,7 @@ public class ReviewServiceTests {
         long postId = 1L;
         long userId = 1L;
         String userRole = "editor";
+        String mail = "john.doe@gmail.com";
         Type type = Type.APPROVAL;
         String[] validStates = {"SUBMITTED"};
 
@@ -90,7 +92,7 @@ public class ReviewServiceTests {
         post.setUserId(1L);
         Mockito.when(postClient.getPostById(postId)).thenReturn(post);
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, mail, type, validStates));
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         assertEquals("User with id " + userId + " cannot review own post.", exception.getReason());
     }
@@ -100,6 +102,7 @@ public class ReviewServiceTests {
         long postId = 1L;
         long userId = 2L;
         String userRole = "editor";
+        String mail = "john.doe@gmail.com";
         Type type = Type.APPROVAL;
         String[] validStates = {"SUBMITTED"};
 
@@ -113,7 +116,7 @@ public class ReviewServiceTests {
         post.setState("DRAFTED");
         Mockito.when(postClient.getPostById(postId)).thenReturn(post);
 
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> reviewService.createReview(reviewRequest, userId, userRole, mail, type, validStates));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertEquals("Post with id " + postId + " does not have the right state.", exception.getReason());
     }
@@ -124,6 +127,7 @@ public class ReviewServiceTests {
         long postId = 1L;
         long userId = 2L;
         String userRole = "editor";
+        String mail = "john.doe@gmail.com";
         Type type = Type.APPROVAL;
         String[] validStates = {"SUBMITTED"};
 
@@ -148,7 +152,7 @@ public class ReviewServiceTests {
                 "\"postId\":1," +
                 "\"reviewId\":1}";
 
-        assertDoesNotThrow(() -> reviewService.createReview(reviewRequest, userId, userRole, type, validStates));
+        assertDoesNotThrow(() -> reviewService.createReview(reviewRequest, userId, userRole, mail, type, validStates));
         verify(rabbitTemplate, times(1)).convertAndSend("reviewQueue", expectedMessage);
     }
 }

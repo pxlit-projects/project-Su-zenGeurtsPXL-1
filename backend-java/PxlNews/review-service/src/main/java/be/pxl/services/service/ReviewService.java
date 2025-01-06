@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import feign.FeignException;
@@ -25,6 +26,9 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ReviewService implements IReviewService {
+    @Autowired
+    private JavaMailSender emailSender;
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -48,30 +52,30 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public void createReviewWithTypeApproval(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeApproval(ReviewRequest reviewRequest, Long userId, String userRole, String email) throws JsonProcessingException {
         logger.info("Approving post with id {}", reviewRequest.getPostId());
 
         String[] validStates = {"SUBMITTED"};
 
-        createReview(reviewRequest, userId, userRole, Type.APPROVAL,  validStates);
+        createReview(reviewRequest, userId, userRole, email, Type.APPROVAL,  validStates);
     }
 
     @Override
-    public void createReviewWithTypeRejection(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeRejection(ReviewRequest reviewRequest, Long userId, String userRole, String email) throws JsonProcessingException {
         logger.info("Rejecting post with id {}", reviewRequest.getPostId());
 
         String[] validStates = {"SUBMITTED"};
 
-        createReview(reviewRequest, userId, userRole, Type.REJECTION,  validStates);
+        createReview(reviewRequest, userId, userRole, email, Type.REJECTION,  validStates);
     }
 
     @Override
-    public void createReviewWithTypeComment(ReviewRequest reviewRequest, Long userId, String userRole) throws JsonProcessingException {
+    public void createReviewWithTypeComment(ReviewRequest reviewRequest, Long userId, String userRole, String email) throws JsonProcessingException {
         logger.info("Commenting on a post with id {}", reviewRequest.getPostId());
 
         String[] validStates = {"SUBMITTED", "REJECTED", "APPROVED"};
 
-        createReview(reviewRequest, userId, userRole, Type.COMMENT,  validStates);
+        createReview(reviewRequest, userId, userRole, email, Type.COMMENT,  validStates);
     }
 
     @Override
@@ -82,7 +86,7 @@ public class ReviewService implements IReviewService {
     }
 
     @Override
-    public void createReview(ReviewRequest reviewRequest, Long userId, String userRole, Type reviewType, String[] validStates) throws JsonProcessingException {
+    public void createReview(ReviewRequest reviewRequest, Long userId, String userRole, String email, Type reviewType, String[] validStates) throws JsonProcessingException {
         checksUserRole(userRole);
 
         long postId = reviewRequest.getPostId();
@@ -130,6 +134,21 @@ public class ReviewService implements IReviewService {
         String messageString = objectMapper.writeValueAsString(message);
 
         rabbitTemplate.convertAndSend("reviewQueue", messageString);
+
+        sendEmail(email, savedReview);
+    }
+
+    @Override
+    public void sendEmail(String to, Review savedReview) {
+        logger.info("Sending email to {}", to);
+//        String subject = "Hello world";
+//        String text = "Hello world to you too!";
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("janedoepxl@gmail.com");
+//        message.setTo(to);
+//        message.setSubject(subject);
+//        message.setText(text);
+//        emailSender.send(message);
     }
 
     private ReviewResponse mapToReviewResponse(Review review) {
