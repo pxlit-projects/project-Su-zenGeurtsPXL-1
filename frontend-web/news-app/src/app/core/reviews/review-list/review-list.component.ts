@@ -20,6 +20,6 @@ export class ReviewListComponent implements OnInit {
   helperService: HelperService = inject(HelperService);
 
   ngOnInit(): void {
-    this.reviews = this.reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    this.reviews = this.reviews.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
     }
 }

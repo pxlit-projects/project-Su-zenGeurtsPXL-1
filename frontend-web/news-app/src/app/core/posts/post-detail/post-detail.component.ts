@@ -87,6 +87,7 @@ export class PostDetailComponent implements OnInit {
       this.reviewService.reviewPost(type, review).subscribe(() => {
         let element = document.getElementById('errorMessage');
         if (element) element.innerText = "";
+        this.commentForm.reset();
         this.fetchPost();
       });
     }
