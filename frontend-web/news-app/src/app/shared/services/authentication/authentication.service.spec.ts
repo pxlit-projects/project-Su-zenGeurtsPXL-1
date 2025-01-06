@@ -19,7 +19,7 @@ describe('AuthenticationService', () => {
       password: 'ed123'
     };
 
-    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor' };
+    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'jd@gmail.com' };
 
     expect(service.login(userRequest)).toEqual(expectedUser);
   });
@@ -41,7 +41,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should format from string to number when ID is a string ', () => {
-    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor' };
+    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'jd@gmail.com' };
     expect(service.getUserById('4')).toEqual(expectedUser);
   });
 
