@@ -106,6 +106,8 @@ public class ReviewControllerTests {
     public void approvePost_shouldCreateReviewWithTypeApprovalForPostWithGivenId() throws Exception {
         long postId = 1L;
 
+        String email = "jd@gmail.com";
+
         ReviewRequest reviewRequest = ReviewRequest.builder()
                 .postId(postId)
                 .content("Content...")
@@ -117,6 +119,7 @@ public class ReviewControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
                         .header("userId", userId)
                         .header("userRole", userRole)
+                        .header("email", email)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isAccepted());
@@ -129,6 +132,8 @@ public class ReviewControllerTests {
     public void rejectPost_shouldCreateReviewWithTypeRejectionForPostWithGivenId() throws Exception {
         long postId = 1L;
 
+        String email = "jd@gmail.com";
+
         ReviewRequest reviewRequest = ReviewRequest.builder()
                 .postId(postId)
                 .content("Content...")
@@ -140,6 +145,7 @@ public class ReviewControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
                         .header("userId", userId)
                         .header("userRole", userRole)
+                        .header("email", email)
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(reviewRequest)))
                 .andExpect(status().isAccepted());
@@ -158,10 +164,12 @@ public class ReviewControllerTests {
 
             long userId = (long) i + 1;
             String userRole = "editor";
+            String email = "jd@gmail.com";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
                             .header("userId", userId)
                             .header("userRole", userRole)
+                            .header("email", email)
                             .contentType("application/json")
                             .content(objectMapper.writeValueAsString(reviewRequest)))
                     .andExpect(status().isAccepted());
@@ -169,370 +177,4 @@ public class ReviewControllerTests {
             assertEquals(Type.COMMENT, reviewRepository.findAll().get(reviewRepository.findAll().size() - 1).getType());
         }
     }
-
-//    @Test
-//    public void approve_Post_withInvalidPostId_shouldReturnNotFound() throws Exception {
-//        long postId = 9999;
-//        Mockito.when(postClient.getPostById(postId))
-//                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Post not found."));
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(postId)
-//                .content("Content...")
-//                .build();
-//
-//        long userId = 1L;
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void approve_Post_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId() + 1;
-//        String userRole = "user";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void approve_Post_withInvalidUserId_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId();
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void approve_Post_withInvalidPostState_shouldReturnBadRequest() throws Exception {
-//        List<String> invalidStates = List.of("DRAFTED", "REJECTED", "APPROVED", "PUBLISHED");
-//
-//        for (String state : invalidStates) {
-//            Post post = Post.builder()
-//                    .id(0L)
-//                    .title("Title ")
-//                    .content("Content...")
-//                    .userId(1L)
-//                    .category("ALUMNI")
-//                    .state(state)
-//                    .createdAt(LocalDateTime.now())
-//                    .build();
-//
-//            Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//            ReviewRequest reviewRequest = ReviewRequest.builder()
-//                    .postId(post.getId())
-//                    .content("Content...")
-//                    .build();
-//
-//            long userId = post.getUserId() + 1;
-//            String userRole = "editor";
-//
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/review/approve")
-//                            .header("userId", userId)
-//                            .header("userRole", userRole)
-//                            .contentType("application/json")
-//                            .content(objectMapper.writeValueAsString(reviewRequest)))
-//                    .andExpect(status().isBadRequest());
-//        }
-//    }
-//
-//    @Test
-//    public void reject_Post_withInvalidPostId_shouldReturnNotFound() throws Exception {
-//        long postId = 9999;
-//
-//        Request request = Request.create(
-//                Request.HttpMethod.GET,
-//                "http://post-service/api/post/9999",
-//                Collections.emptyMap(),
-//                null,
-//                new RequestTemplate()
-//        );
-//
-//        Mockito.when(postClient.getPostById(postId))
-//                .thenThrow(new FeignException.NotFound("Post with id " + postId + " not found.", request, null , null));
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(postId)
-//                .content("Content...")
-//                .build();
-//
-//        long userId = 1L;
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void reject_Post_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId() + 1;
-//        String userRole = "user";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void reject_Post_withInvalidUserId_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId();
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void reject_Post_withInvalidPostState_shouldReturnBadRequest() throws Exception {
-//        List<String> invalidStates = List.of("DRAFTED", "REJECTED", "APPROVED", "PUBLISHED");
-//
-//        for (String state : invalidStates) {
-//            Post post = Post.builder()
-//                    .id(0L)
-//                    .title("Title ")
-//                    .content("Content...")
-//                    .userId(1L)
-//                    .category("ALUMNI")
-//                    .createdAt(LocalDateTime.now())
-//                    .state(state)
-//                    .build();
-//
-//            Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//            ReviewRequest reviewRequest = ReviewRequest.builder()
-//                    .postId(post.getId())
-//                    .content("Content...")
-//                    .build();
-//
-//            long userId = post.getUserId() + 1;
-//            String userRole = "editor";
-//
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/review/reject")
-//                            .header("userId", userId)
-//                            .header("userRole", userRole)
-//                            .contentType("application/json")
-//                            .content(objectMapper.writeValueAsString(reviewRequest)))
-//                    .andExpect(status().isBadRequest());
-//        }
-//    }
-//
-//    @Test
-//    public void comment_OnPost_withInvalidPostId_shouldReturnNotFound() throws Exception {
-//        long postId = 9999;
-//
-//        Request request = Request.create(
-//                Request.HttpMethod.GET,
-//                "http://post-service/api/post/9999",
-//                Collections.emptyMap(),
-//                null,
-//                new RequestTemplate()
-//        );
-//
-//        Mockito.when(postClient.getPostById(postId))
-//                .thenThrow(new FeignException.NotFound("Post with id " + postId + " not found.", request, null , null));
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(postId)
-//                .content("Content...")
-//                .build();
-//
-//        long userId = 1L;
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isNotFound());
-//    }
-//
-//    @Test
-//    public void comment_OnPost_withInvalidUserRole_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId() + 1;
-//        String userRole = "user";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void comment_OnPost_withInvalidUserId_shouldReturnBadRequest() throws Exception {
-//        Post post = Post.builder()
-//                .id(0L)
-//                .title("Title ")
-//                .content("Content...")
-//                .userId(1L)
-//                .category("ALUMNI")
-//                .createdAt(LocalDateTime.now())
-//                .state("SUBMITTED")
-//                .build();
-//
-//        Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//        ReviewRequest reviewRequest = ReviewRequest.builder()
-//                .postId(post.getId())
-//                .content("Content...")
-//                .build();
-//
-//        long userId = post.getUserId();
-//        String userRole = "editor";
-//
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
-//                        .header("userId", userId)
-//                        .header("userRole", userRole)
-//                        .contentType("application/json")
-//                        .content(objectMapper.writeValueAsString(reviewRequest)))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    public void comment_OnPost_withInvalidPostState_shouldReturnBadRequest() throws Exception {
-//        List<String> invalidStates = List.of("DRAFTED", "PUBLISHED");
-//
-//        for (String state : invalidStates) {
-//            Post post = Post.builder()
-//                    .id(0L)
-//                    .title("Title ")
-//                    .content("Content...")
-//                    .userId(1L)
-//                    .category("ALUMNI")
-//                    .createdAt(LocalDateTime.now())
-//                    .state(state)
-//                    .build();
-//
-//            Mockito.when(postClient.getPostById(post.getId())).thenReturn(post);
-//
-//            ReviewRequest reviewRequest = ReviewRequest.builder()
-//                    .postId(post.getId())
-//                    .content("Content...")
-//                    .build();
-//
-//            long userId = post.getUserId() + 1;
-//            String userRole = "editor";
-//
-//            mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
-//                            .header("userId", userId)
-//                            .header("userRole", userRole)
-//                            .contentType("application/json")
-//                            .content(objectMapper.writeValueAsString(reviewRequest)))
-//                    .andExpect(status().isBadRequest());
-//        }
-//    }
 }
