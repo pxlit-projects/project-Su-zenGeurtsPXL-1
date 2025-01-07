@@ -43,7 +43,7 @@ export class AuthenticationService {
   getHeaders(): any {
     const userId = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userId');
     const userRole = localStorage.getItem('userId') == null ? '' : localStorage.getItem('userRole');
-    const email = this.getUserById(userId)?.email;
+    const email = localStorage.getItem('userId') == null ? '' : this.getUserById(userId)?.email;
     return { userId: userId, userRole: userRole, email: email, 'Content-Type': 'application/json' };
   }
 }
