@@ -7,7 +7,7 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-4">
         <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
-        <div class="mt-2"><input type="text" id="username" formControlName="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div class="mt-2"><input type="text" id="username" autocomplete="username" formControlName="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           @if (loginForm.get('username')?.touched && loginForm.get('username')?.hasError('required')){
             <div class="text-red-500 text-sm mt-1">Username is required</div>
           }
@@ -16,7 +16,7 @@
       <div class="mb-4">
         <label for="password" class="block text-sm/6 font-medium text-gray-900">Password</label>
         <div class="mt-2">
-          <input type="password" id="password" formControlName="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <input type="password" id="password" formControlName="password" autocomplete="current-password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
           @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')){
             <div class="text-red-500 text-sm mt-1">Password is required</div>
           }
