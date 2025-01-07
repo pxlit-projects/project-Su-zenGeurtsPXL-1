@@ -40,7 +40,7 @@ describe('PostListComponent', () => {
   localStorage.setItem('userId', '1');
 
   beforeEach(() => {
-    postServiceMock = jasmine.createSpyObj('PostService', ['getMyPosts', 'getPublishedPosts', 'getReviewablePosts', 'filterPublishedPosts', 'filterMyPosts', 'filterReviewablePosts']);
+    postServiceMock = jasmine.createSpyObj('PostService', ['getPosts', 'filterPosts']);
 
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
       snapshot: { url: [new UrlSegment('post', {})] }
@@ -93,18 +93,12 @@ describe('PostListComponent', () => {
   });
 
   it('should fetch posts correctly', () => {
-    postServiceMock.getPublishedPosts.and.returnValue(of(mockPosts));
-    postServiceMock.getMyPosts.and.returnValue(of(mockPosts));
-    postServiceMock.getReviewablePosts.and.returnValue(of(mockPosts));
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
 
     // PUBLISHED
     component.fetchPosts();
-
-    component.posts$.subscribe(posts => {
-      expect(posts).toEqual(mockReversePosts);
-    })
-
-    expect(postServiceMock.getPublishedPosts).toHaveBeenCalled();
+    expect(component.posts$).toEqual(mockReversePosts);
+    expect(postServiceMock.getPosts).toHaveBeenCalledWith(false, false);
 
     // MINE
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
@@ -112,8 +106,7 @@ describe('PostListComponent', () => {
     component = fixture.componentInstance;
 
     component.fetchPosts();
-
-    expect(postServiceMock.getMyPosts).toHaveBeenCalled();
+    expect(postServiceMock.getPosts).toHaveBeenCalledWith(true, false);
 
     // REVIEW
     routeMock.snapshot.url = [new UrlSegment('review', {})];
@@ -121,27 +114,20 @@ describe('PostListComponent', () => {
     component = fixture.componentInstance;
 
     component.fetchPosts();
-
-    expect(postServiceMock.getReviewablePosts).toHaveBeenCalled();
+    expect(postServiceMock.getPosts).toHaveBeenCalledWith(false, true);
   });
 
   it('should filter posts based on the filter criteria correctly', () => {
-    postServiceMock.filterPublishedPosts.and.returnValue(of(filteredPosts));
-    postServiceMock.filterMyPosts.and.returnValue(of(filteredPosts));
-    postServiceMock.filterReviewablePosts.and.returnValue(of(filteredPosts));
+    postServiceMock.filterPosts.and.returnValue(of(filteredPosts));
 
     // PUBLISHED
     component.handleFilter(filter);
 
-    component.posts$.subscribe(posts => {
-      expect(posts).toEqual(mockReverseFilteredPosts);
-    })
+    expect(component.posts$).toEqual(mockReverseFilteredPosts);
 
-    expect(postServiceMock.filterPublishedPosts).toHaveBeenCalledWith(filter);
+    expect(postServiceMock.filterPosts).toHaveBeenCalledWith(filter, false, false);
 
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(filteredPosts);
-    });
+    expect(component.posts$).toEqual(filteredPosts);
 
     // MINE
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
@@ -150,11 +136,9 @@ describe('PostListComponent', () => {
 
     component.handleFilter(filter);
 
-    expect(postServiceMock.filterMyPosts).toHaveBeenCalledWith(filter);
+    expect(postServiceMock.filterPosts).toHaveBeenCalledWith(filter, true, false);
 
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(filteredPosts);
-    });
+    expect(component.posts$).toEqual(filteredPosts);
 
     // REVIEW
     routeMock.snapshot.url = [new UrlSegment('review', {})];
@@ -163,10 +147,8 @@ describe('PostListComponent', () => {
 
     component.handleFilter(filter);
 
-    expect(postServiceMock.filterReviewablePosts).toHaveBeenCalledWith(filter);
+    expect(postServiceMock.filterPosts).toHaveBeenCalledWith(filter, false, true);
 
-    component.posts$.subscribe(data => {
-      expect(data).toEqual(filteredPosts);
-    });
+    expect(component.posts$).toEqual(filteredPosts);
   });
 });

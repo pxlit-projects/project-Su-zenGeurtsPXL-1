@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {map, Observable} from "rxjs";
+import {interval, map, Observable} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 
@@ -23,36 +23,44 @@ export class PostListComponent implements OnInit {
   url: UrlSegment[] = this.route.snapshot.url;
   isMine: boolean = this.url[0].path === 'myPost';
   isToReview: boolean = this.url[0].path === 'review';
-  posts$!: Observable<Post[]>;
+  posts$!: Post[] | undefined;
   postService: PostService = inject(PostService);
+  filter: Filter | undefined;
+  title: string = '';
 
   ngOnInit(): void {
-    this.fetchPosts();
+  if (this.isMine) this.title = 'My posts';
+  else if (this.isToReview) this.title = 'Reviews';
+  else this.title = 'Posts';
+
+  this.fetchPosts();
+  this.fetch(this.postService.getPosts(this.isMine, this.isToReview));
+
+  this.fetchPosts();
+  interval(1000).subscribe(() => this.fetchPosts());
   }
 
   handleFilter(filter: Filter) {
-    if (this.isMine) {
-      this.posts$ = this.postService.filterMyPosts(filter);
-    } else if (this.isToReview) {
-      this.posts$ = this.postService.filterReviewablePosts(filter);
-    } else {
-      this.posts$ = this.postService.filterPublishedPosts(filter);
-    }
-
-    this.posts$ = this.posts$.pipe(map((posts: Post[]) =>
-      posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
+    this.fetch(this.postService.filterPosts(filter, this.isMine, this.isToReview))
+    this.filter = filter;
   }
 
   fetchPosts(): void {
-    if (this.isMine) {
-      this.posts$ = this.postService.getMyPosts();
-    } else if (this.isToReview) {
-      this.posts$ = this.postService.getReviewablePosts();
-    } else {
-      this.posts$ = this.postService.getPublishedPosts();
-    }
+    const emptyFilter = { content: '', author: '', date: '' };
+    if (this.filter == undefined || this.filter == emptyFilter) this.fetch(this.postService.getPosts(this.isMine, this.isToReview));
+  }
 
-    this.posts$ = this.posts$.pipe(
-      map((posts: Post[]) => posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())));
+  fetch(data: Observable<Post[]>): void {
+    data
+      .pipe(map(
+        (posts: Post[]) =>
+          posts.sort((a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+        )
+      )
+      .subscribe(posts => {
+        this.posts$ = posts;
+      });
   }
 }

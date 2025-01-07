@@ -17,16 +17,15 @@ export class PostService {
   http: HttpClient = inject(HttpClient);
   authenticationService: AuthenticationService = inject(AuthenticationService);
 
-  getMyPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/mine', { headers: this.authenticationService.getHeaders() });
-  }
-
-  getPublishedPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/published');
-  }
-
-  getReviewablePosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.api + '/reviewable', { headers: this.authenticationService.getHeaders() });
+  getPosts(isMine: boolean, isToReview: boolean): Observable<Post[]> {
+    if (isMine) {
+      return this.http.get<Post[]>(this.api + '/mine', { headers: this.authenticationService.getHeaders() });
+    }
+    else if (isToReview) {
+      return this.http.get<Post[]>(this.api + '/reviewable', { headers: this.authenticationService.getHeaders() });
+    } else {
+      return this.http.get<Post[]>(this.api + '/published');
+    }
   }
 
   getPost(id: number): Observable<Post> {
@@ -69,20 +68,8 @@ export class PostService {
     return this.http.put<void>(this.api + '/notification/' + notificationId + '/read', null, { headers:this.authenticationService.getHeaders() });
   }
 
-  filterPublishedPosts(filter: Filter): Observable<Post[]> {
-    return this.getPublishedPosts().pipe(
-      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
-    );
-  }
-
-  filterMyPosts(filter: Filter): Observable<Post[]> {
-    return this.getMyPosts().pipe(
-      map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
-    );
-  }
-
-  filterReviewablePosts(filter: Filter): Observable<Post[]> {
-    return this.getReviewablePosts().pipe(
+  filterPosts(filter: Filter, isMine: boolean, isToReview: boolean): Observable<Post[]> {
+    return this.getPosts(isMine, isToReview).pipe(
       map((posts: Post[]) => posts.filter(post => this.isPostMatchingFilter(post, filter)))
     );
   }
