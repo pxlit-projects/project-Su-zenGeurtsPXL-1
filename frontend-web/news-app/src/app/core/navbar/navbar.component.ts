@@ -4,7 +4,7 @@ import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {AuthenticationService} from "../../shared/services/authentication/authentication.service";
 import {PostService} from "../../shared/services/post/post.service";
 import {Notification} from "../../shared/models/posts/notification.model";
-import {interval, tap} from "rxjs";
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-navbar',
@@ -31,19 +31,18 @@ export class NavbarComponent implements OnInit {
   fetchNotifications() {
     if (localStorage.getItem('userRole') !== 'editor') return;
     this.postService.getMyNotifications()
-      .pipe(tap())
       .subscribe(notifications => {
         this.notifications$ = notifications.filter(notification => !notification.isRead);
         this.hasNoNotifications = this.notifications$.length == 0;
       });
   }
 
-  userMenu() {
+  toggleUserMenu() {
     this.userMenuIsHidden = !this.userMenuIsHidden;
     this.notificationsMenuIsHidden = true;
   }
 
-  notificationsMenu() {
+  toggleNotificationsMenu() {
     this.notificationsMenuIsHidden = !this.notificationsMenuIsHidden;
     this.userMenuIsHidden = true;
   }
