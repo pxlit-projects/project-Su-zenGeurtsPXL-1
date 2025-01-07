@@ -19,7 +19,7 @@ describe('AuthenticationService', () => {
       password: 'ed123'
     };
 
-    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'jd@gmail.com' };
+    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com' };
 
     expect(service.login(userRequest)).toEqual(expectedUser);
   });
@@ -41,16 +41,18 @@ describe('AuthenticationService', () => {
   });
 
   it('should format from string to number when ID is a string ', () => {
-    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'jd@gmail.com' };
+    const expectedUser = { id: 4, username: 'emma', fullName: 'Emma Janssen', password: 'ed123', role: 'editor', email: 'sg.jiangxiuzhen@gmail.com'};
     expect(service.getUserById('4')).toEqual(expectedUser);
   });
 
   it('should return headers correctly', () => {
     localStorage.clear();
-    expect(service.getHeaders()).toEqual({ userId: '', userRole: '', 'Content-Type': 'application/json' });
+    expect(service.getHeaders()).toEqual({ userId: '', userRole: '', email: '', 'Content-Type': 'application/json' });
 
+    localStorage.clear();
     localStorage.setItem('userId', '1');
     localStorage.setItem('userRole', 'editor');
-    expect(service.getHeaders()).toEqual({ userId: '1', userRole: 'editor', 'Content-Type': 'application/json' });
+    localStorage.setItem('email', 'sg.jiangxiuzhen@gmail.com');
+    expect(service.getHeaders()).toEqual({ userId: '1', userRole: 'editor', email: 'sg.jiangxiuzhen@gmail.com', 'Content-Type': 'application/json' });
   });
 });

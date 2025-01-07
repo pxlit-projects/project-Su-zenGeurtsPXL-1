@@ -65,7 +65,7 @@ describe('CommentItemComponent', () => {
   });
 
   it('should call updateComment on form submit on success', () => {
-    const content = "Updated content";
+    const content = 'Updated content';
 
     const form = {
       content: content
