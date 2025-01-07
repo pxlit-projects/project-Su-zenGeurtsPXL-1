@@ -2,8 +2,11 @@
   display: block;
 }
 
-#profile {
-  object-fit: cover;
+.circle {
   width: 35px;
   height: 35px;
+}
+
+#profile {
+  object-fit: cover;
 }
