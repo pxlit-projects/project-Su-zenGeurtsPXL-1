@@ -57,6 +57,7 @@ export class NavbarComponent implements OnInit {
     this.localStorage.removeItem('userId');
     this.localStorage.removeItem('userFullName');
     this.localStorage.removeItem('userRole');
+    this.localStorage.removeItem('userImage');
     this.router.navigate(['/post']);
   }
 
