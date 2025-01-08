@@ -40,7 +40,7 @@ export class CommentItemComponent {
 
   deleteComment() {
     if (confirm("Are you sure you want to delete this comment?")) {
-        this.commentService.deleteComment(this.comment.id!);
+      this.commentService.deleteComment(this.comment.id!).subscribe();
     }
     this.menuIsHidden = true;
   }
