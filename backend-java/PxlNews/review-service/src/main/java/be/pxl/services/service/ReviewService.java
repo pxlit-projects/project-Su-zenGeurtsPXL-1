@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -135,20 +136,32 @@ public class ReviewService implements IReviewService {
 
         rabbitTemplate.convertAndSend("reviewQueue", messageString);
 
-        sendEmail(email, savedReview);
+        sendEmail(email, post, savedReview);
     }
 
     @Override
-    public void sendEmail(String to, Review savedReview) {
+    public void sendEmail(String to, Post post, Review savedReview) {
+        // TODO: Make mail better
         logger.info("Sending email to {}", to);
-//        String subject = "Hello world";
-//        String text = "Hello world to you too!";
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("janedoepxl@gmail.com");
-//        message.setTo(to);
-//        message.setSubject(subject);
-//        message.setText(text);
-//        emailSender.send(message);
+        String subject = "Your post has been reviewed!";
+        // Hello editor,
+        // Your post has been approved/reviewed/commented on. Review "[title]".
+        // Click here to view the review.
+        // Kind regards,
+        // The PXL News team
+        String verb = savedReview.getType().equals(Type.APPROVAL) ? "approved" : savedReview.getType().equals(Type.REJECTION) ? "rejected" : "commented on";
+        String text = "Hello editor," +
+        "\nYour post '" + post.getTitle() + "' has been " + verb + " ." +
+        "\n\nLink to view the post: http://localhost:4200/post/" + post.getId() +
+        "\n\nKind regards," +
+        "\nThe PXL News team";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("janedoepxl@gmail.com");
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        emailSender.send(message);
     }
 
     private ReviewResponse mapToReviewResponse(Review review) {
