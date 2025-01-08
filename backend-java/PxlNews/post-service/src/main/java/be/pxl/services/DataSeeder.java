@@ -107,16 +107,11 @@ public class DataSeeder implements CommandLineRunner {
 
             Post post5 = Post.builder()
                     .title("Expo The Research Group")
-                    .content("""
-                            The artist collective featuring Hugo Duchateau, Jos Jans, Hélène Keil, Dré Sprakenis, Vincent Van Den Meersch, and Jan Withofs,
-                            active from 1967 to 1972, created a turning point in contemporary art in Limburg.
-                            Through striking and playful performances and group exhibitions, they made significant strides compared to the international art scene.
-                            Fifty years later, their impact is still felt, and their works remain relevant. Time for a retrospective!
-                            Opening of the exhibition on Friday, 20 September 2024, at 19:00 at Het Stadsmus, Hasselt. Welcome!
-                            Please register your attendance here before 15 September 2024.
-                            On the evening of the opening, you will have the opportunity to purchase the accompanying publication, authored by Edith Doove and designed by Geoffrey Brussatto.
-                            The exhibition and publication were made possible in collaboration with School of Arts PXL-MAD, with support from the Flemish Community.
-                            """)
+                    .content("The artist collective featuring Hugo Duchateau, Jos Jans, Hélène Keil, Dré Sprakenis, Vincent Van Den Meersch, and Jan Withofs, active from 1967 to 1972, created a turning point in contemporary art in Limburg. Through striking and playful performances and group exhibitions," +
+                            "they made significant strides compared to the international art scene. Fifty years later, their impact is still felt, and their works remain relevant. Time for a retrospective!" +
+                            "\n\nOpening of the exhibition on Friday, 20 September 2024, at 19:00 at Het Stadsmus, Hasselt. Welcome! Please register your attendance here before 15 September 2024." +
+                            "\n\nOn the evening of the opening, you will have the opportunity to purchase the accompanying publication, authored by Edith Doove and designed by Geoffrey Brussatto." +
+                            "\n\nThe exhibition and publication were made possible in collaboration with School of Arts PXL-MAD, with support from the Flemish Community.")
                     .userId(4L)
                     .category(Category.RESEARCH)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 10, 10, 32, 0))
