@@ -1,5 +1,6 @@
 package be.pxl.services.service;
 
+import be.pxl.services.domain.Post;
 import be.pxl.services.domain.Review;
 import be.pxl.services.domain.Type;
 import be.pxl.services.domain.dto.ReviewRequest;
@@ -21,5 +22,5 @@ public interface IReviewService {
 
     void createReview(ReviewRequest reviewRequest, Long userId, String userRole, String email, Type reviewType, String[] validStates) throws JsonProcessingException;
 
-    void sendEmail(String email, Review savedReview);
+    void sendEmail(String email, Post post, Review savedReview);
 }
