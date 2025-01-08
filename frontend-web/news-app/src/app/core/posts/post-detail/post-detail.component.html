@@ -45,7 +45,10 @@
         }
       }
 
-      @if (!(userId$ == post.userId && (post.state === 'SUBMITTED' || post.state === 'APPROVED' || post.state === 'REJECTED'))) {
+      @if ((post.state === 'SUBMITTED' && userId$ != post.userId) ||
+      (post.state === 'APPROVED' && userId$ != post.userId) ||
+      (post.state === 'REJECTED' && userId$ != post.userId) ||
+      (post.state === 'PUBLISHED' )) {
         <div class="container mx-auto mt-5 px-2" >
           <form [formGroup]="commentForm">
             <div class="mb-4">
@@ -58,7 +61,7 @@
             <div id="errorMessage" class="text-red-500 text-sm mt-1"></div>
           </form>
         </div>
-      }
+        }
 
       @if(userId$ != post.userId) {
           <div class="grid grid-cols-3 gap-2">
