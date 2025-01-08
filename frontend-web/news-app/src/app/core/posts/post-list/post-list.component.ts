@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {interval, map, Observable} from "rxjs";
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {interval, map, Observable, Subscription} from "rxjs";
 import {AsyncPipe} from "@angular/common";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 
@@ -18,7 +18,7 @@ import {Filter} from "../../../shared/models/filter.model";
   styleUrl: './post-list.component.css'
 })
 
-export class PostListComponent implements OnInit {
+export class PostListComponent implements OnInit, OnDestroy {
   route: ActivatedRoute = inject(ActivatedRoute);
   url: UrlSegment[] = this.route.snapshot.url;
   isMine: boolean = this.url[0].path === 'myPost';
@@ -27,6 +27,8 @@ export class PostListComponent implements OnInit {
   postService: PostService = inject(PostService);
   filter: Filter | undefined;
   title: string = '';
+
+  private fetchsubscription: Subscription | undefined;
 
   ngOnInit(): void {
   if (this.isMine) this.title = 'My posts';
@@ -37,7 +39,11 @@ export class PostListComponent implements OnInit {
   this.fetch(this.postService.getPosts(this.isMine, this.isToReview));
 
   this.fetchPosts();
-  interval(1000).subscribe(() => this.fetchPosts());
+  this.fetchsubscription = interval(1000).subscribe(() => this.fetchPosts());
+  }
+
+  ngOnDestroy() {
+    this.fetchsubscription?.unsubscribe();
   }
 
   handleFilter(filter: Filter) {
