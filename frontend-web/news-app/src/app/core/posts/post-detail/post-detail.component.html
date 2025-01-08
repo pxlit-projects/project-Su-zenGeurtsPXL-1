@@ -18,7 +18,7 @@
           >{{helperService.toPascalCasing(post.state)}}</span>
         }
       </p>
-      <p class="text-black text-justify mb-8">{{post.content}}</p>
+      <p class="text-black text-justify mb-8 content-pretty">{{post.content}}</p>
 
       @if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED' && post.reviews != undefined){
           <app-review-list [reviews]="post.reviews"></app-review-list>
