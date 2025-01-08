@@ -1,4 +1,4 @@
-import {Component, inject, Input} from "@angular/core";
+import {Component, EventEmitter, inject, Input, Output} from "@angular/core";
 import {Comment} from "../../../shared/models/comments/comment.model";
 import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
 import {NgClass} from "@angular/common";
@@ -29,6 +29,7 @@ export class CommentItemComponent {
 
   @Input() comment!: Comment;
   @Input() isLast!: boolean;
+  @Output() deleted = new EventEmitter<void>();
   menuIsHidden: boolean = true;
   isInProgress: boolean = false;
 
@@ -40,7 +41,9 @@ export class CommentItemComponent {
 
   deleteComment() {
     if (confirm("Are you sure you want to delete this comment?")) {
-      this.commentService.deleteComment(this.comment.id!).subscribe();
+      this.commentService.deleteComment(this.comment.id!).subscribe(() => {
+        this.deleted.emit();
+      });
     }
     this.menuIsHidden = true;
   }

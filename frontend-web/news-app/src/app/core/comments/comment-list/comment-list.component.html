@@ -3,6 +3,7 @@
   @if(comments.length != 0) {
     @for(comment of comments; track comment.id) {
         <app-comment-item
+          (deleted)="handleDelete()"
           [comment]="comment"
           [isLast]="comments.at(comments.length - 1) == comment"
         ></app-comment-item>

@@ -120,4 +120,8 @@ export class PostDetailComponent implements OnInit {
   login(){
     this.router.navigate(['/login']);
   }
+
+  handleDelete() {
+    this.post$ = this.postService.getPostWithComments(this.id);
+  }
 }

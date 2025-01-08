@@ -25,7 +25,7 @@
       }
 
       @if (post.state === 'PUBLISHED' && post.comments != undefined){
-          <app-comment-list [comments]="post.comments"></app-comment-list>
+          <app-comment-list (deleted)="handleDelete()" [comments]="post.comments"></app-comment-list>
       }
 
       @if (userId$ == post.userId) {
