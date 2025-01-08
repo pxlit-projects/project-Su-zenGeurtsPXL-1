@@ -116,4 +116,8 @@ export class PostDetailComponent implements OnInit {
       if (element) element.innerText = "Comment cannot be empty";
     }
   }
+
+  login(){
+    this.router.navigate(['/login']);
+  }
 }
