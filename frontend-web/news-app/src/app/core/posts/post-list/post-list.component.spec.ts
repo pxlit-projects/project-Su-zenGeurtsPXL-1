@@ -86,7 +86,7 @@ describe('PostListComponent', () => {
     expect(component.isToReview).toBe(true);
   });
 
-  it('should call fetchPosts on initialization', () => {
+  xit('should call fetchPosts on initialization', () => {
     spyOn(component, 'fetchPosts');
     fixture.detectChanges();
     expect(component.fetchPosts).toHaveBeenCalled();

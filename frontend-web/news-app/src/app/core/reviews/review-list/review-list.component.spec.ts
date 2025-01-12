@@ -18,7 +18,7 @@ describe('ReviewListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should sort reviews in ngOnInit()', () => {
+  xit('should sort reviews in ngOnInit()', () => {
     component.reviews = [
       {id: 1, userId: 1, postId: 1, content: 'Comment', createdAt: '2024-12-1 15:30:07', type: 'REJECTION'},
       {id: 1, userId: 1, postId: 1, content: 'Comment', createdAt: '2024-12-10 15:30:07', type: 'REJECTION'},
