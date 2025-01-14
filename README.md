@@ -16,5 +16,52 @@ Each folder contains its own specific `.gitignore` file.
 **:warning: complete these files asap, so you don't litter your repository with binary build artifacts!**
 
 ## How to setup and run this application
+###### Clone the repository
+```sh
+git clone https://github.com/pxlit-projects/project-Su-zenGeurtsPXL-1.git
+```
 
-:heavy_check_mark:_(COMMENT) Add setup instructions and provide some direction to run the whole  application: frontend to backend._
+### Backend
+###### Navigate to the project
+```sh
+cd project-Su-zenGeurtsPXL-1/backend-java/PxlNews
+```
+###### Setup Docker containers
+```sh
+docker compose up -d
+```
+
+###### Run the application
+1. Right mouse click on the application in every microservice and choose run 
+   1. ConfigServiceApplication
+   2. DiscoveryServiceApplication
+   3. GatewayServiceApplication
+   4. PostServiceApplication
+   5. ReviewServiceApplication
+   6. CommentServiceApplication
+
+### Frontend
+###### Navigate to the project
+```sh
+cd project-Su-zenGeurtsPXL-1/frontend-web/news-app
+```
+###### Install the dependencies
+```sh
+npm install
+```
+
+###### Build the application
+```shell
+ng build --configuration=production
+```
+
+###### Setup Docker and 
+```sh
+
+docker build -t news-app .
+```
+
+###### run the application
+```sh
+docker run -d -p 8080:80 news-app
+```
