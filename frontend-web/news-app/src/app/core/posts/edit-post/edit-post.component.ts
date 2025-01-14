@@ -27,7 +27,7 @@ export class EditPostComponent implements OnInit{
   router: Router = inject(Router);
 
   postForm: FormGroup = this.fb.group({
-    content: [ '', Validators.required]
+    content: [ '', [Validators.required, this.helperService.noWhitespaceValidator]]
   });
 
   ngOnInit(): void {

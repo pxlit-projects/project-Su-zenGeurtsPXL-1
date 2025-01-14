@@ -1,4 +1,5 @@
 import {Injectable} from "@angular/core";
+import {FormControl} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class HelperService {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   }
 
-  // orderReviewsToMostRecent(reviews: Review[]): Review[] {
-  //   return reviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  // }
+  noWhitespaceValidator(control: FormControl) {
+    return (control.value || '').trim().length? null : { 'whitespace': true };
+  }
 }

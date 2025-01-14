@@ -25,8 +25,8 @@ export class AddPostComponent implements OnInit{
   router: Router = inject(Router);
 
   postForm: FormGroup = this.fb.group({
-    title: ['', [Validators.required, Validators.maxLength(130)]],
-    content: ['', Validators.required],
+    title: ['', [Validators.required, Validators.maxLength(130), this.helperService.noWhitespaceValidator]],
+    content: ['', [Validators.required, this.helperService.noWhitespaceValidator]],
     category: ['', Validators.required]
   });
 
@@ -52,4 +52,6 @@ export class AddPostComponent implements OnInit{
       this.router.navigate(['/myPost']);
     });
   }
+
+
 }

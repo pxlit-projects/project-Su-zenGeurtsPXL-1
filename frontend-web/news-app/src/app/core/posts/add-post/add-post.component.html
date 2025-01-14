@@ -4,7 +4,7 @@
     <div class="mb-4">
       <label for="title" class="block text-sm/6 font-medium text-gray-900 mb-1">Title</label>
       <input type="text" id="title" formControlName="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-      @if (postForm.get('title')?.touched && postForm.get('title')?.hasError('required')){
+      @if (postForm.get('title')?.touched && (postForm.get('title')?.hasError('required') || postForm.get('title')?.hasError('whitespace'))){
         <div class="text-red-500 text-sm mt-1">Title is required</div>
       }
       @if (postForm.get('title')?.touched && postForm.get('title')?.hasError('maxlength')){
@@ -14,7 +14,7 @@
     <div class="mb-4">
       <label for="content" class="block text-sm/6 font-medium text-gray-900 mb-1">Content</label>
       <textarea name="content" id="content" formControlName="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-      @if (postForm.get('content')?.touched && postForm.get('content')?.hasError('required')){
+      @if (postForm.get('content')?.touched && (postForm.get('content')?.hasError('required')|| postForm.get('content')?.hasError('whitespace'))){
         <div class="text-red-500 text-sm mt-1">Content is required</div>
       }
     </div>
@@ -31,11 +31,8 @@
       }
     </div>
     <button type="submit" class="bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 mb-2 rounded focus:outline-none focus:shadow-outline"
-            [class]="{'opacity-50 hover:bg-pxlGreen hover:opacity-50 cursor-not-allowed': !postForm.valid}" [disabled]="!postForm.valid">
+            [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !postForm.valid}" [disabled]="!postForm.valid">
       Save
     </button>
-<!--    <button (click)="cancel()" class=" text-black hover:text-pxlGreen font-bold py-2 px-4 mb-2 focus:outline-none focus:shadow-outline">-->
-<!--      Cancel-->
-<!--    </button>-->
   </form>
 </div>

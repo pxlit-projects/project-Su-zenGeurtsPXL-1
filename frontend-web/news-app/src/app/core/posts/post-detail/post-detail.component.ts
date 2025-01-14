@@ -41,7 +41,7 @@ export class PostDetailComponent implements OnInit {
 
   fb: FormBuilder = inject(FormBuilder);
   commentForm: FormGroup = this.fb.group({
-    content: [ '', Validators.required]
+    content: [ '', [Validators.required, this.helperService.noWhitespaceValidator]]
   });
 
   ngOnInit(): void {
@@ -82,20 +82,10 @@ export class PostDetailComponent implements OnInit {
       postId: this.id,
       ...this.commentForm.value
     };
-
-    if (this.commentForm.valid) {
       this.reviewService.reviewPost(type, review).subscribe(() => {
-        let element = document.getElementById('errorMessage');
-        if (element) element.innerText = "";
         this.commentForm.reset();
         this.fetchPost();
       });
-    }
-    else {
-      console.log("empty review")
-      let element = document.getElementById('errorMessage');
-      if (element) element.innerText = "Comment cannot be empty";
-    }
   }
 
   addComment() {

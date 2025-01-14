@@ -54,11 +54,10 @@
             <div class="mb-4">
                 <textarea name="content" id="content" formControlName="content" class="h-full shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Write comment..."
                           oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
-              @if (commentForm.get('content')?.touched && commentForm.get('content')?.hasError('required')){
-                <div class="text-red-500 text-sm mt-1 hidden">Comment is required</div>
+              @if (commentForm.get('content')?.touched && (commentForm.get('content')?.hasError('required') || commentForm.get('content')?.hasError('whitespace'))){
+                <div class="text-red-500 text-sm mt-1">Comment is required</div>
               }
             </div>
-            <div id="errorMessage" class="text-red-500 text-sm mt-1"></div>
           </form>
         </div>
         }
@@ -66,13 +65,13 @@
       @if(userId$ != post.userId) {
           <div class="grid grid-cols-3 gap-2">
             @if (post.state === 'SUBMITTED') {
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('approve')">Approve</button>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('reject')">Reject</button>
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" (click)="reviewPost('comment')">Review</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !commentForm.valid}" [disabled]="!commentForm.valid" (click)="reviewPost('approve')">Approve</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !commentForm.valid}" [disabled]="!commentForm.valid" (click)="reviewPost('reject')">Reject</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2" [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !commentForm.valid}" [disabled]="!commentForm.valid" (click)="reviewPost('comment')">Review</button>
             }
 
             @if (post.state === 'REJECTED' || post.state === 'APPROVED') {
-              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" (click)="reviewPost('comment')">Review</button>
+              <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !commentForm.valid}" [disabled]="!commentForm.valid"  (click)="reviewPost('comment')">Review</button>
             }
           </div>
       }
@@ -80,7 +79,7 @@
         @if (post.state === 'PUBLISHED') {
           <div class="grid grid-cols-3 gap-2">
             @if (userId$) {
-           <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" (click)="addComment()">Add comment</button>
+           <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" [ngClass]="{'opacity-50 bg-pxlGreenH cursor-not-allowed': !commentForm.valid}" [disabled]="!commentForm.valid" (click)="addComment()">Add comment</button>
             }
             @else {
               <button class="bg-pxlGreen text-white font-bold w-full py-2 px-2 rounded hover:bg-pxlGreenH mb-2 col-start-2" (click)="login()">Sign up to comment</button>
