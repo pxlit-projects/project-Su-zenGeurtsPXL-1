@@ -106,7 +106,7 @@ public class ReviewControllerTests {
     public void approvePost_shouldCreateReviewWithTypeApprovalForPostWithGivenId() throws Exception {
         long postId = 1L;
 
-        String email = "jd@gmail.com";
+        String email = "janedoepxl@gmail.com";
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
                 .postId(postId)
@@ -132,7 +132,7 @@ public class ReviewControllerTests {
     public void rejectPost_shouldCreateReviewWithTypeRejectionForPostWithGivenId() throws Exception {
         long postId = 1L;
 
-        String email = "jd@gmail.com";
+        String email = "janedoepxl@gmail.com";
 
         ReviewRequest reviewRequest = ReviewRequest.builder()
                 .postId(postId)
@@ -164,7 +164,7 @@ public class ReviewControllerTests {
 
             long userId = (long) i + 1;
             String userRole = "editor";
-            String email = "jd@gmail.com";
+            String email = "janedoepxl@gmail.com";
 
             mockMvc.perform(MockMvcRequestBuilders.post("/api/review/comment")
                             .header("userId", userId)
