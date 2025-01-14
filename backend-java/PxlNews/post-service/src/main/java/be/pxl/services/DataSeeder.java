@@ -32,14 +32,8 @@ public class DataSeeder implements CommandLineRunner {
             logger.info("Seeding posts");
             Post post1 = Post.builder()
                     .title("1,000 Limburg Students Compete in LEGO League at PXL University of Applied Sciences")
-                    .content("""
-                            The PXL University of Applied Sciences campus in Hasselt was fully dedicated to technology and innovation on Thursday and Friday.
-                            A total of 1,000 enthusiastic students from 76 schools across Limburg gathered here to participate in the twelfth edition of the regional final of the FIRST LEGO League, a prestigious international competition.
-                            This international event aims to promote technology and innovation among children aged 9 to 14.
-                            The children learn to engage with technology by programming robots and having them carry out specific missions.
-                            Leela Schoyen (11) and Valerie Veracht (10) from Go! Freinetschool De Step in Beringen also attended.
-                            “Apart from a few penalties, things went really well,” the two laugh.
-                            """)
+                    .content("The PXL University of Applied Sciences campus in Hasselt was fully dedicated to technology and innovation on Thursday and Friday. A total of 1,000 enthusiastic students from 76 schools across Limburg gathered here to participate in the twelfth edition of the regional final of the FIRST LEGO League, a prestigious international competition." +
+                    "\n\nThis international event aims to promote technology and innovation among children aged 9 to 14. The children learn to engage with technology by programming robots and having them carry out specific missions. Leela Schoyen (11) and Valerie Veracht (10) from Go! Freinetschool De Step in Beringen also attended. Apart from a few penalties, things went really well,” the two laugh.")
                     .userId(4L)
                     .category(Category.CAMPUS)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 1, 8, 30, 0))
@@ -50,15 +44,9 @@ public class DataSeeder implements CommandLineRunner {
 
             Post post2 = Post.builder()
                     .title("PXL Students Shine at Hack The Future Hackathon")
-                    .content("""
-                            PXL students showcased their best talents during the Hack The Future hackathon, the largest technology and design competition in Belgium, organized by technology company Cronos.
-                            Gijs Rommers and Kiara Petillon, Applied Informatics students, won the main prize in one of the challenges.
-                            Gijs and Kiara created a web application called 'Galactic Explorer,' allowing users to explore a galaxy.
-                            With Laravel and Vue.js, they developed a user-friendly and innovative platform.
-                            The jury praised them for their strong technical execution and creative approach.
-                            Students from the Digital Design program also participated in the hackathon.
-                            They worked on design tasks related to the theme of ‘space discovery,’ such as creating branding for a fictional planet or designing a marketing campaign for a space travel company.
-                            """)
+                    .content("PXL students showcased their best talents during the Hack The Future hackathon, the largest technology and design competition in Belgium, organized by technology company Cronos. Gijs Rommers and Kiara Petillon, Applied Informatics students, won the main prize in one of the challenges." +
+                            "\n\nGijs and Kiara created a web application called 'Galactic Explorer,' allowing users to explore a galaxy. With Laravel and Vue.js, they developed a user-friendly and innovative platform. The jury praised them for their strong technical execution and creative approach." +
+                            "\n\nStudents from the Digital Design program also participated in the hackathon. They worked on design tasks related to the theme of ‘space discovery,’ such as creating branding for a fictional planet or designing a marketing campaign for a space travel company.")
                     .userId(1L)
                     .category(Category.ACADEMIC)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 3, 9, 0, 0))
@@ -69,12 +57,8 @@ public class DataSeeder implements CommandLineRunner {
 
             Post post3 = Post.builder()
                     .title("Limburg AI Team, Including a Teacher from Syntra-PXL, Creates Special Effects for Hollywood Film 'Here' Starring Tom Hanks and Robin Wright")
-                    .content("""
-                            Pioneer and artificial intelligence specialist Chris Umé from Beringen, along with family, friends, and the Belgian Metaphysic team, went to see the film 'Here' at Kinepolis Hasselt.
-                            In the film, Metaphysic made main actors Tom Hanks and Robin Wright appear much younger and older using artificial intelligence.
-                            None of the team members, except Chris who attended the American premiere, had seen the film until then.
-                            The team included about ten Belgians, eight of whom were from Limburg: “We look for enthusiasm and a willingness to work, rather than just academic studies or diplomas,” says Umé.
-                            """)
+                    .content("Pioneer and specialist in artificial intelligence Chris Umé from Beringen went to see the film ‘Here’ in Kinepolis Hasselt on Sunday with family, friends and his Belgian team from Metaphysic. In the film, lead actors Tom Hanks and Robin Wright were made both (much) younger and older by Metaphysic with artificial intelligence. None of the team, except Chris who was at the American premiere, had seen the film before." +
+                            "The team also included ten Belgians, eight of whom were from Limburg: “There was also a small, close-knit group of Limburgers, including several students and a teacher from Syntra-PXL,” says Umé. “When we are looking for people, enthusiasm and the will to work are more important than studies or a diploma.”")
                     .userId(4L)
                     .category(Category.STUDENT)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 5, 15, 48, 0))
@@ -85,18 +69,9 @@ public class DataSeeder implements CommandLineRunner {
 
             Post post4 = Post.builder()
                     .title("PXL Rowing Team’s Nude Calendar Raises €1,000 for Kom op tegen Kanker")
-                    .content("""
-                            The 'Nude Calendar 2024' was a special milestone for the PXL rowing team, who compiled this calendar for the seventh time.
-                            The photos were taken at PXL-NeXT’s conference building in Hasselt by photographer Toon Van Den Broek, and printing was done by Haletra.
-                            The PXL rowing team chose to donate the proceeds from the calendar sales to Kom Op Tegen Kanker.
-                            Inspired by their sports coordinator Erik Vanmierlo, this choice highlighted the team’s commitment.
-                            The calendars were sold for €10 each at the Stuvo counter at PXL University of Applied Sciences and were quickly sold out.
-                            “With this nude calendar, we wanted not only to celebrate the beauty of sport but also to contribute to the fight against cancer,” said captain Lukas Gendera.
-                            “We are grateful for the support from our PXL community and hope that the proceeds from our calendar sales will contribute to cancer research.”
-                            “Unfortunately, cancer is also present in the world of sports,” said Tim Van Werde, district coordinator Limburg for Kom op tegen Kanker.
-                            “It’s encouraging when active young people contribute to helping eliminate cancer. Most people know that exercise is good for preventing heart disease and diabetes.
-                            But it also reduces the risk of cancer.”
-                            """)
+                    .content("The 'Nude Calendar 2024' was a special milestone for the PXL rowing team, who compiled this calendar for the seventh time. The photos were taken at PXL-NeXT’s conference building in Hasselt by photographer Toon Van Den Broek, and printing was done by Haletra. The PXL rowing team chose to donate the proceeds from the calendar sales to Kom Op Tegen Kanker. Inspired by their sports coordinator Erik Vanmierlo, this choice highlighted the team’s commitment." +
+                            "\n\nThe calendars were sold for €10 each at the Stuvo counter at PXL University of Applied Sciences and were quickly sold out. “With this nude calendar, we wanted not only to celebrate the beauty of sport but also to contribute to the fight against cancer,” said captain Lukas Gendera. “We are grateful for the support from our PXL community and hope that the proceeds from our calendar sales will contribute to cancer research.”" +
+                            "\n\n“Unfortunately, cancer is also present in the world of sports,” said Tim Van Werde, district coordinator Limburg for Kom op tegen Kanker. “It’s encouraging when active young people contribute to helping eliminate cancer. Most people know that exercise is good for preventing heart disease and diabetes. But it also reduces the risk of cancer.”")
                     .userId(4L)
                     .category(Category.SPORTS)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 14, 16, 4, 0))
@@ -122,10 +97,7 @@ public class DataSeeder implements CommandLineRunner {
 
             Post post6 = Post.builder()
                     .title("PXL-MAD Alumni Nominated for Global Creative Graduate Showcase 2024")
-                    .content("""
-                            Tyana Verstraete and Jiawei Xu, alumni of the School of Arts PXL-MAD, have been nominated for the Global Creative Graduate Showcase 2024 in collaboration with WGSN, Coloro, and Google Arts & Culture.
-                            The public vote is officially open until Friday, 11 October. The winners will be announced on Monday, 14 October.
-                            """)
+                    .content("Tyana Verstraete and Jiawei Xu, alumni of the School of Arts PXL-MAD, have been nominated for the Global Creative Graduate Showcase 2024 in collaboration with WGSN, Coloro, and Google Arts & Culture. The public vote is officially open until Friday, 11 October. The winners will be announced on Monday, 14 October.")
                     .userId(3L)
                     .category(Category.ALUMNI)
                     .createdAt(LocalDateTime.of(2024, Month.DECEMBER, 8, 14, 56, 0))
@@ -133,6 +105,51 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             postRepository.save(post6);
+
+            Post post7 = Post.builder()
+                    .title("PXL takes in 75 children during strike day: “In no time all places were taken”")
+                    .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." +
+                            "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")
+                    .userId(3L)
+                    .category(Category.ALUMNI)
+                    .createdAt(LocalDateTime.of(2025, Month.JANUARY, 15, 15, 0, 0))
+                    .state(State.PUBLISHED)
+                    .build();
+
+            Post post8 = Post.builder()
+                    .title("Ann Bessemans and Kevin Bormans selected for HOWdesign in Mexico")
+                    .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." +
+                            "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")
+                    .userId(5L)
+                    .category(Category.SPORTS)
+                    .createdAt(LocalDateTime.of(2025, Month.JANUARY, 15, 9, 30, 0))
+                    .state(State.PUBLISHED)
+                    .build();
+
+            Post post9 = Post.builder()
+                    .title("Behind the blindes")
+                    .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." +
+                            "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")
+                    .userId(6L)
+                    .category(Category.ACADEMIC)
+                    .createdAt(LocalDateTime.of(2025, Month.JANUARY, 13, 13, 11, 0))
+                    .state(State.PUBLISHED)
+                    .build();
+
+            Post post10 = Post.builder()
+                    .title("Zion Luts is one of the new heroes from '#LikeMe': \"What happened to the previous generation, we can only dream of\"")
+                    .content("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." +
+                            "\n\nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?")
+                    .userId(1L)
+                    .category(Category.CAMPUS)
+                    .createdAt(LocalDateTime.of(2025, Month.JANUARY, 11, 16, 42, 0))
+                    .state(State.PUBLISHED)
+                    .build();
+
+            postRepository.save(post7);
+            postRepository.save(post8);
+            postRepository.save(post9);
+            postRepository.save(post10);
         }
 
         if (notificationRepository.count() == 0) {
