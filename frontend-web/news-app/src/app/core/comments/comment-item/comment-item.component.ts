@@ -34,7 +34,7 @@ export class CommentItemComponent {
   isInProgress: boolean = false;
 
   commentForm: FormGroup = this.fb.group({
-    content: [ '', Validators.required]
+    content: [ '', [Validators.required, this.helperService.noWhitespaceValidator]]
   });
 
   protected readonly localStorage = localStorage;
