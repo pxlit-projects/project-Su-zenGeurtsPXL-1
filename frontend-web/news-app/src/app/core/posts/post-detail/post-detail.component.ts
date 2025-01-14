@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {MatDividerModule} from "@angular/material/divider";
 import { Post } from '../../../shared/models/posts/post.model';
-import { Observable} from 'rxjs';
+import {interval, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Router, RouterLink, RouterLinkActive, UrlSegment} from '@angular/router';
 import {PostService} from "../../../shared/services/post/post.service";
 import {AuthenticationService} from "../../../shared/services/authentication/authentication.service";
@@ -34,7 +34,7 @@ export class PostDetailComponent implements OnInit {
   url: UrlSegment[] = this.route.snapshot.url;
   id: number = this.route.snapshot.params['id'];
 
-  post$: Observable<Post> = this.postService.getPost(this.id);
+  post$!: Post | undefined;
   userId$: number | null = Number(localStorage.getItem('userId'));
   isMine: boolean = this.url[0].path === 'myPost';
   isToReview: boolean = this.url[0].path === 'review';
@@ -44,25 +44,37 @@ export class PostDetailComponent implements OnInit {
     content: [ '', [Validators.required, this.helperService.noWhitespaceValidator]]
   });
 
+  fetchSubscription: Subscription | undefined;
+
   ngOnInit(): void {
    this.fetchPost();
+
+    this.fetchSubscription = interval(1000).subscribe(() => this.fetchPost());
   }
 
   fetchPost() {
-    this.post$.subscribe({
+    this.id = this.route.snapshot.params['id'];
+    let data = this.postService.getPost(this.id);
+    data.subscribe({
       next: (post) => {
         if (post.state !== 'DRAFTED' && post.state !== 'PUBLISHED') {
-          this.post$ = this.postService.getPostWithReviews(this.id);
+          data = this.postService.getPostWithReviews(this.id);
         }
 
         if (post.state === 'PUBLISHED') {
-          this.post$ = this.postService.getPostWithComments(this.id);
+          data = this.postService.getPostWithComments(this.id);
         }
+
+        this.handleFetch(data);
       },
       error: () => {
         this.router.navigate(['/pageNotFound']);
       }
     });
+  }
+
+  handleFetch(data: Observable<Post>): void {
+    data.subscribe(post => { this.post$ = post; });
   }
 
   submitPost() {
@@ -112,6 +124,6 @@ export class PostDetailComponent implements OnInit {
   }
 
   handleDelete() {
-    this.post$ = this.postService.getPostWithComments(this.id);
+    this.handleFetch(this.postService.getPostWithComments(this.id));
   }
 }
