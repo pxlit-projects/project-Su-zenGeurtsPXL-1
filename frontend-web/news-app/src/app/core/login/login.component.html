@@ -25,12 +25,7 @@
       <button type="submit" class="flex w-full justify-center bg-pxlGreen hover:bg-pxlGreenH text-white font-bold py-2 px-4 mb-2 rounded">
         Sign in
       </button>
-      @if (loginIsInvalid){
-        <div class="text-red-500 text-sm mt-1">Username and/or password is incorrect</div>
-      }
-      @if (formIsInvalid){
-        <div class="text-red-500 text-sm mt-1">Username and password is required</div>
-      }
+        <div id="errorMessage" class="text-red-500 text-sm mt-1"></div>
     </form>
   </div>
 </div>
