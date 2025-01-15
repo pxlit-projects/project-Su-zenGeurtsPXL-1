@@ -6,7 +6,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {of, throwError} from 'rxjs';
-import {By} from "@angular/platform-browser";
 
 
 describe('EditPostComponent', () => {
@@ -80,20 +79,6 @@ describe('EditPostComponent', () => {
 
     expect(component.postForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost/1']);
-  });
-
-  it('should display error message when editPost fails', () => {
-    const errorResponse = {
-      error: {message: 'Failed to update the post'
-      },
-    };
-    postServiceMock.editPost.and.returnValue(throwError(() => errorResponse));
-
-    component.onSubmit();
-    fixture.detectChanges();
-
-    const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
-    expect(debugElement.nativeElement.textContent).toContain('Failed to update the post');
   });
 
   it('should navigate back on cancel', () => {

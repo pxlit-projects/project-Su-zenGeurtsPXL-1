@@ -31,4 +31,12 @@ describe('CommentListComponent', () => {
     expect(component.comments[1].createdAt).toBe('2024-12-4 15:30:07');
     expect(component.comments[2].createdAt).toBe('2024-12-10 15:30:07');
   });
+
+  it('should handle deleted comment', () => {
+    spyOn(component.deleted, 'emit');
+
+    component.handleDelete();
+
+    expect(component.deleted.emit).toHaveBeenCalled();
+  });
 });

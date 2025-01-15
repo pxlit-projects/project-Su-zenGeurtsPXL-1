@@ -6,6 +6,7 @@ import {LoginComponent} from "./login.component";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import {By} from "@angular/platform-browser";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -32,6 +33,7 @@ describe('LoginComponent', () => {
   });
 
   it('should call login on form submit for editor and navigate on success', () => {
+    // EDITOR
     const userRequest = {
       username: 'john',
       password: '123'
@@ -55,57 +57,24 @@ describe('LoginComponent', () => {
 
     expect(component.loginForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/myPost']);
-  });
 
-  it('should call login on form submit for user and navigate on success 2', () => {
-    const userRequest = {
-      username: 'john',
-      password: '123'
-    };
 
-    const mockUser = {
-      id: 1,
-      username: 'john',
-      fullName: 'John Doe',
-      password: '123',
-      role: 'user'
-    };
-
+    mockUser.role = 'user';
     component.loginForm.setValue(userRequest);
-
     authenticationServiceMock.login.and.returnValue(mockUser as User);
+    fixture.detectChanges();
 
     component.onSubmit();
 
-    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
-
-    expect(component.loginForm.pristine).toBeTrue();
     expect(routerMock.navigate).toHaveBeenCalledWith(['/post']);
   });
 
-  it('should set invalidLoginForm to true when form is invalid', () => {
-     component.onSubmit();
-    expect(component.formIsInvalid).toBeTrue();
-  });
-
-  it('should set invalidLoginForm to true when form is invalid', () => {
-    const userRequest = {
-      username: 'john',
-      password: 'invalidPassword'
-    };
-
-    const mockUser = null;
-
-    component.loginForm.setValue(userRequest);
-
-    authenticationServiceMock.login.and.returnValue(mockUser);
+  it('should display error message when login fails', () => {
+    authenticationServiceMock.login.and.returnValue(null);
 
     component.onSubmit();
 
-    expect(authenticationServiceMock.login).toHaveBeenCalledWith(userRequest as LoginRequest);
-
-    expect(component.loginForm.pristine).toBeTrue();
-    expect(component.loginIsInvalid ).toBeTrue();
+    const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
+    expect(debugElement.nativeElement.textContent).toContain('Username and/or password is incorrect');
   });
-
 });

@@ -53,10 +53,6 @@ export class EditPostComponent implements OnInit{
       next: () => {
         this.postForm.reset();
         this.router.navigate(['/myPost/' + this.id]);
-      },
-      error: (err) => {
-        let element = document.getElementById('errorMessage');
-        if (element) element.innerText = err.error.message;
       }
     });
   }

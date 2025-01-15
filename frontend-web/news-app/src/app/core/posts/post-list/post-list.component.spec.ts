@@ -3,7 +3,7 @@ import {PostService} from "../../../shared/services/post/post.service";
 import {PostListComponent} from "./post-list.component";
 import {Filter} from "../../../shared/models/filter.model";
 
-import {ComponentFixture, TestBed } from "@angular/core/testing";
+import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {of} from "rxjs";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 
@@ -63,6 +63,8 @@ describe('PostListComponent', () => {
   });
 
   it('should initialize "isMine" based on route URL', () => {
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
+
     // !MINE
     expect(component.isMine).toBe(false);
 
@@ -70,26 +72,58 @@ describe('PostListComponent', () => {
     routeMock.snapshot.url = [new UrlSegment('myPost', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
 
     expect(component.isMine).toBe(true);
+    expect(component.title).toEqual("My posts");
   });
 
   it('should initialize "review" based on route URL', () => {
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
+
     // !REVIEW
     expect(component.isToReview).toBe(false);
 
-    // MINE
+    // REVIEW
     routeMock.snapshot.url = [new UrlSegment('review', {})];
     fixture = TestBed.createComponent(PostListComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
 
     expect(component.isToReview).toBe(true);
+    expect(component.title).toEqual("Reviews");
   });
 
-  xit('should call fetchPosts on initialization', () => {
-    spyOn(component, 'fetchPosts');
+  it('should call fetchPosts on initialization', () => {
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
     fixture.detectChanges();
-    expect(component.fetchPosts).toHaveBeenCalled();
+
+
+    expect(postServiceMock.getPosts).toHaveBeenCalled();
+  });
+
+  it('should call fetchPosts periodically', fakeAsync(() => {
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
+    fixture.detectChanges();
+    spyOn(component, 'fetchPosts');
+
+    tick(3000);
+
+    expect(component.fetchPosts).toHaveBeenCalledTimes(3);
+
+    component.fetchSubscription?.unsubscribe();
+  }));
+
+  it('should fetch post with an empty filter', () => {
+    postServiceMock.filterPosts.and.returnValue(of(filteredPosts));
+    postServiceMock.getPosts.and.returnValue(of(mockPosts));
+
+    const emptyFilter = { content: '', author: '', date: '' };
+    component.handleFilter(emptyFilter);
+    fixture.detectChanges();
+
+    expect(component.filter).toEqual(emptyFilter);
+    expect(postServiceMock.getPosts).toHaveBeenCalled();
   });
 
   it('should fetch posts correctly', () => {

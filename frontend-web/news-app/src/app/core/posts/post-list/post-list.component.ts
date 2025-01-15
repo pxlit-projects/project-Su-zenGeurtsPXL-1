@@ -28,7 +28,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   filter: Filter | undefined;
   title: string = '';
 
-  private fetchsubscription: Subscription | undefined;
+  fetchSubscription: Subscription | undefined;
 
   ngOnInit(): void {
   if (this.isMine) this.title = 'My posts';
@@ -36,27 +36,27 @@ export class PostListComponent implements OnInit, OnDestroy {
   else this.title = 'Posts';
 
   this.fetchPosts();
-  this.fetch(this.postService.getPosts(this.isMine, this.isToReview));
+  this.handleFetch(this.postService.getPosts(this.isMine, this.isToReview));
 
   this.fetchPosts();
-  this.fetchsubscription = interval(1000).subscribe(() => this.fetchPosts());
+  this.fetchSubscription = interval(1000).subscribe(() => this.fetchPosts());
   }
 
   ngOnDestroy() {
-    this.fetchsubscription?.unsubscribe();
+    this.fetchSubscription?.unsubscribe();
   }
 
   handleFilter(filter: Filter) {
-    this.fetch(this.postService.filterPosts(filter, this.isMine, this.isToReview))
+    this.handleFetch(this.postService.filterPosts(filter, this.isMine, this.isToReview))
     this.filter = filter;
   }
 
   fetchPosts(): void {
     const emptyFilter = { content: '', author: '', date: '' };
-    if (this.filter == undefined || this.filter == emptyFilter) this.fetch(this.postService.getPosts(this.isMine, this.isToReview));
+    if (this.filter == undefined || this.filter == emptyFilter) this.handleFetch(this.postService.getPosts(this.isMine, this.isToReview));
   }
 
-  fetch(data: Observable<Post[]>): void {
+  handleFetch(data: Observable<Post[]>): void {
     data
       .pipe(map(
         (posts: Post[]) =>

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {AsyncPipe, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {MatDividerModule} from "@angular/material/divider";
 import { Post } from '../../../shared/models/posts/post.model';
@@ -22,7 +22,7 @@ import {HelperService} from "../../../shared/services/helper/helper.service";
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
 })
-export class PostDetailComponent implements OnInit {
+export class PostDetailComponent implements OnInit, OnDestroy {
   postService: PostService = inject(PostService);
   commentService: CommentService = inject(CommentService);
   reviewService: ReviewService = inject(ReviewService);
@@ -50,6 +50,10 @@ export class PostDetailComponent implements OnInit {
    this.fetchPost();
 
     this.fetchSubscription = interval(1000).subscribe(() => this.fetchPost());
+  }
+
+  ngOnDestroy() {
+    this.fetchSubscription?.unsubscribe();
   }
 
   fetchPost() {
@@ -106,17 +110,10 @@ export class PostDetailComponent implements OnInit {
       ...this.commentForm.value
     };
 
-    if (this.commentForm.valid) {
-      this.commentService.addComment(comment).subscribe(() => {
-        let element = document.getElementById('errorMessage');
-        if (element) element.innerText = "";
-        this.commentForm.reset();
-        this.fetchPost();
-      });
-    } else {
-      let element = document.getElementById('errorMessage');
-      if (element) element.innerText = "Comment cannot be empty";
-    }
+    this.commentService.addComment(comment).subscribe(() => {
+      this.commentForm.reset();
+      this.fetchPost();
+    });
   }
 
   login(){

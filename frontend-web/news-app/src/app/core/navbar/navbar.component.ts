@@ -1,10 +1,10 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {AuthenticationService} from "../../shared/services/authentication/authentication.service";
 import {PostService} from "../../shared/services/post/post.service";
 import {Notification} from "../../shared/models/posts/notification.model";
-import {interval} from "rxjs";
+import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +13,7 @@ import {interval} from "rxjs";
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   protected readonly localStorage = localStorage;
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
@@ -23,9 +23,15 @@ export class NavbarComponent implements OnInit {
   notifications$: Notification[] | undefined;
   hasNoNotifications: boolean = true;
 
+  fetchSubscription: Subscription | undefined;
+
   ngOnInit(): void {
     this.fetchNotifications();
-    interval(1000).subscribe(() => this.fetchNotifications());
+    this.fetchSubscription = interval(1000).subscribe(() => this.fetchNotifications());
+  }
+
+  ngOnDestroy() {
+    this.fetchSubscription?.unsubscribe();
   }
 
   fetchNotifications() {

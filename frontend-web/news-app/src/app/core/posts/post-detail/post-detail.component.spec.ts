@@ -1,6 +1,6 @@
 import {PostService} from "../../../shared/services/post/post.service";
 import {PostDetailComponent} from "./post-detail.component";
-import {ComponentFixture, TestBed} from "@angular/core/testing";
+import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {ActivatedRoute, Router, UrlSegment} from "@angular/router";
 import {of, throwError} from "rxjs";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -8,7 +8,6 @@ import {Post} from "../../../shared/models/posts/post.model";
 import {ReviewService} from "../../../shared/services/review/review.service";
 import {CommentService} from "../../../shared/services/comment/comment.service";
 import {HelperService} from "../../../shared/services/helper/helper.service";
-import {By} from "@angular/platform-browser";
 
 describe('PostDetailComponent', () => {
   let component: PostDetailComponent;
@@ -29,7 +28,7 @@ describe('PostDetailComponent', () => {
     postServiceMock = jasmine.createSpyObj('PostService', ['getPost', 'getPostWithReviews', 'getPostWithComments', 'publishPost', 'submitPost']);
     reviewServiceMock = jasmine.createSpyObj('ReviewService', ['reviewPost']);
     commentServiceMock = jasmine.createSpyObj('CommentService', ['addComment']);
-    helperServiceMock = jasmine.createSpyObj('HelperService', ['transformDate', 'toPascalCasing']);
+    helperServiceMock = jasmine.createSpyObj('HelperService', ['transformDate', 'toPascalCasing', 'noWhitespaceValidator']);
 
     routerMock = jasmine.createSpyObj('Router', ['navigate']);
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
@@ -78,6 +77,20 @@ describe('PostDetailComponent', () => {
     expect(component.isMine).toBe(true);
   });
 
+  it('should call fetchPost periodically', fakeAsync(() => {
+    fixture = TestBed.createComponent(PostDetailComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    spyOn(component, 'fetchPost');
+
+    tick(3000);
+
+    expect(component.fetchPost).toHaveBeenCalledTimes(3);
+
+    component.fetchSubscription?.unsubscribe();
+  }));
+
   it('should navigate to pageNotFound when getPost fails in ngOnInit', () => {
     postServiceMock.getPost.and.returnValue(throwError(() => new Error('Post not found')));
     fixture = TestBed.createComponent(PostDetailComponent);
@@ -89,6 +102,9 @@ describe('PostDetailComponent', () => {
   });
 
   it('should fetch post with reviews when relevant in ngOnInit', () => {
+    spyOn(component, 'handleFetch').and.returnValue(undefined)
+    fixture.detectChanges();
+
     const post = {
       title: 'Title',
       content: 'Content',
@@ -99,6 +115,7 @@ describe('PostDetailComponent', () => {
     };
 
     postServiceMock.getPost.and.returnValue(of(post as Post));
+    postServiceMock.getPostWithReviews.and.returnValue(of(post as Post));
 
     fixture = TestBed.createComponent(PostDetailComponent);
     component = fixture.componentInstance;
@@ -117,11 +134,13 @@ describe('PostDetailComponent', () => {
       createdAt: '2024-12-10 15:30:07',
       state: 'PUBLISHED'
     };
-
     postServiceMock.getPost.and.returnValue(of(post as Post));
+    postServiceMock.getPostWithComments.and.returnValue(of(post as Post));
+    // spyOn(component, 'handleFetch');
 
     fixture = TestBed.createComponent(PostDetailComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
 
     component.ngOnInit();
 
@@ -162,23 +181,6 @@ describe('PostDetailComponent', () => {
     expect(reviewServiceMock.reviewPost).toHaveBeenCalledWith(reviewType, reviewRequest);
   });
 
-  xit('should display error message when reviewPost fails', () => {
-    let reviewType = 'approve';
-    let reviewRequest = {
-      postId: 1,
-      content: ''
-    }
-
-    component.commentForm.setValue({content: ''});
-    component.reviewPost(reviewType);
-
-    fixture.detectChanges();
-
-    const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
-    expect(debugElement.nativeElement.textContent).toContain('Comment cannot be empty');
-    expect(reviewServiceMock.reviewPost).not.toHaveBeenCalledWith(reviewType, reviewRequest);
-  });
-
   it('should add comment on addComment', () => {
     const content = 'Comment'
     let commentRequest = {
@@ -199,24 +201,18 @@ describe('PostDetailComponent', () => {
     expect(commentServiceMock.addComment).toHaveBeenCalledWith(commentRequest);
   });
 
-  xit('should display error message when addComment fails', () => {
-    const content = ''
-    let commentRequest = {
-      postId: 1,
-      content: content
-    }
+  it('should navigate to login on login', () => {
 
-    const commentForm = {
-      content: content
-    }
+    component.login();
 
-    component.commentForm.setValue(commentForm);
+    expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+  });
 
-    component.addComment();
-    fixture.detectChanges();
+  it('should refetch data on handleDelete', () => {
+    spyOn(component, 'handleFetch');
+    component.handleDelete();
 
-    const debugElement = fixture.debugElement.query(By.css('#errorMessage'));
-    expect(debugElement.nativeElement.textContent).toContain('Comment cannot be empty');
-    expect(commentServiceMock.addComment).not.toHaveBeenCalledWith(commentRequest);
+    expect(component.handleFetch).toHaveBeenCalled();
+    expect(postServiceMock.getPostWithComments).toHaveBeenCalled();
   });
 });

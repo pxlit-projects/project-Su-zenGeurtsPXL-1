@@ -32,11 +32,25 @@ describe('NavbarComponent', () => {
 
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  // it('should create the component', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  xit('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  xit('should call fetchPost periodically', fakeAsync(() => {
+    // fixture = TestBed.createComponent(PostDetailComponent);
+    // component = fixture.componentInstance;
+    spyOn(component, 'fetchNotifications');
+    fixture.detectChanges();
+
+    tick(3000);
+
+    expect(component.fetchNotifications).toHaveBeenCalledTimes(3);
+
+    component.fetchSubscription?.unsubscribe();
+  }));
 
   xit('should navigate to /login on login()', () => {
     component.login();

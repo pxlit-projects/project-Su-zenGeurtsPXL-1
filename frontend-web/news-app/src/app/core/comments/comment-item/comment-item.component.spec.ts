@@ -14,7 +14,7 @@ describe('CommentItemComponent', () => {
 
   beforeEach(async () => {
     commentServiceMock = jasmine.createSpyObj('CommentService', ['editComment', 'deleteComment']);
-    helperServiceMock = jasmine.createSpyObj('HelperService', ['transformDateShort']);
+    helperServiceMock = jasmine.createSpyObj('HelperService', ['transformDateShort', 'noWhitespaceValidator']);
 
     await TestBed.configureTestingModule({
       imports: [CommentItemComponent],
@@ -32,40 +32,37 @@ describe('CommentItemComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('should delete comment on deleteComment', () => {
+  it('should delete comment on deleteComment', () => {
+    commentServiceMock.deleteComment.and.returnValue(of(undefined));
+    spyOn(component.deleted, 'emit');
     component.menuIsHidden = false;
     component.comment = mockComment;
-
     spyOn(window, 'confirm').and.returnValue(true);
     fixture.detectChanges();
 
     component.deleteComment();
 
     expect(commentServiceMock.deleteComment).toHaveBeenCalled();
+    expect(component.deleted.emit).toHaveBeenCalled();
     expect(component.menuIsHidden).toBeTrue();
   });
 
-  xit('should activate update mode on updateComment', () => {
+  it('should activate update mode on updateComment', () => {
     component.menuIsHidden = false;
     component.isInProgress = false;
     component.comment = mockComment;
-
-    const form = {
-      content: ''
-    };
-
-    component.commentForm.setValue(form);
+    // component.commentForm.value.content = "Content";
+    fixture.detectChanges();
 
     component.updateComment();
-    fixture.detectChanges();
 
     expect(component.commentForm.value.content).toEqual('Content');
     expect(component.isInProgress).toBeTrue();
     expect(component.menuIsHidden).toBeTrue();
   });
 
-  it('should call updateComment on form submit on success', () => {
-    const content = 'Updated content';
+  it('should call editComment on form submit on success', () => {
+    const content = 'Content';
 
     const form = {
       content: content

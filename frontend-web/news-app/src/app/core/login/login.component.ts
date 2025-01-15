@@ -21,8 +21,6 @@ export class LoginComponent {
   fb: FormBuilder = inject(FormBuilder);
   router: Router = inject(Router);
   authenticationService: AuthenticationService = inject(AuthenticationService);
-  loginIsInvalid: boolean = false;
-  formIsInvalid: boolean = false;
   loginForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required],

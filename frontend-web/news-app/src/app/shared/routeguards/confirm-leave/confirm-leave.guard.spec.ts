@@ -1,11 +1,10 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {ActivatedRoute, CanDeactivateFn, Router, UrlSegment} from '@angular/router';
 import { confirmLeaveGuard } from './confirm-leave.guard';
 import { AddPostComponent } from '../../../core/posts/add-post/add-post.component';
 import { EditPostComponent } from '../../../core/posts/edit-post/edit-post.component';
 
-// Mock Components
 class MockAddPostComponent {
   postForm = new FormBuilder().group({
     title: [''],
@@ -25,7 +24,6 @@ describe('confirmLeaveGuard', () => {
   let routeMock: jasmine.SpyObj<ActivatedRoute>;
   let currentRouterMock: jasmine.SpyObj<Router>;
   let nextRouterMock: jasmine.SpyObj<Router>;
-  let fixture: ComponentFixture<AddPostComponent | EditPostComponent>;
 
   beforeEach(() => {
     routeMock = jasmine.createSpyObj('ActivatedRoute', [], {
@@ -39,10 +37,6 @@ describe('confirmLeaveGuard', () => {
     nextRouterMock = jasmine.createSpyObj('Router', [], {
       state: {url: [new UrlSegment('addPost', {})]}
     });
-
-    // currentRoute: Route(url:'addPost', path:'addPost')
-    // confirm-leave.guard.ts:7 currentState: Route(url:'', path:'') { Route(url:'addPost', path:'addPost') }
-    // confirm-leave.guard.ts:8 nextState: Route(url:'', path:'') { Route(url:'post', path:'post') }
 
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
@@ -70,7 +64,6 @@ describe('confirmLeaveGuard', () => {
     mockComponent.postForm.markAsDirty();
 
     spyOn(window, 'confirm').and.returnValue(false);
-    fixture.detectChanges();
 
     // @ts-ignore
     const result = await guard(mockComponent, routeMock, currentRouterMock, nextRouterMock);
@@ -79,24 +72,4 @@ describe('confirmLeaveGuard', () => {
     );
     expect(result).toBeFalse();
   });
-  //
-  // xit('should allow navigation if user confirms leaving', async () => {
-  //   const mockComponent = new MockEditPostComponent();
-  //   mockComponent.postForm.markAsDirty();
-  //
-  //   spyOn(window, 'confirm').and.returnValue(true);
-  //
-  //   const result = await guard(mockComponent, null, null, null);
-  //   expect(result).toBeTrue();
-  // });
-  //
-  // xit('should block navigation if user cancels leaving', async () => {
-  //   const mockComponent = new MockEditPostComponent();
-  //   mockComponent.postForm.markAsDirty();
-  //
-  //   spyOn(window, 'confirm').and.returnValue(false);
-  //
-  //   const result = await guard(mockComponent, null, null, null);
-  //   expect(result).toBeFalse();
-  // });
 });
